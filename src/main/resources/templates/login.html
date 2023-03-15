@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <th:block th:replace="~{include::head}"/>
+</head>
+<body>
+<div class="container">
+<!--    <form>-->
+    <form th:action="@{/auth}" method="post">
+        <div class="form-group">
+            <label for="username">Имя пользователя</label>
+            <input type="text" name="username" class="form-input" id="username" placeholder="Имя пользователя">
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" placeholder="Введите пароль" name="password" id="password">
+        </div>
+        <input type="submit" class="btn btn-success" value="Войти"/>
+        <a th:href="@{/register}">Регистрация</a>
+    </form>
+</div>
+</body>
+</html>

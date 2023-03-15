@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: security_schema
+      author: admin
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: create schema if not exists security;
+      rollback:
+        - sql:
+            sql: drop schema security;
+  - changeSet:
+      id: user_table
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: security
+            tableName: users
+            columns:
+              - column:
+                  name: login
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: PK_user
+              - column:
+                  name: password
+                  type: VARCHAR(256)
+              - column:
+                  name: firstName
+                  type: VARCHAR(32)
+              - column:
+                  name: lastName
+                  type: VARCHAR(32)
+              - column:
+                  name: fatherName
+                  type: VARCHAR(32)
+              - column:
+                  name: email
+                  type: VARCHAR(128)
+              - column:
+                  name: email_verified
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: phone_number
+                  type: CHAR(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+      rollback:
+        - dropTable:
+            schemaName: security
+            tableName: users
+  - changeSet:
+      id: table_authorities
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: security
+            tableName: authorities
+            columns:
+              - column:
+                  name: login
+                  type: VARCHAR(128)
+                  constraints:
+                    foreignKeyName: FK_authorities_users
+                    referencedTableSchemaName: security
+                    referencedTableName: users
+                    referencedColumnNames: login
+              - column:
+                  name: authority
+                  type: VARCHAR(64)
+      rollback:
+        - dropTable:
+            schemaName: security
+            tableName: authority

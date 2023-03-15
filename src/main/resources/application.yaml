@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fis
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  liquibase:
+    change-log: db/changelog/changelog-main.yaml
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
