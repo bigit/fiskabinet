@@ -11,3 +11,11 @@ logging:
     org:
       springframework:
         security: DEBUG
+mybatis:
+#  type-aliases-package: ru.antelit.fiskabinet.domain
+  config-location: classpath:mybatis-config.xml
+#  mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
+server:
+  error:
+    whitelabel:
+      enabled: true
