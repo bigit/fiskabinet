@@ -23,7 +23,7 @@ public class KabinetController {
     @Autowired
     private OrgService orgService;
 
-    @GetMapping( "/home")
+    @GetMapping("/home")
     public String home(Model model) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserInfo userInfo = userService.findUser(userDetails.getUsername());
@@ -39,4 +39,8 @@ public class KabinetController {
         return "redirect:home";
     }
 
+    @GetMapping("/")
+    public String redirectToHome() {
+        return "redirect:home";
+    }
 }
