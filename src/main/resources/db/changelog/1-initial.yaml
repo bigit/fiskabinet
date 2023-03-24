@@ -18,33 +18,41 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: login
-                  type: VARCHAR(64)
+                  name: id
+                  type: serial
                   constraints:
                     nullable: false
                     primaryKey: true
                     primaryKeyName: PK_user
               - column:
+                  name: username
+                  type: VARCHAR(64)
+                  constraints:
+                    unique: true
+              - column:
                   name: password
                   type: VARCHAR(256)
               - column:
-                  name: firstName
+                  name: first_name
                   type: VARCHAR(32)
               - column:
-                  name: lastName
+                  name: last_name
                   type: VARCHAR(32)
               - column:
-                  name: fatherName
+                  name: father_name
                   type: VARCHAR(32)
               - column:
                   name: email
                   type: VARCHAR(128)
+                  constraints:
+                    notNullConstraintName: constraint_empty_email
+                    checkConstraint: email SIMILAR TO '\k+@\k+.\k'
               - column:
                   name: email_verified
                   type: BOOLEAN
                   defaultValueBoolean: false
               - column:
-                  name: phone_number
+                  name: phonenumber
                   type: CHAR(11)
                   constraints:
                     nullable: false
@@ -65,13 +73,13 @@ databaseChangeLog:
             tableName: authorities
             columns:
               - column:
-                  name: login
-                  type: VARCHAR(128)
+                  name: username
+                  type: varchar(64)
                   constraints:
                     foreignKeyName: FK_authorities_users
                     referencedTableSchemaName: security
                     referencedTableName: users
-                    referencedColumnNames: login
+                    referencedColumnNames: username
               - column:
                   name: authority
                   type: VARCHAR(64)
@@ -79,3 +87,16 @@ databaseChangeLog:
         - dropTable:
             schemaName: security
             tableName: authority
+  - changeSet:
+      id: pk_authorities
+      author: r.miller
+      changes:
+        - addPrimaryKey:
+            schemaName: security
+            tableName: authorities
+            constraintName: PK_authorities
+            columnNames: username, authority
+      rollback:
+        - dropPrimaryKey:
+            schemaName: security
+            tableName: authorities

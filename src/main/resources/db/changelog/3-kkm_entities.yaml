@@ -1,0 +1,146 @@
+databaseChangeLog:
+  - changeSet:
+      id: kkm_table
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: kkm
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_kkm
+              - column:
+                  name: inner_name
+                  type: varchar(32)
+              - column:
+                  name: model_id
+                  type: integer
+              - column:
+                  name: fn_number
+                  type: bigint
+              - column:
+                  name: fn_end
+                  type: date
+              - column:
+                  name: ofd_id
+                  type: integer
+              - column:
+                  name: ofd_end
+                  type: date
+              - column:
+                  name: tradepoint_id
+                  type: integer
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: kkm
+
+  - changeSet:
+      id: fk_kkm_tradepoint
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: FK_kkm_tradepoint
+            baseTableSchemaName: org
+            baseTableName: kkm
+            baseColumnNames: tradepoint_id
+            referencedTableSchemaName: org
+            referencedTableName: tradepoint
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: org
+            baseTableName: kkm
+            constraintName: FK_kkm_tradepoint
+
+  - changeSet:
+      id: vendor_table
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: vendor
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_vendor
+              - column:
+                  name: name
+                  type: varchar(24)
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: vendor
+
+  - changeSet:
+      id: model_table
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKeyName: PK_model
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(20)
+              - column:
+                  name: vendor_id
+                  type: integer
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: model
+
+  - changeSet:
+      id: fk_model_vendor
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: FK_model_vendor
+            baseTableSchemaName: org
+            baseTableName: model
+            baseColumnNames: vendor_id
+            referencedTableSchemaName: org
+            referencedTableName: vendor
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: org
+            baseTableName: model
+            constraintName: FK_model_vendor
+
+  - changeSet:
+      id: fk_kkm_model
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: FK_kkm_model
+            baseTableSchemaName: org
+            baseTableName: kkm
+            baseColumnNames: model_id
+            referencedTableSchemaName: org
+            referencedTableName: model
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: org
+            baseTableName: kkm
+            constraintName: FK_kkm_model

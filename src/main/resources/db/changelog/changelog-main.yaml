@@ -2,3 +2,9 @@ databaseChangeLog:
   - include:
       file: ./1-initial.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 2-org_entities.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 3-kkm_entities.yaml
+      relativeToChangelogFile: true
