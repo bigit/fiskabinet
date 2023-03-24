@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.antelit.fiskabinet.service.dao.OrgDao">
+    <resultMap id="organization" type="ru.antelit.fiskabinet.domain.Organization">
+        <id property="id" column="id"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="inn" property="inn"/>
+        <collection property="activities" autoMapping="true"/>
+    </resultMap>
+
+    <resultMap id="activity" type="ru.antelit.fiskabinet.domain.Activity" autoMapping="true"/>
+
+    <select id="list" resultMap="organization">
+        select id, name, inn
+        from org.organization o
+        where o.id in ( select org_id from org.user_org
+                        where user_id = #{user.id})
+    </select>
+
+    <select id="getUserOrganizations" resultType="ru.antelit.fiskabinet.domain.Organization">
+        select name, inn from org.organization
+        where id in (select org_id from org.user_org where user_id = #{user.id})
+    </select>
+
+    <insert id="add">
+        insert into org.organization (name, inn)
+        values (#{organization.name}, #{organization.inn})
+    </insert>
+
+    <update id="update">
+        update org.organization set (name = #{organization.name}, inn = #{organization.inn})
+    </update>
+
+    <select id="getOrgActivities" resultType="ru.antelit.fiskabinet.domain.Activity"></select>
+    <insert id="addOrgActivity"></insert>
+    <insert id="addOrgActivities"></insert>
+    <delete id="removeOrgActivity"></delete>
+    <delete id="removeOrgActivities"></delete>
+
+</mapper>

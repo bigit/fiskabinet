@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
-<div class="container">
-<!--    <form>-->
-    <form th:action="@{/auth}" method="post">
-        <div class="form-group">
-            <label for="username">Имя пользователя</label>
-            <input type="text" name="username" class="form-input" id="username" placeholder="Имя пользователя">
+<div class="container text-center h-auto w-100">
+    <div class="row">
+        <div class="col">
+            <label>"ФИС Услуги"</label>
         </div>
-        <div class="form-group">
-            <label for="password">Пароль</label>
-            <input type="password" placeholder="Введите пароль" name="password" id="password">
+    </div>
+    <div class="row">
+        <div class="col">
+            <label>Личный кабинет</label>
         </div>
-        <input type="submit" class="btn btn-success" value="Войти"/>
-        <a th:href="@{/register}">Регистрация</a>
-    </form>
+    </div>
+    <div class="parent d-flex justify-content-center">
+
+        <form th:action="@{/auth}" method="post" class="login-form shadow w-30 p-4  mt-5">
+            <div class="form-outline mb-3">
+                <input type="text" name="username" class="form-control">
+            </div>
+            <div class="form-outline mb-3">
+                <input type="password" placeholder="Введите пароль" name="password" class="form-control">
+            </div>
+            <div class="text-center">
+                <input type="submit" class="btn btn-success btn-block mb-4" value="Войти"/>
+            </div>
+            <div class="text-center">
+                <a th:href="@{/forgot}">Забыли пароль?</a>
+            </div>
+            <span th:if="${logout}" class="text-success">Вы вышли из системы</span>
+            <span th:if="${error}" class="text-danger"><p>Неверно указан пользователь или пароль</span>
+        </form>
+    </div>
 </div>
 </body>
 </html>
