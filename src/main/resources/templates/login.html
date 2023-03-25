@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ФИС Услги - Вход</title>
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
@@ -33,7 +33,7 @@
                 <a th:href="@{/forgot}">Забыли пароль?</a>
             </div>
             <span th:if="${logout}" class="text-success">Вы вышли из системы</span>
-            <span th:if="${error}" class="text-danger"><p>Неверно указан пользователь или пароль</span>
+            <span th:if="${error}" class="text-danger">Неверно указан пользователь или пароль</span>
         </form>
     </div>
 </div>
