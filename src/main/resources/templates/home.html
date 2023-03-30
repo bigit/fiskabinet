@@ -9,39 +9,65 @@
 </head>
 <body>
 <div class="container vh-100 shadow">
-    <div class="row">
-        <div class="col-11">
+    <div class="row mb-5">
+        <div class="col-10">
             <h1 class="h1"></h1>
             <label id="username" th:text="${user.getShortName()}"></label>
+        </div>
+        <div class="col-1">
+            <a th:href="@{/settings}">Настройки</a>
         </div>
         <div class="col-1">
             <a href="javascript: document.logoutForm.submit()">Выйти</a>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <table class="table">
-                <theader>
-                    <th>Название</th>
-                    <th>ИНН</th>
-                </theader>
-                <tbody>
-                <tr th:each="org : ${organizations}">
-                    <td th:text="${org.name}"></td>
-                    <td th:text="${org.inn}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="accordion">
+
+            <div class="card" th:each="org, itemStat: ${organizations}">
+                <div class="card-header" th:id="'head'+${itemStat.index}">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link"
+                                data-bs-toggle="collapse"
+                                th:attr="data-bs-target='#org'+${itemStat.index}, aria-controls='org'+${itemStat.index}, aria-expanded=true"
+                                th:text="${org.name}">
+                        </button>
+                    </h5>
+                </div>
+                <div th:id="'org'+${itemStat.index}" class="collapse show" th:attr="data-parent='#accordion', aria-labelledby='head'+${itemStat.index}">
+                    <div class="card-body">
+                        <div th:each="tp: ${tradepointMap.get(org)}">
+                            <h5 th:text="${tp.name}"/>
+                            <table class="table">
+                                <thead>
+                                <th>Номер ФН</th>
+                                <th>Модель</th>
+                                <th>Срок ФН</th>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="kkm: ${kkmMap.get(tp)}">
+                                        <td>
+                                            <label th:text="${kkm.fnNumber}"></label>
+                                        </td>
+                                        <td>
+                                            <label th:text="${kkm.model.getFullName()}"></label>
+                                        </td>
+                                        <td>
+                                            <label th:text="${#dates.format(kkm.fnEnd, 'dd.MM.yyyy')}"></label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     </div>
 </div>
-
-
-
-
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-    <input hidden type="submit" value="Sign Out" />
+    <input hidden type="submit" value="Sign Out"/>
 </form>
+
 
 </body>
 </html>

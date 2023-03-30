@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900);
+
 .bg-opaque {
     background-color: rgba(78, 172, 39, 0.2);
 }
@@ -7,17 +9,25 @@
     border-radius: 7px;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900);
+.register-form{
+    border: thin gray solid;
+    border-right: 7px;
+    text-align: right !important;
+}
 
 body {
 
+}
+
+.center-button {
+    text-align: center !important;
 }
 
 #wrapper {
     width: 100%
 }
 
-error-box {
+.error-box {
     height: 100%;
     position: fixed;
     top: 20%;

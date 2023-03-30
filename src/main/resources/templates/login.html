@@ -17,9 +17,13 @@
             <label>Личный кабинет</label>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <label>Вход</label>
+        </div>
+    </div>
     <div class="parent d-flex justify-content-center">
-
-        <form th:action="@{/auth}" method="post" class="login-form shadow w-30 p-4  mt-5">
+        <form th:action="@{/auth}" method="post" class="login-form shadow w-30 p-4  mt-2">
             <div class="form-outline mb-3">
                 <input type="text" name="username" class="form-control">
             </div>
@@ -28,6 +32,9 @@
             </div>
             <div class="text-center">
                 <input type="submit" class="btn btn-success btn-block mb-4" value="Войти"/>
+            </div>
+            <div class="text-center">
+                <a th:href="@{/register}">Регистрация</a>
             </div>
             <div class="text-center">
                 <a th:href="@{/forgot}">Забыли пароль?</a>
