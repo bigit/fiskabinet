@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.antelit.fiskabinet.service.dao.UserDao">
+    <resultMap id="user" type="ru.antelit.fiskabinet.domain.UserInfo">
+        <id property="id" column="id"/>
+        <result column="username" property="username"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="father_name" property="fatherName"/>
+        <result column="email" property="email"/>
+        <result column="phonenumber" property="phone"/>
+    </resultMap>
+
+    <sql id="select">
+        select username, password, first_name, last_name, father_name, email, email_verified, enabled
+     from security.users
+    </sql>
+
+    <sql id="select_distinct">
+        select distinct id, username, password, first_name, last_name, father_name, email, email_verified, enabled
+     from security.users
+    </sql>
+
+    <select id="getUserByUsername" parameterType="java.lang.String" resultMap="user">
+        <include refid="select_distinct"/>
+        where username = #{username}
+    </select>
+
+    <select id="findUserByLogin" parameterType="java.lang.String" resultMap="user">
+        <include refid="select_distinct"/>
+        where email = #{login} or phonenumber = #{login} or username = #{login}
+    </select>
+
+<!--    <insert id="createUser" parameterType="User">-->
+<!--;         insert into security.users (id, username, password, first)-->
+<!--    </insert>/-->
+
+<!--    <update id="updateUserInfo" parameterType="User">-->
+<!--         update users-->
+<!--        set first_name  = #{user.firstName},-->
+<!--             last_name   = #{user.lastName},-->
+<!--             father_name = #{user.fatherName},-->
+<!--             email       = #{user.email},-->
+<!--            phonenumber = #{user.phonenumber}-->
+<!--    </update>-->
+</mapper>

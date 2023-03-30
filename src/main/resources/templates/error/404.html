@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="favicon.ico">
+    <title>Страница не найдена</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <link th:href="@{css/style.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+    <!-- Preloader -->
+    <section id="wrapper" class="container-fluid">
+        <div class="error-box">
+            <div class="error-body text-center">
+                <h1 class="text-success" >404</h1>
+                <label>Страница не найдена</label>
+                <h3></h3>
+          <a th:href="@{/}" class="btn btn-danger btn-rounded m-b-40">На главную</a> </div>
+            <footer class="footer text-center">2023 <a href="http://antelit.ru/" target="_blank">ООО "Антель Плюс"</a></footer>
+        </div>
+    </section>
+</body>
+</html>

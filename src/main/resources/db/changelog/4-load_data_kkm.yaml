@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: load_vendors
+      author: r.miller
+      changes:
+        - loadUpdateData:
+            schemaName: org
+            tableName: vendor
+            file: ./data/vendor.csv
+            relativeToChangelogFile: true
+            primaryKey: id
+            columns:
+              - column:
+                  name: id
+                  type: intger
+              - column:
+                  name: name
+                  type: string
+  - changeSet:
+      id: load_models
+      author: r.miller
+      changes:
+        - loadUpdateData:
+            schemaName: org
+            tableName: model
+            file: ./data/model.csv
+            relativeToChangelogFile: true
+            primaryKey: id
+            columns:
+              - column:
+                  name: id
+                  type: integer
+              - column:
+                  name: name
+                  type: string
+              - column:
+                  name: vendor_id
+                  type: integer

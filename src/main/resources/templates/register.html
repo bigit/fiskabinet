@@ -1,33 +1,72 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:th="http://thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
-
-<form class="form" action="/register">
-    <div class="form-group">
-    <label for="login">Логин</label>
-    <input id="login" type="text" placeholder="Введите логин">
+<div class="container text-center h-auto w-100">
+    <div class="row">
+        <div class="col">
+            <label>"ФИС Услуги"</label>
+        </div>
     </div>
-    <div class="form-group">
-    <label for="firstName">Имя</label>
-    <input type="text" id="firstName" placeholder="Введите имя">
+    <div class="row">
+        <div class="col">
+            <label>Личный кабинет</label>
+        </div>
     </div>
-    <div class="form-group">
-    <label for="fatherName">Отчество*</label>
-    <input type="text" id="fatherName" placeholder="Введите отчество">
+    <div class="row">
+        <div class="col">
+            <label>Регистрация</label>
+        </div>
     </div>
-    <div class="form-group">
-    <label for="lastName">Фамилия</label>
-    <input type="text" class="form-input" id="lastName" placeholder="Введите фамилию">
+    <div class="parent d-flex justify-content-center">
+        <form th:action="@{/register}" method="post">
+            <div class="register-form w-30 p-4 mt-5 shadow" >
+                <div class="form-outline mb-3">
+                    <label for="login">Логин</label>
+                    <input id="login" name=login type="text" placeholder="Введите логин">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="text" placeholder="user@mailt.to">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="phone">Номер телефона</label>
+                    <input id="phone" name="phone" type="text" placeholder="7 (900) 123-45-67">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="password">Пароль</label>
+                    <input id="password" type="password" name="password">
+                </div>
+                <div class="mb-3">
+                    <label for="repeat_pass">Пароль еще раз</label>
+                    <input type="password" id="repeat_pass" name="pass">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="firstName">Имя</label>
+                    <input type="text" id="firstName" placeholder="Введите имя">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="fatherName">Отчество*</label>
+                    <input type="text" id="fatherName" placeholder="Введите отчество">
+                </div>
+                <div class="form-outline mb-3">
+                    <label for="lastName">Фамилия</label>
+                    <input type="text" class="form-input" id="lastName" placeholder="Введите фамилию">
+                </div>
+                <div class="text-center">
+                    <input type="submit" class="btn btn-success btn-block" value="Зарегистрироваться"/>
+                </div>
+                <div class="text-center">
+                    <a th:href="@{/login}">Войти</a>
+                </div>
+                </div>
+            </div>
+        </form>
     </div>
-
-
-</form>
-
+</div>
 </body>
 </html>
