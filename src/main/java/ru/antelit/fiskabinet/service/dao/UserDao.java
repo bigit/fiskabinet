@@ -7,7 +7,10 @@ import ru.antelit.fiskabinet.domain.UserInfo;
 @Mapper
 public interface UserDao {
 
-    UserInfo findUser(@Param("username") String username);
+    UserInfo getUserByUsername(@Param("username") String username);
+
+    UserInfo findUserByLogin(String login);
+
 //    Integer createUser(@Param("user")UserInfo userInfo);
 //    void updateUserInfo(@Param("user") UserInfo userInfo);
 }

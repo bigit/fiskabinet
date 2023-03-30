@@ -15,11 +15,11 @@
 		</dir>
 	</classpath>
 
-	<web>
-		<link target="/">
-			<dir name="/home/bigit/IdeaProjects/fiskabinet/src/main/webapp">
-			</dir>
-		</link>
-	</web>
+<!--	<web>-->
+<!--		<link target="/">-->
+<!--			<dir name="/home/bigit/IdeaProjects/fiskabinet/src/main/webapp">-->
+<!--			</dir>-->
+<!--		</link>-->
+<!--	</web>-->
 
 </application>

@@ -5,6 +5,6 @@
 <configuration>
     <typeAliases>
         <typeAlias type="ru.antelit.fiskabinet.domain.UserInfo" alias="User"/>
+        <typeAlias type="java.util.List" alias="List"/>
     </typeAliases>
-
 </configuration>

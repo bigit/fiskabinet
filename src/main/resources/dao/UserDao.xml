@@ -23,9 +23,14 @@
      from security.users
     </sql>
 
-    <select id="findUser" parameterType="java.lang.String" resultMap="user">
+    <select id="getUserByUsername" parameterType="java.lang.String" resultMap="user">
         <include refid="select_distinct"/>
         where username = #{username}
+    </select>
+
+    <select id="findUserByLogin" parameterType="java.lang.String" resultMap="user">
+        <include refid="select_distinct"/>
+        where email = #{login} or phonenumber = #{login} or username = #{login}
     </select>
 
 <!--    <insert id="createUser" parameterType="User">-->

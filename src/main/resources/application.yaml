@@ -6,16 +6,26 @@ spring:
     password: postgres
   liquibase:
     change-log: db/changelog/changelog-main.yaml
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+
 logging:
   level:
     org:
       springframework:
         security: DEBUG
 mybatis:
-#  type-aliases-package: ru.antelit.fiskabinet.domain
   config-location: classpath:mybatis-config.xml
-#  mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
+# type-aliases-package: ru.antelit.fiskabinet.domain
+# mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
 server:
   error:
     whitelabel:
-      enabled: true
+      enabled: false
+    path: /error
+  servlet:
+    application-display-name: Личный кабинет ФИС Услуги

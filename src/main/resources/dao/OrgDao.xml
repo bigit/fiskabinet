@@ -21,7 +21,7 @@
     </select>
 
     <select id="getUserOrganizations" resultType="ru.antelit.fiskabinet.domain.Organization">
-        select name, inn from org.organization
+        select id, name, inn from org.organization
         where id in (select org_id from org.user_org where user_id = #{user.id})
     </select>
 

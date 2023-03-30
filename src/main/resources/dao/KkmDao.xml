@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.antelit.fiskabinet.service.dao.KkmDao">
+    <resultMap id="vendor" type="ru.antelit.fiskabinet.domain.Vendor">
+        <id column="id" property="id"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
+
+    <resultMap id="model" type="ru.antelit.fiskabinet.domain.Model">
+        <id column="id" property="id"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="vendor"
+                     javaType="ru.antelit.fiskabinet.domain.Vendor"
+                     select="getVendor"
+                        column="vendor_id">
+                </association>
+    </resultMap>
+    
+    <resultMap id="kkm" type="ru.antelit.fiskabinet.domain.Kkm" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="id" property="id"/>
+        <result column="inner_name" property="innerName"/>
+        <result column="fn_number" property="fnNumber"/>
+        <result column="fn_end" property="fnEnd"/>
+<!--        <result column="ofd_end" property="ofdEnd"/>-->
+        <association property="model" resultMap="model" columnPrefix="m_"/>
+    </resultMap>
+
+    <select id="listVendors" resultMap="vendor" resultType="List">
+        select id, name from org.vendor;
+    </select>
+
+    <select id="listModelsByVendor" resultMap="model" resultType="List">
+        select m.id as id, m.name as name, v.id as v_id, v.name as v_name
+            from org.model m join org.vendor v on m.vendor_id = v.id;
+    </select>
+
+    <select id="listKkmByTradepoint" resultMap="kkm" resultType="List">
+        select k.id, k.inner_name as inner_name, k.fn_number, k.fn_end,
+               m.id as m_id, m.name as m_name,
+               v.id as v_id, v.name v_name
+        from org.kkm k
+            join org.model m on m.id = k.model_id
+            join org.vendor v on m.vendor_id = v.id
+        where k.tradepoint_id = #{tradepoint.id};
+    </select>
+
+    <select id="getVendor" resultType="ru.antelit.fiskabinet.domain.Vendor" parameterType="integer">
+        select id, name
+        from org.vendor
+        where id = #{id}
+    </select>
+</mapper>

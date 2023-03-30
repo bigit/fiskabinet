@@ -135,3 +135,81 @@ databaseChangeLog:
             baseTableSchemaName: org
             baseTableName: tradepoint
             constraintName: FK_tradepoint_organization
+  - changeSet:
+      id: table_activity
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: activity
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: activity
+
+  - changeSet:
+      id: table_org_act
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: org_act
+            columns:
+              - column:
+                  name: org_id
+                  type: integer
+              - column:
+                  name: act_id
+                  type: integer
+      rollback:
+        - dropTable: 
+            schemaName: org
+            tableName: org_act
+  
+  
+  - changeSet: 
+      id: fk_org_act_organization
+      author: r.miller
+      changes:
+        - addForeignKeyConstraint: 
+            constraintName: FK_org_act_organization
+            baseTableSchemaName: org
+            baseTableName: org_act
+            baseColumnNames: org_id
+            referencedTableSchemaName: org
+            referencedTableName: organization
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint: 
+            baseTableSchemaName: org
+            baseTableName: org_act
+            constraintName: FK_org_act_organization
+            
+  - changeSet:
+      id: fk_org_act_activity
+      author: r.miller
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: FK_org_act_activity
+            baseTableSchemaName: org
+            baseTableName: org_act
+            baseColumnNames: org_id
+            referencedTableSchemaName: org
+            referencedTableName: activity
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: org
+            baseTableName: org_act
+            constraintName: FK_org_act_activity   
+         

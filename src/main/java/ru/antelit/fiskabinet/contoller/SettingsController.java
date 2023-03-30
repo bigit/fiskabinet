@@ -2,18 +2,12 @@ package ru.antelit.fiskabinet.contoller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class RegisterController {
+public class SettingsController {
 
-    @GetMapping("/register")
+    @GetMapping("/settings")
     public String show() {
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String register() {
         return "under_construct";
-    };
+    }
 }

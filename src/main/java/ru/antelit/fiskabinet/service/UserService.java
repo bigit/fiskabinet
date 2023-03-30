@@ -1,31 +1,51 @@
 package ru.antelit.fiskabinet.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.antelit.fiskabinet.api.Bitrix24;
 import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.service.dao.UserDao;
+import ru.antelit.fiskabinet.service.repository.UserRepository;
 
+import java.util.Collections;
+import java.util.List;
+
+@Log4j2
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private UserRepository repository;
 
     public UserInfo findUser(String username) {
-        return userDao.findUser(username);
+
+        return userDao.getUserByUsername(username);
     }
 
-    public UserDetails getUserDetails(String username) {
-        UserInfo userInfo = findUser(username);
-        if (userInfo == null) {
-            return null;
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        log.debug("Login: " + login);
+//        UserInfo user = userDao.findUserByLogin(login);
+        UserInfo user = repository.findUserInfosByLogin(login);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
-        UserDetails details = (UserDetails) userInfo;
-        return details;
+        return getDetails(user);
     }
 
+
+    private static UserDetails getDetails(UserInfo userInfo) {
+        List<GrantedAuthority> list = Collections.singletonList(new SimpleGrantedAuthority("READ"));
+        return new User(userInfo.getUsername(), userInfo.getPassword(), list );
+    }
 //    public Integer saveUser(UserInfo userInfo) {
 //           if (userInfo.getId() == null) {
 //               return createUser(userInfo);
