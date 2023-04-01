@@ -39,6 +39,7 @@
             <div class="text-center">
                 <a th:href="@{/forgot}">Забыли пароль?</a>
             </div>
+            <span th:if="${register}" class="text-success">Вы успешно зарегистрировались</span>
             <span th:if="${logout}" class="text-success">Вы вышли из системы</span>
             <span th:if="${error}" class="text-danger">Неверно указан пользователь или пароль</span>
         </form>
