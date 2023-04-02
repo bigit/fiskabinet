@@ -14,7 +14,7 @@ import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.service.KkmService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.TradepointService;
-import ru.antelit.fiskabinet.service.UserService;
+import ru.antelit.fiskabinet.service.UserInfoService;
 import ru.antelit.fiskabinet.service.repository.KkmRepository;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class KabinetController {
 
     @Autowired
-    private UserService userService;
+    private UserInfoService userInfoService;
     @Autowired
     private OrgService orgService;
     @Autowired
@@ -44,7 +44,7 @@ public class KabinetController {
     public String home(Model model) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        UserInfo userInfo = userService.findUser(userDetails.getUsername());
+        UserInfo userInfo = userInfoService.findUser(userDetails.getUsername());
         model.addAttribute("user", userInfo);
 
         List<Organization> organizations = orgService.getUserOrganizations(userInfo);
