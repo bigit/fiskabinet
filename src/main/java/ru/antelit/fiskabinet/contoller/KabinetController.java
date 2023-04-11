@@ -15,7 +15,6 @@ import ru.antelit.fiskabinet.service.KkmService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.TradepointService;
 import ru.antelit.fiskabinet.service.UserInfoService;
-import ru.antelit.fiskabinet.service.repository.KkmRepository;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,8 +32,6 @@ public class KabinetController {
     private TradepointService tradepointSerivce;
     @Autowired
     private KkmService kkmService;
-    @Autowired
-    private KkmRepository kkmRepository;
 
     private List<Tradepoint> tradepointList;
     private Map<Organization, List<Tradepoint>> tradepointMap;
@@ -53,7 +50,6 @@ public class KabinetController {
         tradepointMap = new HashMap<>();
         tradepointList = new LinkedList<>();
 
-
         for (Organization org: organizations) {
             List<Tradepoint> tradepoints = tradepointSerivce.listTradepointsByOrganization(org);
             tradepointList.addAll(tradepoints);
@@ -65,7 +61,7 @@ public class KabinetController {
 
         for (Tradepoint tradepoint: tradepointList) {
 //            List<Kkm> kkms = kkmService.listKkmByTradepoint(tradepoint);
-            List<Kkm> kkms = kkmRepository.getKkmByTradepoint(tradepoint);
+            List<Kkm> kkms = kkmService.getKkmByTradepoint(tradepoint);
             kkmMap.put(tradepoint, kkms);
         }
 
