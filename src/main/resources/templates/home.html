@@ -23,44 +23,54 @@
     </div>
     <div class="accordion">
 
-            <div class="card" th:each="org, itemStat: ${organizations}">
-                <div class="card-header" th:id="'head'+${itemStat.index}">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link"
-                                data-bs-toggle="collapse"
-                                th:attr="data-bs-target='#org'+${itemStat.index}, aria-controls='org'+${itemStat.index}, aria-expanded=true"
-                                th:text="${org.name}">
-                        </button>
-                    </h5>
-                </div>
-                <div th:id="'org'+${itemStat.index}" class="collapse show" th:attr="data-parent='#accordion', aria-labelledby='head'+${itemStat.index}">
-                    <div class="card-body">
-                        <div th:each="tp: ${tradepointMap.get(org)}">
-                            <h5 th:text="${tp.name}"/>
-                            <table class="table">
-                                <thead>
+        <div class="card" th:each="org, itemStat: ${organizations}">
+            <div class="card-header" th:id="'head'+${itemStat.index}">
+                <h5 class="mb-0">
+                    <button class="btn btn-link"
+                            data-bs-toggle="collapse"
+                            th:attr="data-bs-target='#org'+${itemStat.index}, aria-controls='org'+${itemStat.index}, aria-expanded=true"
+                            th:text="${org.name}">
+                    </button>
+                </h5>
+            </div>
+            <div th:id="'org'+${itemStat.index}" class="collapse show"
+                 th:attr="data-parent='#accordion', aria-labelledby='head'+${itemStat.index}">
+                <div class="card-body">
+                    <div th:each="tp: ${tradepointMap.get(org)}">
+                        <h5 th:text="${tp.name}"/>
+                        <div class="mt-3 mb-1">
+                            <button type="button" class="btn btn-success">Добавить</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
                                 <th>Номер ФН</th>
                                 <th>Модель</th>
                                 <th>Срок ФН</th>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="kkm: ${kkmMap.get(tp)}">
-                                        <td>
-                                            <label th:text="${kkm.fnNumber}"></label>
-                                        </td>
-                                        <td>
-                                            <label th:text="${kkm.model.getFullName()}"></label>
-                                        </td>
-                                        <td>
-                                            <label th:text="${#dates.format(kkm.fnEnd, 'dd.MM.yyyy')}"></label>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="kkm: ${kkmMap.get(tp)}">
+                                <td>
+                                    <label th:text="${kkm.fnNumber}"></label>
+                                </td>
+                                <td>
+                                    <label th:text="${kkm.getKkmModel.getFullName()}"></label>
+                                </td>
+                                <td>
+                                    <label th:text="${#dates.format(kkm.fnEnd, 'dd.MM.yyyy')}"></label>
+                                </td>
+                                <td>
+                                    <a th:href="@{/kkm(id=${kkm.id})}" class="btn">Редактировать</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
 
     </div>
 </div>
