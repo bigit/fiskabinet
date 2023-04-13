@@ -62,7 +62,7 @@
                                     <label th:text="${#dates.format(kkm.fnEnd, 'dd.MM.yyyy')}"></label>
                                 </td>
                                 <td>
-                                    <a th:href="@{/kkm(id=${kkm.id})}" class="btn">Редактировать</a>
+                                    <a th:href="@{|/kkm/${kkm.id}|}" class="btn">Редактировать</a>
                                 </td>
                             </tr>
                             </tbody>

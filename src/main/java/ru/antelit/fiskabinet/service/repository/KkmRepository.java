@@ -8,7 +8,8 @@ import ru.antelit.fiskabinet.domain.Tradepoint;
 import java.util.List;
 
 @Repository
-public interface KkmRepository extends JpaRepository<Kkm, Long> {
+public interface KkmRepository extends JpaRepository<Kkm, Integer> {
 
-    List<Kkm> getKkmByTradepoint(Tradepoint tradepoint);
+   List<Kkm> getKkmByTradepoint(Tradepoint tradepoint);
+
 }

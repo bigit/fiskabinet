@@ -24,6 +24,8 @@ public class ErrController {
                 return "error/404";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 return "error/500";
+            } else if (statusCode == HttpStatus.BAD_REQUEST.value()) {
+                return "error/400";
             }
         }
         return "";

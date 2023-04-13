@@ -3,26 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <th:block th:replace="~{include::head}"/>
-    <script th:src="@{js/kkm.js}" type="text/javascript"></script>
+    <script th:src="@{/js/kkm.js}" type="text/javascript"></script>
     <title th:value="${title}"></title>
 </head>
-<form class="form" th:object="${kkm}">
-    <input type="number" size="11" value="" name="fnMum" placeholder="Номер ФН">
-
-    <select id="vendor_list">
-        <option label="Выберите производителя"></option>
-        <option th:each="vendor : ${vendors}" th:text="${vendor.name}" th:value="${vendor.id}"></option>
-    </select>
-    <div id="model_list">
-        <select>
-            <option label="Выберите модель"></option>
-            <option th:each="model : ${models}" th:text="${model.name}" th:value="${model.id}"></option>
-        </select>
-    </div>
-
-</form>
-
 <body>
-
+<div class="container">
+    <form class="form" th:object="${kkm}" th:action="@{/kkm/save}" method="post">
+        <input type="hidden" name="id" th:field="*{id}">
+        <div class="row">
+            <div class="col">
+                <label for="inner_name">Внутреннее имя</label>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" id="inner_name" name="innerName" th:value="*{innerName}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <input type="number" size="11" value="" name="fnNum" placeholder="Номер ФН">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">
+                <select id="vendor_list">
+                    <option label="Выберите производителя"></option>
+                    <option th:each="vendor : ${vendors}" th:text="${vendor.name}" th:value="${vendor.id}"></option>
+                </select>
+            </div>
+            <div class="col-2">
+                <div id="model_list">
+                    <select>
+                        <option label="Выберите модель"></option>
+                        <option th:each="model : ${models}" th:text="${model.name}" th:value="${model.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-success" value="Сохранить">
+        <input type="button" class="btn btn-warning" value="Назад">
+    </form>
+</div>
 </body>
 </html>

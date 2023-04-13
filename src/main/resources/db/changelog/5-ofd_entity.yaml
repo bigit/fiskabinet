@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: ofd_table
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: ofd
+            remarks: Каталог операторов фискальных данных
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_ofd
+              - column:
+                  name: name
+                  type: varchar(24)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inn
+                  type: char(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: ofd
+
+  - changeSet:
+      id: fk_kkm_ofd
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: FK_kkm_ofd
+            baseTableSchemaName: equip
+            baseTableName: kkm
+            baseColumnNames: ofd_id
+            referencedTableSchemaName: org
+            referencedTableName: ofd
+            referencedColumnNames: id
+  - changeSet:
+      id: load_ofd
+      author: r.miller
+      changes:
+        - loadUpdateData:
+            schemaName: org
+            tableName: ofd
+            file: data/ofd.csv
+            relativeToChangelogFile: true
+            primaryKey: id
+            columns:
+              - column:
+                  name: id
+                  type: string
+              - column:
+                  name: name
+                  type: string
+              - column:
+                  name: inn
+                  type: string
+

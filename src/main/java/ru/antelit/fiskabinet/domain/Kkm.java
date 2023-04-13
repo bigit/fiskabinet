@@ -19,12 +19,12 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity(name = "kkm")
-@Table(schema = "org", name = "kkm")
+@Table(schema = "equip", name = "kkm")
 public class Kkm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "inner_name")
     private String innerName;
@@ -32,6 +32,9 @@ public class Kkm {
     @OneToOne()
     @JoinColumn(name = "model_id")
     private KkmModel kkmModel;
+
+    @Column(name = "reg_num")
+    private String regNumber;
 
     @Column(name = "fn_number")
     private Long fnNumber;
@@ -44,6 +47,8 @@ public class Kkm {
     @JoinColumn(name = "tradepoint_id")
     private Tradepoint tradepoint;
 
-//    private Ofd ofd;
-//    private Date ofdEnd;
+    @ManyToOne
+    @JoinColumn(name = "ofd_id")
+    private OfdProvider ofdProvider;
+
 }

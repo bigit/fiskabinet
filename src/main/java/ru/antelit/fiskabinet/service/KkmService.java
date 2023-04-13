@@ -25,7 +25,7 @@ public class KkmService {
         return repository.getKkmByTradepoint(tradepoint);
     }
 
-    public Kkm get(Long id) {
+    public Kkm get(Integer id) {
         return repository.getReferenceById(id);
     }
 

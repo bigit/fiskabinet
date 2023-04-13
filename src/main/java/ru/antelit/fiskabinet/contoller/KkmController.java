@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.KkmModel;
@@ -24,12 +26,12 @@ public class KkmController {
     @Autowired
     private ModelService modelService;
 
-    @GetMapping("/kkm")
-    public String index(@RequestParam(value = "id", required = false) Integer id, Model model) {
+    @GetMapping("/kkm/{id}")
+    public String index(@PathVariable(value = "id", required = false) Integer id, Model model) {
         if (id == null) {
             model.addAttribute("kkm", new Kkm());
         } else {
-            Kkm kkm = kkmService.get(Long.valueOf(id));
+            Kkm kkm = kkmService.get(id);
             model.addAttribute("kkm", kkm);
         }
 
@@ -37,6 +39,12 @@ public class KkmController {
         model.addAttribute("vendors", vendors);
 
         return "kkm";
+    }
+
+    @PostMapping("/kkm/save")
+    public String save(Kkm kkm) {
+        Kkm saved = kkmService.save(kkm);
+        return "redirect:/kkm/" + saved.getId();
     }
 
     @GetMapping("/models")

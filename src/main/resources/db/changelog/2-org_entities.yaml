@@ -1,4 +1,5 @@
 databaseChangeLog:
+
   - changeSet:
       id: org_schema
       author: r.miller
@@ -8,6 +9,7 @@ databaseChangeLog:
       rollback:
         - sql:
             sql: drop schema "org";
+
   - changeSet:
       id: create_organization_table
       author: r.miller
@@ -35,6 +37,7 @@ databaseChangeLog:
         - dropTable:
             schemaName: org
             tableName: organization
+
   - changeSet:
       id: create_user_org_table
       author: r.miller
@@ -53,6 +56,7 @@ databaseChangeLog:
         - dropTable:
             schemaName: org
             tableName: user_org
+
   - changeSet:
       id: fk_user_org_user
       author: r.miller

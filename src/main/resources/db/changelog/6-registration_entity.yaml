@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: reg_table
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: register
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: FK_register
+              - column:
+                  name: reg_num
+                  type: char(16)
+                  constraints:
+                    checkConstraint: "\d+"
+                    unique: true
+                    nullable: true
+              - column:
+                  name: fn_num
+                  type: char(16)
+                  constraints:
+                    checkConstraint: "\d+"
+                    nullable: true
+                    unique: true
+              - column:
+                  name: kkm_id
+                  type: integer
+              - column:
+                  name: ofd_id
+                  type: integer
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: register
+
+  - changeSet:
+      id: table_ofd
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: org
+            tableName: ofd
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKeyName: FK_ofd
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(60)
+              - column:
+                  name: inn
+                  type: char(10)
+      rollback:
+        - dropTable:
+            schemaName: org
+            tableName: ofd
+    

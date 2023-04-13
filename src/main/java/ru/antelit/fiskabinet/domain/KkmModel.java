@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity(name = "model")
-@Table(schema = "org", name = "model")
+@Table(schema = "equip", name = "model")
 public class KkmModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
