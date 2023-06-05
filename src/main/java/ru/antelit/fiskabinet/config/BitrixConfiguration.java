@@ -1,6 +1,5 @@
 package ru.antelit.fiskabinet.config;
 
-import org.apache.tomcat.util.threads.ScheduledThreadPoolExecutor;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -12,12 +11,13 @@ import org.springframework.context.annotation.PropertySource;
 import ru.antelit.fiskabinet.api.Bitrix24;
 
 import javax.ws.rs.client.ClientBuilder;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Configuration
 @PropertySource("classpath:application-dev.yaml")
 @Profile("dev")
-public class CoreConfiguration {
+public class BitrixConfiguration {
 
     @Value("${bitrix24.domain}")
     private String domain;
@@ -33,15 +33,21 @@ public class CoreConfiguration {
 
     @Bean
     public JerseyClient jerseyClient() {
-        JerseyClient client;
         ClientBuilder builder = JerseyClientBuilder.newBuilder();
 
+        ClientConfig config = new ClientConfig();
+        config.register(ObjectMapperProvider.class);
+        builder.withConfig(config);
 
-        return null;
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        builder.scheduledExecutorService(service);
+
+        return (JerseyClient) builder.build();
     }
+
     @Bean
     public Bitrix24 bitrix24() {
-
+//        return new Bitrix24("https://65df5531-c8e0-4ffd-981e-6a0246750b63.mock.pstmn.io", "21");
         return Bitrix24.builder()
                 .country(country)
                 .domain(domain)
@@ -49,5 +55,4 @@ public class CoreConfiguration {
                 .apiKey(apiKey)
                 .build();
     }
-
 }
