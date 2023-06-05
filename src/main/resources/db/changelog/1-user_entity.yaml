@@ -15,7 +15,7 @@ databaseChangeLog:
       changes:
         - createTable:
             schemaName: security
-            tableName: users
+            tableName: user
             columns:
               - column:
                   name: id
@@ -63,7 +63,7 @@ databaseChangeLog:
       rollback:
         - dropTable:
             schemaName: security
-            tableName: users
+            tableName: user
   - changeSet:
       id: table_authorities
       author: r.miller
@@ -78,7 +78,7 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: FK_authorities_users
                     referencedTableSchemaName: security
-                    referencedTableName: users
+                    referencedTableName: user
                     referencedColumnNames: username
               - column:
                   name: authority

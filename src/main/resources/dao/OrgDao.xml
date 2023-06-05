@@ -16,13 +16,17 @@
     <select id="list" resultMap="organization">
         select id, name, inn
         from org.organization o
-        where o.id in ( select org_id from org.user_org
-                        where user_id = #{user.id})
+        where o.user_id = #{user.id}
     </select>
 
     <select id="getUserOrganizations" resultType="ru.antelit.fiskabinet.domain.Organization">
         select id, name, inn from org.organization
-        where id in (select org_id from org.user_org where user_id = #{user.id})
+        where user_id = #{user.id}
+    </select>
+
+    <select id="checkInnExists" parameterType="string" resultType="boolean">
+        select 1 from org.organization
+        where inn = #{inn}
     </select>
 
     <insert id="add">
@@ -31,7 +35,7 @@
     </insert>
 
     <update id="update">
-        update org.organization set (name = #{organization.name}, inn = #{organization.inn})
+        update org.organization set "name" = #{organization.name}, inn = #{organization.inn};
     </update>
 
     <select id="getOrgActivities" resultType="ru.antelit.fiskabinet.domain.Activity"></select>

@@ -1,4 +1,9 @@
 spring:
+#  profiles:
+#    active: dev
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:postgresql://localhost:5432/fis
     driver-class-name: org.postgresql.Driver
@@ -12,7 +17,6 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
-
 logging:
   level:
     org:
@@ -29,3 +33,10 @@ server:
     path: /error
   servlet:
     application-display-name: Личный кабинет ФИС Услуги
+bitrix24:
+  domain: antelplus
+  user-id: 21
+  token: b38vyanz2vyjj67m
+  country: ru
+  responsible-id: 21
+

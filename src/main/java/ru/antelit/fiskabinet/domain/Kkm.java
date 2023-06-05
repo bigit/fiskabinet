@@ -1,6 +1,7 @@
 package ru.antelit.fiskabinet.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,17 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "kkm")
-@Table(schema = "org", name = "kkm")
+@Table(schema = "equip", name = "kkm")
 public class Kkm {
 
     @Id
@@ -29,8 +29,13 @@ public class Kkm {
     @Column(name = "inner_name")
     private String innerName;
 
-    @OneToOne
-    private Model model;
+    @OneToOne()
+    @JoinColumn(name = "model_id")
+    private KkmModel kkmModel;
+
+//TODO Добавить регитрационный номер
+//    @Column(name = "reg_num")
+//    private String regNumber;
 
     @Column(name = "fn_number")
     private Long fnNumber;
@@ -43,6 +48,8 @@ public class Kkm {
     @JoinColumn(name = "tradepoint_id")
     private Tradepoint tradepoint;
 
-//    private Ofd ofd;
-//    private Date ofdEnd;
+//    @ManyToOne
+//    @JoinColumn(name = "ofd_id")
+//    private OfdProvider ofdProvider;
+
 }

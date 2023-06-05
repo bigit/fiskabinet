@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:value="${org.name}"></title>
+    <th:block th:replace="~{include::head}"/>
+</head>
+<body>
+<div class="container">
+    <form th:action="@{/org}" method="post" th:object="${org}">
+        <input type="hidden" th:field="*{id}">
+        <span class="small text-success" th:if="${saved}">Данные сохранены</span>
+        <div class="row">
+            <div class="col">
+                <label for="name">Название</label>
+                <input type="text" id="name" th:field="*{name}">
+            </div>
+<!--            <span class="text-danger small" th:if='${errors ne null and #lists.contains(errors,"name")}'-->
+<!--                                   th:text="${errors.name}"/>-->
+                            <span class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            <div class="row">
+                <div class="col">
+                    <label for="inn">ИНН</label>
+                    <input type="text" id="inn" th:field="*{inn}">
+                </div>
+
+                <span class="text-danger small"
+                                          th:if='${errors ne null and #lists.contains(errors,"inn")}'
+                      th:text="${errors.inn}"/>
+
+                <span class="text-danger small" th:if="${#fields.hasErrors('inn')}" th:errors="*{inn}"></span>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-success" th:value="Сохранить">
+                    <a th:href="@{/home}" class="btn btn-warning">Назад</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

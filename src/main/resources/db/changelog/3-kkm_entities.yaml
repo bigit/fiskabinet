@@ -1,10 +1,21 @@
 databaseChangeLog:
   - changeSet:
+      id: schema_equip
+      author: r.miller
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: create schema if not exists "equip";
+      rollback:
+        - sql:
+            sql: drop schema "equip";
+
+  - changeSet:
       id: kkm_table
       author: r.miller
       changes:
         - createTable:
-            schemaName: org
+            schemaName: equip
             tableName: kkm
             columns:
               - column:
@@ -29,14 +40,14 @@ databaseChangeLog:
                   name: ofd_id
                   type: integer
               - column:
-                  name: ofd_end
+                  name: ofd_sub_end
                   type: date
               - column:
                   name: tradepoint_id
                   type: integer
       rollback:
         - dropTable:
-            schemaName: org
+            schemaName: equip
             tableName: kkm
 
   - changeSet:
@@ -46,7 +57,7 @@ databaseChangeLog:
       changes:
         - addForeignKeyConstraint:
             constraintName: FK_kkm_tradepoint
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: kkm
             baseColumnNames: tradepoint_id
             referencedTableSchemaName: org
@@ -54,7 +65,7 @@ databaseChangeLog:
             referencedColumnNames: id
       rollback:
         - dropForeignKeyConstraint:
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: kkm
             constraintName: FK_kkm_tradepoint
 
@@ -64,7 +75,7 @@ databaseChangeLog:
       dbms: postgresql
       changes:
         - createTable:
-            schemaName: org
+            schemaName: equip
             tableName: vendor
             columns:
               - column:
@@ -78,7 +89,7 @@ databaseChangeLog:
                   type: varchar(24)
       rollback:
         - dropTable:
-            schemaName: org
+            schemaName: equip
             tableName: vendor
 
   - changeSet:
@@ -87,7 +98,7 @@ databaseChangeLog:
       dbms: postgresql
       changes:
         - createTable:
-            schemaName: org
+            schemaName: equip
             tableName: model
             columns:
               - column:
@@ -104,7 +115,7 @@ databaseChangeLog:
                   type: integer
       rollback:
         - dropTable:
-            schemaName: org
+            schemaName: equip
             tableName: model
 
   - changeSet:
@@ -114,15 +125,15 @@ databaseChangeLog:
       changes:
         - addForeignKeyConstraint:
             constraintName: FK_model_vendor
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: model
             baseColumnNames: vendor_id
-            referencedTableSchemaName: org
+            referencedTableSchemaName: equip
             referencedTableName: vendor
             referencedColumnNames: id
       rollback:
         - dropForeignKeyConstraint:
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: model
             constraintName: FK_model_vendor
 
@@ -133,14 +144,14 @@ databaseChangeLog:
       changes:
         - addForeignKeyConstraint:
             constraintName: FK_kkm_model
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: kkm
             baseColumnNames: model_id
-            referencedTableSchemaName: org
+            referencedTableSchemaName: equip
             referencedTableName: model
             referencedColumnNames: id
       rollback:
         - dropForeignKeyConstraint:
-            baseTableSchemaName: org
+            baseTableSchemaName: equip
             baseTableName: kkm
             constraintName: FK_kkm_model

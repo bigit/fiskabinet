@@ -9,7 +9,7 @@
         <result column="name" property="name"/>
     </resultMap>
 
-    <resultMap id="model" type="ru.antelit.fiskabinet.domain.Model">
+    <resultMap id="model" type="ru.antelit.fiskabinet.domain.KkmModel">
         <id column="id" property="id"/>
         <result column="id" property="id"/>
         <result column="name" property="name"/>
@@ -27,7 +27,7 @@
         <result column="fn_number" property="fnNumber"/>
         <result column="fn_end" property="fnEnd"/>
 <!--        <result column="ofd_end" property="ofdEnd"/>-->
-        <association property="model" resultMap="model" columnPrefix="m_"/>
+        <association property="kkmModel" resultMap="model" columnPrefix="m_"/>
     </resultMap>
 
     <select id="listVendors" resultMap="vendor" resultType="List">

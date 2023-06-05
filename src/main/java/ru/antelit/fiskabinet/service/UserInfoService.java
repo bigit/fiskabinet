@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,7 +47,14 @@ public class UserInfoService implements UserDetailsService {
         return new User(userInfo.getUsername(), userInfo.getPassword(), list );
     }
 
+    public UserInfo getUserByName(String username) {
+        return repository.findUserInfosByLogin(username);
+    }
 
+    public UserInfo getCurrentUser() {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       return repository.findUserInfosByLogin(user.getUsername());
+    }
     /**
      * Обновляет информацию о пользователе (ФИО, телефон, email)
      * @param userInfo -
