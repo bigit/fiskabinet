@@ -27,13 +27,10 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-web") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
-
-
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
 
     compileOnly 'org.projectlombok:lombok'
-
 
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
@@ -42,15 +39,18 @@ dependencies {
 
     implementation 'org.webjars:bootstrap:5.2.3'
     implementation 'org.webjars:jquery:3.6.3'
+    implementation 'org.webjars:font-awesome:6.2.1'
 
     annotationProcessor 'org.projectlombok:lombok'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
+test {
+    useJUnitPlatform()
+}
 cargo {
     containerId = 'tomcat9x'
 

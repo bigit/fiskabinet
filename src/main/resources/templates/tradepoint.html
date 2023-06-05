@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title th:value="${tradepoint.name}"></title>
+  <th:block th:replace="~{include::head}"/>
+</head>
+<body>
+<div class="container">
+  <form th:action="@{/tradepoint/save}" method="post" th:object="${tradepoint}">
+    <input type="hidden" th:field="*{id}">
+    <div class="row">
+      <div class="col">
+        <label for="name">Название</label>
+        <input type="text" id="name" th:field="*{name}">
+      </div>
+      <div class="col">
+        <span class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="inn">Адрес</label>
+          <input type="text" id="inn" th:field="*{address}">
+        </div>
+        <div class="col">
+          <span class="text-danger small" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <input type="submit" class="btn btn-success" th:value="Сохранить">
+          <a th:href="@{/home}" class="btn btn-warning">Назад</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+</html>

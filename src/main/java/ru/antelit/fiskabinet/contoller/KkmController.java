@@ -9,12 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.KkmModel;
+import ru.antelit.fiskabinet.domain.Tradepoint;
+import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.domain.Vendor;
+import ru.antelit.fiskabinet.domain.dto.KkmDto;
+import ru.antelit.fiskabinet.service.BitrixService;
 import ru.antelit.fiskabinet.service.KkmService;
+import ru.antelit.fiskabinet.service.TradepointService;
 import ru.antelit.fiskabinet.service.VendorService;
 import ru.antelit.fiskabinet.service.ModelService;
 
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 @Controller
 public class KkmController {
@@ -25,32 +33,61 @@ public class KkmController {
     private VendorService vendorService;
     @Autowired
     private ModelService modelService;
+    @Autowired
+    private TradepointService tradepointService;
+    @Autowired
+    private BitrixService bitrixService;
 
-    @GetMapping("/kkm/{id}")
-    public String index(@PathVariable(value = "id", required = false) Integer id, Model model) {
-        if (id == null) {
-            model.addAttribute("kkm", new Kkm());
+    @GetMapping({"/kkm/{id}", "/kkm/new"})
+    public String index(@PathVariable(value = "id", required = false) Integer id,
+                        @RequestParam(value = "tp", required = false) Integer tp,
+                        @RequestParam(value = "org", required = false) Integer org,
+                        Model model) {
+        KkmDto kkmDto;
+
+        if (id != null) {
+            kkmDto = KkmDto.create(kkmService.get(id));
+
+            var models = modelService.getModelsByVendorId(kkmDto.getVendorId())
+                    .stream()
+                    .collect(Collectors.toMap(KkmModel::getId, KkmModel::getName));
+            model.addAttribute("models", models);
+
         } else {
-            Kkm kkm = kkmService.get(id);
-            model.addAttribute("kkm", kkm);
+            kkmDto = new KkmDto();
         }
 
-        List<Vendor> vendors = vendorService.list();
+        model.addAttribute("kkm", kkmDto);
+
+        Map<Integer, String> vendors = vendorService.list().stream()
+                .collect(Collectors.toMap(Vendor::getId, Vendor::getName));
         model.addAttribute("vendors", vendors);
+
+        var tradepoints = tradepointService.listSiblings(tp).stream()
+                    .collect(Collectors.toMap(Tradepoint::getId, Tradepoint::getName));
+
+        model.addAttribute("tradepoints", tradepoints);
 
         return "kkm";
     }
 
     @PostMapping("/kkm/save")
-    public String save(Kkm kkm) {
+    public String save(KkmDto kkmDto) {
+
+        var kkm = kkmService.fromDto(kkmDto);
         Kkm saved = kkmService.save(kkm);
-        return "redirect:/kkm/" + saved.getId();
+        return "redirect:/kkm/" + saved.getId() +"?tp=" + kkmDto.getTradepointId();
     }
 
     @GetMapping("/models")
     public String getModels(@RequestParam("id") Integer vendorId, Model model) {
-        List<KkmModel> models =  modelService.getModelsByVendorId(vendorId);
+        Map<Integer, String> models = modelService.getModelsByVendorId(vendorId).stream()
+                .collect(Collectors.toMap(KkmModel::getId, KkmModel::getName));
+
         model.addAttribute("models", models);
-        return "kkm::#model_list";
+        return "kkm::model_list";
     }
+
+
+
 }

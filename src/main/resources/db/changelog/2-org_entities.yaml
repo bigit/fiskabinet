@@ -33,64 +33,81 @@ databaseChangeLog:
                   constraints:
                     checkConstraint: length(inn) = 10 or length(inn) = 12
                     unique: true
+              - column:
+                  name: user_id
+                  type: integer
       rollback:
         - dropTable:
             schemaName: org
             tableName: organization
 
   - changeSet:
-      id: create_user_org_table
-      author: r.miller
-      changes:
-        - createTable:
-            schemaName: org
-            tableName: user_org
-            columns:
-              - column:
-                  name: user_id
-                  type: integer
-              - column:
-                  name: org_id
-                  type: integer
-      rollback:
-        - dropTable:
-            schemaName: org
-            tableName: user_org
-
-  - changeSet:
-      id: fk_user_org_user
+      id: fk_org_user
       author: r.miller
       changes:
         - addForeignKeyConstraint:
-            constraintName: FK_user_org_user
+            constraintName: FK_organization_user
             baseTableSchemaName: org
-            baseTableName: user_org
+            baseTableName: organization
             baseColumnNames: user_id
             referencedTableSchemaName: security
-            referencedTableName: users
+            referencedTableName: user
             referencedColumnNames: id
-      rollback:
-        - dropForeignKeyConstraint:
-            baseTableSchemaName: org
-            baseTableName: user_org
-            constraintName: FK_user_org_user
-  - changeSet:
-      id: fk_user_org_organization
-      author: r.miller
-      changes:
-        - addForeignKeyConstraint:
-            constraintName: FK_user_org_organization
-            baseTableSchemaName: org
-            baseTableName: user_org
-            baseColumnNames: org_id
-            referencedTableSchemaName: org
-            referencedTableName: organization
-            referencedColumnNames: id
-      rollback:
-        - dropForeignKeyConstraint:
-            baseTableSchemaName: org
-            baseTableName: user_org
-            constraintName: FK_user_org_organization
+
+#  - changeSet:
+#      id: create_user_org_table
+#      author: r.miller
+#      changes:
+#        - createTable:
+#            schemaName: org
+#            tableName: user_org
+#            columns:
+#              - column:
+#                  name: user_id
+#                  type: integer
+#              - column:
+#                  name: org_id
+#                  type: integer
+#      rollback:
+#        - dropTable:
+#            schemaName: org
+#            tableName: user_org
+
+#  - changeSet:
+#      id: fk_user_org_user
+#      author: r.miller
+#      changes:
+#        - addForeignKeyConstraint:
+#            constraintName: FK_user_org_user
+#            baseTableSchemaName: org
+#            baseTableName: user_org
+#            baseColumnNames: user_id
+#            referencedTableSchemaName: security
+#            referencedTableName: users
+#            referencedColumnNames: id
+#      rollback:
+#        - dropForeignKeyConstraint:
+#            baseTableSchemaName: org
+#            baseTableName: user_org
+#            constraintName: FK_user_org_user
+#
+#  - changeSet:
+#      id: fk_user_org_organization
+#      author: r.miller
+#      changes:
+#        - addForeignKeyConstraint:
+#            constraintName: FK_user_org_organization
+#            baseTableSchemaName: org
+#            baseTableName: user_org
+#            baseColumnNames: org_id
+#            referencedTableSchemaName: org
+#            referencedTableName: organization
+#            referencedColumnNames: id
+#      rollback:
+#        - dropForeignKeyConstraint:
+#            baseTableSchemaName: org
+#            baseTableName: user_org
+#            constraintName: FK_user_org_organization
 
   - changeSet:
       id: tradepoint_table

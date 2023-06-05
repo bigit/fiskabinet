@@ -26,6 +26,10 @@ public class OrgService {
         return organizationRepository.findAll();
     }
 
+    public Organization get(Integer id) {
+        return organizationRepository.getReferenceById(id);
+    }
+
     public Integer save(Organization organization) {
         Organization org = organizationRepository.save(organization);
         return org.getId();
@@ -33,5 +37,9 @@ public class OrgService {
 
     public List<Organization> getUserOrganizations(UserInfo userInfo) {
         return orgDao.getUserOrganizations(userInfo);
+    }
+
+    public boolean checkInnExists(String inn) {
+        return orgDao.checkInnExists(inn);
     }
 }

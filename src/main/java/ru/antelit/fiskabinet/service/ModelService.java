@@ -1,5 +1,6 @@
 package ru.antelit.fiskabinet.service;
 
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.antelit.fiskabinet.domain.KkmModel;
@@ -20,5 +21,9 @@ public class ModelService {
 
     public List<KkmModel> getModelsByVendorId(Integer vendorId) {
         return modelRepository.getModelsByVendorId(vendorId);
+    }
+
+    public KkmModel get(Integer id) {
+        return modelRepository.findById(id).get();
     }
 }

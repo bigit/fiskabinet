@@ -23,4 +23,6 @@ public interface OrgDao {
     void addOrgActivities(@Param("org") Organization organization, @Param("activities") List<Activity> activities);
     void removeOrgActivity(@Param("org") Organization organization, @Param("activity") Activity activity);
     void removeOrgActivities(@Param("org") Organization organization, @Param("activities") List<Activity> activities);
+
+    boolean checkInnExists(@Param("inn") String inn);
 }

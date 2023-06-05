@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity(name = "user")
-@Table(schema = "security", name = "users")
+@Table(schema = "security", name = "user")
 @Getter
 @Setter
 public class UserInfo {

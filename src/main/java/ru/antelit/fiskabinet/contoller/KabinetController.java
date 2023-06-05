@@ -1,16 +1,21 @@
 package ru.antelit.fiskabinet.contoller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ru.antelit.fiskabinet.api.enums.Entity;
 import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.Tradepoint;
 import ru.antelit.fiskabinet.domain.UserInfo;
+import ru.antelit.fiskabinet.service.BitrixService;
 import ru.antelit.fiskabinet.service.KkmService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.TradepointService;
@@ -20,6 +25,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Controller
 public class KabinetController {
@@ -32,6 +39,8 @@ public class KabinetController {
     private TradepointService tradepointSerivce;
     @Autowired
     private KkmService kkmService;
+    @Autowired
+    private BitrixService bitrixService;
 
     private List<Tradepoint> tradepointList;
     private Map<Organization, List<Tradepoint>> tradepointMap;
@@ -39,9 +48,8 @@ public class KabinetController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        UserInfo userInfo = userInfoService.findUser(userDetails.getUsername());
+        UserInfo userInfo = getCurrentUserInfo();
         model.addAttribute("user", userInfo);
 
         List<Organization> organizations = orgService.getUserOrganizations(userInfo);
@@ -50,16 +58,16 @@ public class KabinetController {
         tradepointMap = new HashMap<>();
         tradepointList = new LinkedList<>();
 
-        for (Organization org: organizations) {
+        for (Organization org : organizations) {
             List<Tradepoint> tradepoints = tradepointSerivce.listTradepointsByOrganization(org);
             tradepointList.addAll(tradepoints);
             tradepointMap.put(org, tradepoints);
         }
-        model.addAttribute("tradepointMap",tradepointMap);
+        model.addAttribute("tradepointMap", tradepointMap);
 
         kkmMap = new HashMap<>();
 
-        for (Tradepoint tradepoint: tradepointList) {
+        for (Tradepoint tradepoint : tradepointList) {
 //            List<Kkm> kkms = kkmService.listKkmByTradepoint(tradepoint);
             List<Kkm> kkms = kkmService.getKkmByTradepoint(tradepoint);
             kkmMap.put(tradepoint, kkms);
@@ -67,6 +75,19 @@ public class KabinetController {
 
         model.addAttribute("kkmMap", kkmMap);
         return "home";
+    }
+
+    private UserInfo getCurrentUserInfo() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userInfoService.findUser(userDetails.getUsername());
+    }
+
+    @PostMapping("/kkm/task")
+    @ResponseBody
+    public ResponseEntity<?> serviceRequest(@RequestParam("id") Integer kkmId) throws ExecutionException, InterruptedException, TimeoutException {
+        Kkm kkm = kkmService.get(kkmId);
+        bitrixService.createTask(getCurrentUserInfo(), kkm);
+        return ResponseEntity.ok(kkmId);
     }
 
     @PostMapping("/home")

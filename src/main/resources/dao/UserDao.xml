@@ -15,12 +15,12 @@
 
     <sql id="select">
         select username, password, first_name, last_name, father_name, email, email_verified, enabled
-     from security.users
+     from security.user
     </sql>
 
     <sql id="select_distinct">
         select distinct id, username, password, first_name, last_name, father_name, email, email_verified, enabled
-     from security.users
+     from security.user
     </sql>
 
     <select id="getUserByUsername" parameterType="java.lang.String" resultMap="user">
