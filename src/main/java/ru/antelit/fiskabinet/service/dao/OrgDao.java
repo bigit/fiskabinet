@@ -1,6 +1,5 @@
 package ru.antelit.fiskabinet.service.dao;
 
-import liquibase.pro.packaged.P;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import ru.antelit.fiskabinet.domain.Activity;
@@ -14,6 +13,7 @@ public interface OrgDao {
 
     List<Organization> list();
     List<Organization> getUserOrganizations(@Param("user") UserInfo user);
+    Organization findOrganizationBySourceId(@Param("source_id") String sourceId);
 
     Integer add(@Param("org") Organization organization);
     void update(@Param("org") Organization organization);
