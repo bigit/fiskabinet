@@ -41,7 +41,9 @@
     </insert>
 
     <update id="update">
-        update org.organization set "name" = #{organization.name}, inn = #{organization.inn};
+        update org.organization
+        set "name" = #{organization.name}, inn = #{organization.inn}
+        where id = #{organization.id};
     </update>
 
     <select id="getOrgActivities" resultType="ru.antelit.fiskabinet.domain.Activity"></select>
