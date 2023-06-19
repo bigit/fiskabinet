@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="include::head"/>
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="org: ${organizations}">
+                    <td>
+                        <label th:value="${org.name}"></label>
+                    </td>
+                <tr th:each="kkm : ${kkmMap.get(org.id)}">
+                    <td th:></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<body>
+
+</body>
+</html>
