@@ -49,4 +49,7 @@ public class Organization {
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserInfo owner;
+
+    @Column
+    private String sourceId;
 }

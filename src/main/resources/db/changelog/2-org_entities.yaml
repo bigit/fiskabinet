@@ -232,5 +232,22 @@ databaseChangeLog:
         - dropForeignKeyConstraint:
             baseTableSchemaName: org
             baseTableName: org_act
-            constraintName: FK_org_act_activity   
+            constraintName: FK_org_act_activity
+
+  - changeSet:
+      id: add_source_id_column
+      author: r.miller
+      changes:
+        - addColumn:
+            schemaName: org
+            tableName: organization
+            columns:
+              - column:
+                  name: source_id
+                  type: varchar(10)
+      rollback:
+        - dropColumn:
+            schemaName: org
+            tableName: organization
+            columnName: source_id
          

@@ -24,6 +24,12 @@
         where user_id = #{user.id}
     </select>
 
+    <select id="findOrganizationBySourceId" resultMap="organization">
+        select distinct id, name, inn, source_id
+        from org.organization
+        where source_id = #{source_id};
+    </select>
+
     <select id="checkInnExists" parameterType="string" resultType="boolean">
         select 1 from org.organization
         where inn = #{inn}
@@ -35,7 +41,9 @@
     </insert>
 
     <update id="update">
-        update org.organization set "name" = #{organization.name}, inn = #{organization.inn};
+        update org.organization
+        set "name" = #{organization.name}, inn = #{organization.inn}
+        where id = #{organization.id};
     </update>
 
     <select id="getOrgActivities" resultType="ru.antelit.fiskabinet.domain.Activity"></select>
