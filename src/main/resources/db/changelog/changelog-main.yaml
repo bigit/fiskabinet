@@ -1,6 +1,6 @@
 databaseChangeLog:
   - include:
-      file: ./1-user_entity.yaml
+      file: 1-user_entity.yaml
       relativeToChangelogFile: true
   - include:
       file: 2-org_entities.yaml

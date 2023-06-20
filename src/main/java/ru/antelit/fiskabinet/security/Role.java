@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Getter
 @Entity
-@Table(schema = "security", name = "role")
+@Table(schema = "security", name = "roles")
 public class Role {
 
     @Id

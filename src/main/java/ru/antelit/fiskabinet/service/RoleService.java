@@ -15,7 +15,4 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public List<Role> getUserRoles(UserInfo user) {
-        return roleRepository.findRolesByName("ROLE");
-    }
 }

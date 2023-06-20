@@ -120,7 +120,7 @@ databaseChangeLog:
                     primaryKeyName: fk_roles
               - column:
                   name: name
-                  type: varchar(10)
+                  type: varchar(15)
 
   - changeSet:
       id: create_table_user_roles

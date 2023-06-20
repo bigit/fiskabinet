@@ -1,4 +1,4 @@
 id,name
-1,"ADMIN"
-2,"MANAGER"
-3,"USER"
+1,"ROLE_ADMIN"
+2,"ROLE_MANAGER"
+3,"ROLE_USER"

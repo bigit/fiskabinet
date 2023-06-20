@@ -10,14 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.antelit.fiskabinet.domain.UserInfo;
-import ru.antelit.fiskabinet.security.Role;
 import ru.antelit.fiskabinet.service.dao.UserDao;
 import ru.antelit.fiskabinet.service.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Log4j2
@@ -36,6 +34,7 @@ public class UserInfoService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         log.debug("Login: " + login);
         UserInfo userInfo = repository.findUserInfosByLogin(login);
@@ -43,9 +42,9 @@ public class UserInfoService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        Collection<Role> roles = roleService.getUserRoles(userInfo);
+
         List <GrantedAuthority> auth = new ArrayList<>();
-        roles.forEach(role -> auth.add(new SimpleGrantedAuthority(role.getName())));
+        userInfo.getRoles().forEach(role -> auth.add(new SimpleGrantedAuthority(role.getName())));
 
         return new User(userInfo.getUsername(), userInfo.getPassword(), auth);
 
