@@ -3,7 +3,6 @@ package ru.antelit.fiskabinet.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +23,7 @@ public class SecurityConfig {
     DataSource dataSource;
 
     @Bean
-    public JdbcUserDetailsManager userDetailsService() {
+    public JdbcUserDetailsManager userDetailsManager() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
         manager.setDataSource(dataSource);
         manager.setAuthoritiesByUsernameQuery("select username, authority from security.authorities where username=?");

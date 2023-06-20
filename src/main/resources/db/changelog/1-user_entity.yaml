@@ -9,6 +9,7 @@ databaseChangeLog:
       rollback:
         - sql:
             sql: drop schema security;
+
   - changeSet:
       id: user_table
       author: r.miller
@@ -64,6 +65,7 @@ databaseChangeLog:
         - dropTable:
             schemaName: security
             tableName: user
+
   - changeSet:
       id: table_authorities
       author: r.miller
@@ -87,6 +89,7 @@ databaseChangeLog:
         - dropTable:
             schemaName: security
             tableName: authority
+
   - changeSet:
       id: pk_authorities
       author: r.miller
@@ -100,3 +103,96 @@ databaseChangeLog:
         - dropPrimaryKey:
             schemaName: security
             tableName: authorities
+
+  - changeSet:
+      id: create_table_roles
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: security
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: fk_roles
+              - column:
+                  name: name
+                  type: varchar(10)
+
+  - changeSet:
+      id: create_table_user_roles
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: security
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+              - column:
+                  name: role_id
+                  type: integer
+      rollback:
+        - dropTable:
+            schemaName: security
+            tableName: user_roles
+
+  - changeSet:
+      id: fk_user_roles_user
+      author: r.miller
+      changes:
+        - addForeignKeyConstraint:
+            baseTableSchemaName: security
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableSchemaName: security
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: fk_user_roles_user
+        - addForeignKeyConstraint:
+            baseTableSchemaName: security
+            baseTableName: user_roles
+            baseColumnNames: role_id
+            referencedTableSchemaName: security
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_user_roles_roles
+      rollback:
+        - dropAllForeignKeyConstraints:
+            baseTableSchemaName: security
+            baseTableName: user_roles
+
+  - changeSet:
+      id: load_security_meta
+      author: r.miller
+      changes:
+        - loadUpdateData:
+            relativeToChangelogFile: true
+            file: ./data/roles.csv
+            encoding: UTF-8
+            schemaName: security
+            tableName: roles
+            primaryKey: id
+
+  - changeSet:
+      id: create_default_admin
+      author: r.miller
+      failOnError: false
+      changes:
+        - sql:
+            splitStatements: true
+            sql: insert into security.user 
+                  (id, username, password, first_name, last_name, father_name, email, email_verified, phonenumber, enabled)
+                  values 
+                  (1, 'admin', '$2a$10$SvnRKpVnpO2h5BFl.CZMBOMqj82VDQVoUlaGYSpTLjxSs3hBsMrq.', 'admin', 'admin', 'admin',
+                  'admin@antelit.ru', true, '79060000555', true);
+                  insert into security.user_roles (user_id, role_id)
+                  values (1, 1);
+      rollback:
+        - sql:
+            sql: delete from security.user_roles where user_id = 1;
+                  delete from security.user where id = 1;
