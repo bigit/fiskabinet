@@ -156,7 +156,9 @@ public class BitrixService {
         Map<String, Organization> orgsBySourceId = organizations.stream().collect(Collectors.toMap(Organization::getSourceId, org -> org));
         for (RequisiteDto req : requisiteDtos) {
             String id = req.getEntityId();
-            orgsBySourceId.get(id).setInn(req.getInn());
+            var org = orgsBySourceId.get(id);
+            org.setInn(req.getInn());
+            orgService.save(org);
         }
     }
 
