@@ -33,7 +33,7 @@ public class KkmService {
     }
 
     public List<Kkm> getByOrganization(Organization organization) {
-        return repository.getByOrganization(organization);
+        return repository.findByTradepoint_Organization(organization);
     }
 
     public Kkm get(Integer id) {
