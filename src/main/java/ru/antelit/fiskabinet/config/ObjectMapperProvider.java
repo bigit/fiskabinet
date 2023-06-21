@@ -21,7 +21,7 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
         mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
         mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-        mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+//        mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     }
 
     @Override

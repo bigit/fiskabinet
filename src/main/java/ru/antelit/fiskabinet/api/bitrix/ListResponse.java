@@ -10,10 +10,10 @@ import java.util.List;
 @JsonIgnoreProperties({"total", "time"})
 public class ListResponse<T> {
 
-    @JsonProperty
+    @JsonProperty("result")
     private List<T> result;
-    @JsonProperty
+    @JsonProperty("name")
     private Integer next;
-    @JsonProperty
+    @JsonProperty("next")
     private Integer start;
 }

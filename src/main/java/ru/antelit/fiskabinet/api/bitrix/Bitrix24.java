@@ -14,6 +14,7 @@ import ru.antelit.fiskabinet.api.bitrix.enums.Scope;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.COMPANY;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.REQUISITE;
@@ -57,7 +59,6 @@ public class Bitrix24 {
     public static final String COMPANY_URL = "/crm/company/details/%d/";
     public static final String HOST = ".bitrix24.";
     public static final String REST = "rest";
-
 
     private String path;
 
@@ -104,6 +105,7 @@ public class Bitrix24 {
         return 0;
     }
 
+    @SuppressWarnings("unchecked")
     public List<CompanyDto> getOrganizations(Map<String, String> filters, List<String> select) {
         BitrixRequest request = BitrixRequest.builder()
                 .scope(Scope.CRM)
@@ -112,9 +114,13 @@ public class Bitrix24 {
                 .filter(filters)
                 .select(select)
                 .build();
-        return getList(request);
+        return getList(request, response ->
+                (ListResponse<CompanyDto>) response.readEntity(GenericType.forInstance(
+                        new GenericEntity<ListResponse<CompanyDto>>(new ListResponse<>()) {
+                        })));
     }
 
+    @SuppressWarnings("unchecked")
     public List<RequisiteDto> getRequisites(Map<String, List<String>> filters, List<String> select) {
         if (filters == null) {
             filters = new HashMap<>();
@@ -127,10 +133,13 @@ public class Bitrix24 {
                 .filter(filters)
                 .select(select)
                 .build();
-        return getList(request);
+        return getList(request, response ->
+                (ListResponse<RequisiteDto>) response.readEntity(GenericType.forInstance(
+                        new GenericEntity<ListResponse<RequisiteDto>>(new ListResponse<>()) {
+                        })));
     }
 
-    public <T> List<T> getList(BitrixRequest request) {
+    public <T> List<T> getList(BitrixRequest request, Function<Response, ListResponse<T>> deserializer) {
         List<T> list = new ArrayList<>();
         ListResponse<T> listResponse;
         do {
@@ -138,7 +147,7 @@ public class Bitrix24 {
             Invocation invocation = client.invocation(Link.fromUri(uri).build()).buildPost(Entity.json(request));
             try {
                 var response = invocation.submit().get();
-                listResponse = response.readEntity(new GenericType<>() {});
+                listResponse = deserializer.apply(response);
                 list.addAll(listResponse.getResult());
                 request.setStart(listResponse.getNext());
             } catch (Exception e) {
@@ -150,10 +159,8 @@ public class Bitrix24 {
         return list;
     }
 
-
     private URI buildUri(BitrixRequest request) {
         UriBuilder builder = new JerseyUriBuilder();
-
         if (path == null) {
             builder.scheme("https")
                     .host(domain + HOST + country)
@@ -164,9 +171,7 @@ public class Bitrix24 {
         } else {
             builder.path(path);
         }
-
         builder.path(request.buildRequest());
-
         return builder.build();
     }
 

@@ -99,43 +99,43 @@ public class BitrixService {
 
             current = 1;
             Kkm kkm = new Kkm();
-
-            for (String rec : dto.getKkt()) {
-                matcher = patternKkmNumber.matcher(rec);
-                if (matcher.find()) {
-                    int num = Integer.parseInt(matcher.group());
-                    if (num > current) {
-                        kkmService.save(kkm);
-                        kkm = new Kkm();
-                        current++;
-                    }
-                    if (!kkmNumbersMap.containsKey(dto.getId())) {
-                        kkmNumbersMap.put(dto.getId(), new HashMap<>());
-                    }
-                    kkmNumbersMap.get(dto.getId()).put(num, kkm);
-                }
-                if (rec.contains("ФН")) {
-                    if (kkm.getFnNumber() != null) {
-                        kkmService.save(kkm);
-                        kkm = new Kkm();
-                        current++;
-                    }
-                    matcher = patternFnNumber.matcher(rec);
-                    String fnNumber = matcher.group();
-                    kkm.setFnNumber(Long.getLong(fnNumber));
-
-                    matcher = patternDate.matcher(rec);
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy[yy]");
-
+            if (dto.getKkt() != null) {
+                for (String rec : dto.getKkt()) {
+                    matcher = patternKkmNumber.matcher(rec);
                     if (matcher.find()) {
-
-                        String strDate = matcher.group();
-                        try {
-                            kkm.setFnEnd(sdf.parse(matcher.group()));
-                        } catch (ParseException e) {
-                            log.error("Не распознана дата окончания срока ФН ({})", strDate);
+                        int num = Integer.parseInt(matcher.group());
+                        if (num > current) {
+                            kkmService.save(kkm);
+                            kkm = new Kkm();
+                            current++;
                         }
+                        if (!kkmNumbersMap.containsKey(dto.getId())) {
+                            kkmNumbersMap.put(dto.getId(), new HashMap<>());
+                        }
+                        kkmNumbersMap.get(dto.getId()).put(num, kkm);
+                    }
+                    if (rec.contains("ФН")) {
+                        if (kkm.getFnNumber() != null) {
+                            kkmService.save(kkm);
+                            kkm = new Kkm();
+                            current++;
+                        }
+                        matcher = patternFnNumber.matcher(rec);
+                        String fnNumber = matcher.group();
+                        kkm.setFnNumber(Long.getLong(fnNumber));
 
+                        matcher = patternDate.matcher(rec);
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy[yy]");
+
+                        if (matcher.find()) {
+
+                            String strDate = matcher.group();
+                            try {
+                                kkm.setFnEnd(sdf.parse(matcher.group()));
+                            } catch (ParseException e) {
+                                log.error("Не распознана дата окончания срока ФН ({})", strDate);
+                            }
+                        }
                     }
                 }
             }
