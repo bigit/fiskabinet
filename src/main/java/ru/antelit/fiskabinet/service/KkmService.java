@@ -3,6 +3,7 @@ package ru.antelit.fiskabinet.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.antelit.fiskabinet.domain.Kkm;
+import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.Tradepoint;
 import ru.antelit.fiskabinet.domain.dto.KkmDto;
 import ru.antelit.fiskabinet.service.repository.KkmRepository;
@@ -29,6 +30,10 @@ public class KkmService {
 
     public List<Kkm> getKkmByTradepoint(Tradepoint tradepoint) {
         return repository.getKkmByTradepoint(tradepoint);
+    }
+
+    public List<Kkm> getByOrganization(Organization organization) {
+        return repository.findByTradepoint_Organization(organization);
     }
 
     public Kkm get(Integer id) {

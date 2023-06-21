@@ -50,6 +50,6 @@ public class Organization {
     @JoinColumn(name = "user_id")
     private UserInfo owner;
 
-    @Column
+    @Column(name = "source_id")
     private String sourceId;
 }

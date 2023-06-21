@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="include::head"/>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>АДМИНКА</h1>
+    <button hx-post="/manager/import">Импорт</button>
+    <div class="row" th:each="org: ${organizations}">
+        <div class="col">
+            <table class="table">
+                <tr>
+                    <td>
+                        <label th:text="${org.name}"></label>
+                    </td>
+                </tr>
+                <tr th:if="${not #lists.isEmpty(kkmMap.get(org.id))}" th:each="kkm : ${kkmMap.get(org.id)}">
+                    <td>
+                        <label th:value="${kkm.getInnerName()}"></label>
+                    </td>
+                    <td>
+                        <label th:text="${kkm.getFnNumber()}"></label>
+                    </td>
+                    <td>
+                        <label th:text="${kkm.getFnEnd()}"></label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

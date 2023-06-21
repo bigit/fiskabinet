@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import ru.antelit.fiskabinet.api.Bitrix24;
+import ru.antelit.fiskabinet.api.bitrix.Bitrix24;
+
 
 import javax.ws.rs.client.ClientBuilder;
 import java.util.concurrent.Executors;
