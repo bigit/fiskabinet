@@ -155,3 +155,39 @@ databaseChangeLog:
             baseTableSchemaName: equip
             baseTableName: kkm
             constraintName: FK_kkm_model
+
+  - changeSet:
+      id: add_serial_number
+      author: r.miller
+      changes:
+        - addColumn:
+            schemaName: equip
+            tableName: kkm
+            columns:
+              - column:
+                  name: serial_number
+                  type: varchar(32)
+                  constraints:
+                    unique: true
+      rollback:
+        - dropColumn:
+            schemaName: equip
+            tableName: kkm
+            columnName: serial_number
+
+  - changeSet:
+      id: add_serial_number_pattern
+      author: r.miller
+      changes:
+        - addColumn:
+            schemaName: equip
+            tableName: vendor
+            columns:
+              - column:
+                  name: sn_pattern
+                  type: varchar(60)
+      rollback:
+        - dropColumn:
+            schemaName: equip
+            tableName: vendor
+            columnName: sn_pattern

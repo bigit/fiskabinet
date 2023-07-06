@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.config;
+package ru.antelit.fiskabinet.api.bitrix.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +20,9 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
     public ObjectMapperProvider() {
         mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
-        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        mapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+//        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 //        mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     }
 

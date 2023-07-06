@@ -7,6 +7,8 @@ import lombok.Data;
 @JsonRootName("fields")
 public class TaskDto {
 
+    private String id;
+
     private String title;
 
     private Integer responsibleId;

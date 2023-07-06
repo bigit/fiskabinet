@@ -12,8 +12,8 @@ public class ListResponse<T> {
 
     @JsonProperty("result")
     private List<T> result;
-    @JsonProperty("name")
-    private Integer next;
     @JsonProperty("next")
+    private Integer next;
+    @JsonProperty("start")
     private Integer start;
 }

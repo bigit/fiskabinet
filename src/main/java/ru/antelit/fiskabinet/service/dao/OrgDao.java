@@ -13,7 +13,7 @@ public interface OrgDao {
 
     List<Organization> list();
     List<Organization> getUserOrganizations(@Param("user") UserInfo user);
-    Organization findOrganizationBySourceId(@Param("source_id") String sourceId);
+    Organization findOrganizationBySourceId(@Param("sourceId") String sourceId);
 
     Integer add(@Param("org") Organization organization);
     void update(@Param("org") Organization organization);

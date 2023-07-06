@@ -3,32 +3,36 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Список организаций</title>
     <th:block th:replace="include::head"/>
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 <body>
 
 <div class="container">
-    <h1>АДМИНКА</h1>
-    <button hx-post="/manager/import">Импорт</button>
+    <h1>Организации</h1>
+    <button hx-post="/manager/import" hx-swap="afterend">Импорт</button>
     <div class="row" th:each="org: ${organizations}">
         <div class="col">
             <table class="table">
                 <tr>
                     <td>
-                        <label th:text="${org.name}"></label>
+                        <label class="fw-bold" th:text="${org.name}"></label>
+                        <a th:if="${urlMap.get(org.id) ne null}" th:href="${urlMap.get(org.id)}" target="_blank"><i class="fa fa-link"></i></a>
                     </td>
                 </tr>
                 <tr th:if="${not #lists.isEmpty(kkmMap.get(org.id))}" th:each="kkm : ${kkmMap.get(org.id)}">
                     <td>
-                        <label th:value="${kkm.getInnerName()}"></label>
+                        <label th:text="${kkm.getInnerName()}"></label>
+                    </td>
+                    <td>
+                        <label th:text="${kkm.getSerialNumber()}"></label>
                     </td>
                     <td>
                         <label th:text="${kkm.getFnNumber()}"></label>
                     </td>
                     <td>
-                        <label th:text="${kkm.getFnEnd()}"></label>
+                        <label th:class="${kkm.getFnEnd lt #dates.createNow()} ? 'text-danger'" th:text="${kkm.getFnEnd()}"></label>
                     </td>
                 </tr>
             </table>

@@ -1,7 +1,6 @@
 package ru.antelit.fiskabinet.validator;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.antelit.fiskabinet.service.OrgService;
 
 import javax.validation.ConstraintValidator;
@@ -9,15 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 
 public class InnUniqueValidator implements ConstraintValidator<InnUniqueConstraint, String> {
 
-    @Autowired
     private OrgService orgService;
 
-    @Override
-    public void initialize(InnUniqueConstraint annotation) {
+    public InnUniqueValidator(OrgService orgService) {
+        this.orgService = orgService;
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return !orgService.checkInnExists(value);
+        return value == null || !orgService.checkInnExists(value);
     }
 }

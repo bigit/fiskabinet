@@ -35,10 +35,10 @@ public class Organization {
     @NotBlank(message = "Укажите название организации")
     private String name;
 
-    @Column(columnDefinition = "bpchar", length = 12)
-    @Length(min = 10, max = 12, message = "ИНН должен быть 10 или 12 цифр")
-    @InnUniqueConstraint
-    @NotBlank(message = "Не указан ИНН")
+//    @Column(columnDefinition = "bpchar", length = 12)
+//    @Length(min = 10, max = 12, message = "ИНН должен быть 10 или 12 цифр")
+//    @InnUniqueConstraint
+//    @NotBlank(message = "Не указан ИНН")
     private String inn;
 
     @OneToMany

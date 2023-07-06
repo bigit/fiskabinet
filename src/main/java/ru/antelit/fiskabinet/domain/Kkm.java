@@ -33,6 +33,9 @@ public class Kkm {
     @JoinColumn(name = "model_id")
     private KkmModel kkmModel;
 
+    @Column(name = "serial_number")
+    private String serialNumber;
+
 //TODO Добавить регитрационный номер
 //    @Column(name = "reg_num")
 //    private String regNumber;

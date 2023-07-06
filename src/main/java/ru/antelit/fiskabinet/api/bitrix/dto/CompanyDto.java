@@ -2,11 +2,15 @@ package ru.antelit.fiskabinet.api.bitrix.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CompanyDto {
 
@@ -19,8 +23,8 @@ public class CompanyDto {
     @JsonProperty("ASSIGNED_BY_ID")
     private Integer assignedById;
 
-//    @JsonProperty("UF_CRM_1506421566")
-//    private String ofd;
+    @JsonProperty("UF_CRM_1506421566")
+    private List<String> ofd;
 
     @JsonProperty("UF_CRM_1506422595")
     private List<String> loginPassword;
@@ -29,10 +33,7 @@ public class CompanyDto {
     private List<String> serialNumbers;
 
     @JsonProperty("UF_CRM_1565683449215")
-    private String kabinets;
-
-    @JsonProperty("UF_CRM_1596523038359")
-    private List<String> maintainAddress;
+    private List<String> kabinets;
 
     @JsonProperty("UF_CRM_1597121179")
     private List<String> maintainAddress2;
@@ -44,5 +45,5 @@ public class CompanyDto {
     private String ofd2;
 
     @JsonProperty("UF_CRM_1664526798211")
-    private String ofd3;
+    private List<String> ofd3;
 }

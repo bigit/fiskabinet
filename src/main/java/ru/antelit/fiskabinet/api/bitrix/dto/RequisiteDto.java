@@ -8,7 +8,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequisiteDto {
 
-    @JsonProperty("RQ_ENITYT_ID")
+    @JsonProperty("ENTITY_ID")
     private String entityId;
 
     @JsonProperty("RQ_INN")
