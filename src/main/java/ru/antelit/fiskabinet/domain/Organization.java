@@ -52,4 +52,7 @@ public class Organization {
 
     @Column(name = "source_id")
     private String sourceId;
+
+    @Column(name = "fully_imported")
+    private boolean fullyImported;
 }

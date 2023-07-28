@@ -32,7 +32,7 @@ databaseChangeLog:
                   type: integer
               - column:
                   name: fn_number
-                  type: bigint
+                  type: char(16)
               - column:
                   name: fn_end
                   type: date
@@ -191,3 +191,18 @@ databaseChangeLog:
             schemaName: equip
             tableName: vendor
             columnName: sn_pattern
+
+  - changeSet:
+      id: add_unique_fn_number_constraint
+      author: r.miller
+      changes:
+        - addUniqueConstraint:
+            schemaName: equip
+            tableName: kkm
+            constraintName: unique_fn_num
+            columnNames: fn_number
+      rollback:
+        - dropUniqueConstraint:
+            schemaName: equip
+            tableName: kkm
+            constraintName: unique_fn_num

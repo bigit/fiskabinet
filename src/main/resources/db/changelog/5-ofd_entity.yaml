@@ -46,6 +46,7 @@ databaseChangeLog:
   - changeSet:
       id: load_ofd
       author: r.miller
+      runOnChange: true
       changes:
         - loadUpdateData:
             schemaName: org
@@ -63,4 +64,3 @@ databaseChangeLog:
               - column:
                   name: inn
                   type: string
-

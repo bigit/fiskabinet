@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -47,6 +48,7 @@ import static ru.antelit.fiskabinet.api.bitrix.enums.Scope.CRM;
  */
 @Builder
 @Getter
+@Slf4j
 @AllArgsConstructor
 public class Bitrix24 {
 
@@ -64,7 +66,7 @@ public class Bitrix24 {
     public static final String OFD2 = "UF_CRM_1658205075471";
     public static final String OFD3 = "UF_CRM_1664526798211";
     public static final String KKT = "UF_CRM_1657547855021";
-    public static final String COMPANY_URL = "/crm/company/details/%d/";
+    public static final String COMPANY_URL = "/crm/company/details/%s/";
     public static final String HOST = ".bitrix24.";
     public static final String REST = "rest";
 
@@ -90,11 +92,13 @@ public class Bitrix24 {
     private static JerseyClient buildDefaultClient()
     {
         ClientBuilder builder = JerseyClientBuilder.newBuilder();
+
         ClientConfig config = new ClientConfig();
         config.register(ObjectMapperProvider.class);
         builder.withConfig(config);
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        builder.scheduledExecutorService(service);
+
+        builder.scheduledExecutorService(Executors.newSingleThreadScheduledExecutor());
+
         return (JerseyClient) builder.build();
     }
 
@@ -104,7 +108,7 @@ public class Bitrix24 {
         this.userId = userId;
     }
 
-    public Integer createTask(TaskDto task) throws ExecutionException, InterruptedException {
+    public TaskDto createTask(TaskDto task) throws ExecutionException, InterruptedException {
         BitrixRequest request = BitrixRequest.builder()
                 .scope(Scope.TASKS)
                 .entity(TASK)
@@ -121,7 +125,7 @@ public class Bitrix24 {
 
         Future<Response> future = invocation.submit();
         Response response = future.get();
-        return 0;
+        return response.readEntity(TaskDto.class);
     }
 
     public List<CompanyDto> findCompanyByName(String query) {
@@ -178,7 +182,6 @@ public class Bitrix24 {
                 return list;
             }
         } while (listResponse.getNext() != null);
-        System.out.println("Count" + list.size());
         return list;
     }
 
@@ -198,7 +201,7 @@ public class Bitrix24 {
         return builder.build();
     }
 
-    public String getCompanyUrl(int id) {
+    public String getCompanyUrl(String id) {
         return "https://" + domain + HOST + country + String.format(COMPANY_URL, id);
     }
 }

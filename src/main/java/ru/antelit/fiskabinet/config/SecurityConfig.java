@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/manager")
+                .antMatchers("/manager/**", "/import/**")
                 .hasRole("ADMIN")
                 .and()
                 .authorizeRequests()
@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/home", "/org/**")
-                .hasRole("USER");
+                .hasAnyRole("USER","ADMIN");
         return http.build();
     }
 

@@ -36,6 +36,14 @@ public class KkmService {
         return repository.findByTradepoint_Organization(organization);
     }
 
+    public Kkm getBySerialNumber(String serialNumber) {
+        return repository.getKkmBySerialNumber(serialNumber).orElse(null);
+    }
+
+    public Kkm getByFnNumber(String fnNumber) {
+        return repository.getKkmByFnNumber(fnNumber);
+    }
+
     public Kkm get(Integer id) {
         return repository.getReferenceById(id);
     }
