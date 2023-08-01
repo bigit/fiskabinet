@@ -1,5 +1,5 @@
 databaseChangeLog:
-
+  - logicalFilePath: initial/1-org_entities
   - changeSet:
       id: org_schema
       author: r.miller
@@ -53,61 +53,6 @@ databaseChangeLog:
             referencedTableSchemaName: security
             referencedTableName: user
             referencedColumnNames: id
-
-#  - changeSet:
-#      id: create_user_org_table
-#      author: r.miller
-#      changes:
-#        - createTable:
-#            schemaName: org
-#            tableName: user_org
-#            columns:
-#              - column:
-#                  name: user_id
-#                  type: integer
-#              - column:
-#                  name: org_id
-#                  type: integer
-#      rollback:
-#        - dropTable:
-#            schemaName: org
-#            tableName: user_org
-
-#  - changeSet:
-#      id: fk_user_org_user
-#      author: r.miller
-#      changes:
-#        - addForeignKeyConstraint:
-#            constraintName: FK_user_org_user
-#            baseTableSchemaName: org
-#            baseTableName: user_org
-#            baseColumnNames: user_id
-#            referencedTableSchemaName: security
-#            referencedTableName: users
-#            referencedColumnNames: id
-#      rollback:
-#        - dropForeignKeyConstraint:
-#            baseTableSchemaName: org
-#            baseTableName: user_org
-#            constraintName: FK_user_org_user
-#
-#  - changeSet:
-#      id: fk_user_org_organization
-#      author: r.miller
-#      changes:
-#        - addForeignKeyConstraint:
-#            constraintName: FK_user_org_organization
-#            baseTableSchemaName: org
-#            baseTableName: user_org
-#            baseColumnNames: org_id
-#            referencedTableSchemaName: org
-#            referencedTableName: organization
-#            referencedColumnNames: id
-#      rollback:
-#        - dropForeignKeyConstraint:
-#            baseTableSchemaName: org
-#            baseTableName: user_org
-#            constraintName: FK_user_org_organization
 
   - changeSet:
       id: tradepoint_table
@@ -250,4 +195,22 @@ databaseChangeLog:
             schemaName: org
             tableName: organization
             columnName: source_id
-         
+
+  - changeSet:
+      id: add_column_fully_imported
+      author: r.miller
+      comment: Признак полного импорта из внешней системы
+      changes:
+        - addColumn:
+            schemaName: org
+            tableName: organization
+            columns:
+              - column:
+                  name: fully_imported
+                  type: boolean
+                  defaultValueBoolean: false
+      rollback:
+        - dropColumn:
+            schemaName: org
+            tableName: organization
+            columnName: fully_imported

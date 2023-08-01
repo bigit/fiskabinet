@@ -1,5 +1,8 @@
 package ru.antelit.fiskabinet.api.bitrix;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import ru.antelit.fiskabinet.api.bitrix.enums.Entity;
@@ -12,15 +15,21 @@ import java.util.StringJoiner;
 
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BitrixRequest {
 
+    @JsonIgnore
     private Scope scope;
+    @JsonIgnore
     private Entity entity;
+    @JsonIgnore
     private Method method;
 
+    @JsonProperty("filter")
     private Map<String, ?> filter;
+    @JsonProperty("select")
     private List<String> select;
-
+    @JsonProperty("start")
     private Integer start;
 
     public String buildRequest() {
@@ -36,5 +45,4 @@ public class BitrixRequest {
         }
         return joiner.toString();
     }
-
 }

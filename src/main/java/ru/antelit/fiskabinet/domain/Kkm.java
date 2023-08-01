@@ -33,12 +33,15 @@ public class Kkm {
     @JoinColumn(name = "model_id")
     private KkmModel kkmModel;
 
+    @Column(name = "serial_number")
+    private String serialNumber;
+
 //TODO Добавить регитрационный номер
 //    @Column(name = "reg_num")
 //    private String regNumber;
 
     @Column(name = "fn_number")
-    private Long fnNumber;
+    private String fnNumber;
 
     @Column(name = "fn_end")
     @Temporal(TemporalType.DATE)
@@ -48,8 +51,11 @@ public class Kkm {
     @JoinColumn(name = "tradepoint_id")
     private Tradepoint tradepoint;
 
-//    @ManyToOne
-//    @JoinColumn(name = "ofd_id")
-//    private OfdProvider ofdProvider;
+    @ManyToOne
+    @JoinColumn(name = "ofd_id")
+    private OfdProvider ofdProvider;
+
+    @Column(name = "ofd_sub_end")
+    private Date ofdSubEnd;
 
 }

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import ru.antelit.fiskabinet.service.UserInfoService;
 
 import javax.sql.DataSource;
@@ -45,11 +46,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(encoder());
         return provider;
     }
-//
-//    @Autowired
-//    public void authManager(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService);
-//    }
 
     @Bean
     public PasswordEncoder encoder() {
@@ -63,7 +59,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/auth")
-                .successForwardUrl("/home")
+                .successHandler(successHandler())
                 .failureUrl("/login?error=true")
                 .permitAll()
                 .and()
@@ -73,13 +69,28 @@ public class SecurityConfig {
                 .permitAll()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/manager/**", "/import/**")
+                .hasRole("ADMIN")
+                .and()
+                .authorizeRequests()
                 .antMatchers("/register", "/error/**", "/webjars/**")
                 .permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/home", "/org/**")
-                .hasRole("USER");
+                .hasAnyRole("USER","ADMIN");
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return (request, response, authentication) -> {
+            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                request.getRequestDispatcher("/manager").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/home").forward(request, response);
+            }
+        };
     }
 
 //    @Autowired

@@ -26,6 +26,10 @@ public class TradepointService {
         return tradepointDao.getTradepointByOrg(organizationId);
     }
 
+    public Tradepoint findTradepointByName(Organization organization, String name) {
+        return tradepointRepository.findByOrganizationAndName(organization, name);
+    }
+
     public List<Tradepoint> listSiblings(Tradepoint tradepoint) {
         return listSiblings(tradepoint.getId());
     }
@@ -41,8 +45,15 @@ public class TradepointService {
     public Integer save(Tradepoint tradepoint) {
         return tradepointRepository.save(tradepoint).getId();
     }
-//    public List<Tradepoint> listTradepointsByOrganization(Organization organization) {
-//        return tradepointDao.getTradepointByOrg(organization.getId());
-//    }
 
+    public Tradepoint createDefaultTradepoint(Organization organization) {
+        Tradepoint tradepoint = new Tradepoint();
+        tradepoint.setOrganization(organization);
+        tradepoint.setName("Без торговой точки");
+        return tradepoint;
+    }
+
+    public Tradepoint getDefaultTradepoint(Organization organization) {
+        return tradepointRepository.findByOrganizationAndName(organization, "Без торговой точки");
+    }
 }

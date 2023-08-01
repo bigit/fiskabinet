@@ -4,39 +4,51 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.antelit.fiskabinet.api.bitrix.dto.CompanyDto;
 import ru.antelit.fiskabinet.api.bitrix.dto.RequisiteDto;
 import ru.antelit.fiskabinet.api.bitrix.enums.Method;
 import ru.antelit.fiskabinet.api.bitrix.enums.Scope;
+import ru.antelit.fiskabinet.api.bitrix.json.ObjectMapperProvider;
 
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConsts.ENTITY_TYPE_COMPANY;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConsts.ENTITY_TYPE_ID;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.COMPANY;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.REQUISITE;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.TASK;
+import static ru.antelit.fiskabinet.api.bitrix.enums.Method.LIST;
+import static ru.antelit.fiskabinet.api.bitrix.enums.Scope.CRM;
 
 /**
  * Клиент для Bitrix24 REST API
  */
 @Builder
 @Getter
+@Slf4j
 @AllArgsConstructor
 public class Bitrix24 {
 
@@ -54,10 +66,9 @@ public class Bitrix24 {
     public static final String OFD2 = "UF_CRM_1658205075471";
     public static final String OFD3 = "UF_CRM_1664526798211";
     public static final String KKT = "UF_CRM_1657547855021";
-    public static final String COMPANY_URL = "/crm/company/details/%d/";
+    public static final String COMPANY_URL = "/crm/company/details/%s/";
     public static final String HOST = ".bitrix24.";
     public static final String REST = "rest";
-
 
     private String path;
 
@@ -75,8 +86,21 @@ public class Bitrix24 {
     @NonNull
     private String apiKey;
 
-    @Autowired
-    private JerseyClient client;
+    @Builder.Default
+    private JerseyClient client = buildDefaultClient();
+
+    private static JerseyClient buildDefaultClient()
+    {
+        ClientBuilder builder = JerseyClientBuilder.newBuilder();
+
+        ClientConfig config = new ClientConfig();
+        config.register(ObjectMapperProvider.class);
+        builder.withConfig(config);
+
+        builder.scheduledExecutorService(Executors.newSingleThreadScheduledExecutor());
+
+        return (JerseyClient) builder.build();
+    }
 
     public Bitrix24(String path, @NonNull String userId) {
         this.domain = "";
@@ -84,7 +108,7 @@ public class Bitrix24 {
         this.userId = userId;
     }
 
-    public Integer createTask(TaskDto task) throws ExecutionException, InterruptedException, TimeoutException {
+    public TaskDto createTask(TaskDto task) throws ExecutionException, InterruptedException {
         BitrixRequest request = BitrixRequest.builder()
                 .scope(Scope.TASKS)
                 .entity(TASK)
@@ -101,36 +125,48 @@ public class Bitrix24 {
 
         Future<Response> future = invocation.submit();
         Response response = future.get();
-        return 0;
+        return response.readEntity(TaskDto.class);
     }
 
+    public List<CompanyDto> findCompanyByName(String query) {
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put("%TITLE", query);
+        return getOrganizations(filter, null);
+    }
+
+    @SuppressWarnings("unchecked")
     public List<CompanyDto> getOrganizations(Map<String, String> filters, List<String> select) {
         BitrixRequest request = BitrixRequest.builder()
-                .scope(Scope.CRM)
+                .scope(CRM)
                 .entity(COMPANY)
-                .method(Method.LIST)
+                .method(LIST)
                 .filter(filters)
                 .select(select)
                 .build();
-        return getList(request);
+        return getList(request, response ->
+                (ListResponse<CompanyDto>) response.readEntity(GenericType.forInstance(
+                        new GenericEntity<ListResponse<CompanyDto>>(new ListResponse<>()) {})));
     }
 
-    public List<RequisiteDto> getRequisites(Map<String, List<String>> filters, List<String> select) {
+    @SuppressWarnings("unchecked")
+    public List<RequisiteDto> getRequisites(Map<String, Object> filters, List<String> select) {
         if (filters == null) {
             filters = new HashMap<>();
         }
-        filters.put("RQ_ENTITY_ID", Collections.singletonList("4"));
+        filters.put(ENTITY_TYPE_ID, ENTITY_TYPE_COMPANY);
         BitrixRequest request = BitrixRequest.builder()
-                .scope(Scope.CRM)
+                .scope(CRM)
                 .entity(REQUISITE)
-                .method(Method.LIST)
+                .method(LIST)
                 .filter(filters)
                 .select(select)
                 .build();
-        return getList(request);
+        return getList(request, response ->
+                (ListResponse<RequisiteDto>) response.readEntity(GenericType.forInstance(
+                        new GenericEntity<ListResponse<RequisiteDto>>(new ListResponse<>()) {})));
     }
 
-    public <T> List<T> getList(BitrixRequest request) {
+    private <T> List<T> getList(BitrixRequest request, Function<Response, ListResponse<T>> deserializer) {
         List<T> list = new ArrayList<>();
         ListResponse<T> listResponse;
         do {
@@ -138,7 +174,7 @@ public class Bitrix24 {
             Invocation invocation = client.invocation(Link.fromUri(uri).build()).buildPost(Entity.json(request));
             try {
                 var response = invocation.submit().get();
-                listResponse = response.readEntity(new GenericType<>() {});
+                listResponse = deserializer.apply(response);
                 list.addAll(listResponse.getResult());
                 request.setStart(listResponse.getNext());
             } catch (Exception e) {
@@ -146,14 +182,11 @@ public class Bitrix24 {
                 return list;
             }
         } while (listResponse.getNext() != null);
-        System.out.println("Count" + list.size());
         return list;
     }
 
-
     private URI buildUri(BitrixRequest request) {
         UriBuilder builder = new JerseyUriBuilder();
-
         if (path == null) {
             builder.scheme("https")
                     .host(domain + HOST + country)
@@ -164,13 +197,11 @@ public class Bitrix24 {
         } else {
             builder.path(path);
         }
-
         builder.path(request.buildRequest());
-
         return builder.build();
     }
 
-    public String getCompanyUrl(int id) {
+    public String getCompanyUrl(String id) {
         return "https://" + domain + HOST + country + String.format(COMPANY_URL, id);
     }
 }

@@ -18,10 +18,6 @@ public class OrgService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-//    public List<Organization> list() {
-//        return orgDao.list();
-//    }
-
     public List<Organization> list() {
         return organizationRepository.findAll();
     }

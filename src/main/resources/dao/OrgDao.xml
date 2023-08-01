@@ -8,7 +8,9 @@
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="inn" property="inn"/>
-        <collection property="activities" autoMapping="true"/>
+        <result column="source_id" property="sourceId"/>
+<!--        <association property="owner" column="user_id" resultMap="ru.antelit.fiskabinet.service.dao.UserDao.user"/>-->
+<!--        <collection property="activities" autoMapping="true"/>-->
     </resultMap>
 
     <resultMap id="activity" type="ru.antelit.fiskabinet.domain.Activity" autoMapping="true"/>
@@ -24,10 +26,10 @@
         where user_id = #{user.id}
     </select>
 
-    <select id="findOrganizationBySourceId" resultMap="organization">
+    <select id="findOrganizationBySourceId" resultType="object" resultMap="organization">
         select distinct id, name, inn, source_id
         from org.organization
-        where source_id = #{source_id};
+        where source_id = #{sourceId};
     </select>
 
     <select id="checkInnExists" parameterType="string" resultType="boolean">
