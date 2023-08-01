@@ -300,22 +300,13 @@ public class BitrixService {
         for (RequisiteDto req : requisiteDtos) {
             String id = req.getEntityId();
             var org = orgsBySourceId.get(id);
-            if (org.getInn() != null) {
-                continue;
-            }
-            if (req.getInn() != null) {
-                org.setInn(req.getInn());
-            } else {
-                String msg = String.format("Не найден ИНН для %s", org.getName());
-                log.error(msg);
-                report.append(msg).append("\n");
-            }
+            importRequisites(org, req);
             orgService.save(org);
         }
         return report.toString();
     }
 
-    private Organization importOrganizationInfo(CompanyDto company) {
+    private Organization importOrganizationInfo(final CompanyDto company) {
         var org = orgService.findOrganizationBySourceId(String.valueOf(company.getId()));
         if (org == null) {
             org = new Organization();
@@ -325,6 +316,21 @@ public class BitrixService {
         }
         return org;
     }
+
+    private void importRequisites(Organization org, final RequisiteDto requisiteDto) {
+        String inn = requisiteDto.getInn();
+        if (inn == null) {
+            return;
+        }
+        if (org.getInn() != null) {
+            if (!org.getInn().equals(requisiteDto.getInn())) {
+                log.error("Для организации {} указаны разные ИНН {} и {}",
+                        org.getName(), org.getInn(), requisiteDto.getInn());
+                return;
+            }
+        }
+        org.setInn(requisiteDto.getInn());
+    };
 
     private Date parseDate(String strDate) throws ParseException {
         Date date = null;

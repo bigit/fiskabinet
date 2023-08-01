@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.UserInfo;
+import ru.antelit.fiskabinet.domain.dto.OrgDto;
+import ru.antelit.fiskabinet.service.BitrixService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.UserInfoService;
 
@@ -21,6 +23,10 @@ public class OrganizationController {
 
     @Autowired
     private OrgService organizationService;
+
+    @Autowired
+    private BitrixService bitrixService;
+
     @Autowired
     private UserInfoService userInfoService;
 
@@ -36,7 +42,18 @@ public class OrganizationController {
             } else {
                 org = new Organization();
             }
-            model.addAttribute("org", org);
+
+            OrgDto dto = new OrgDto();
+            dto.setId(org.getId());
+            dto.setName(org.getName());
+            dto.setFullyImported(org.isFullyImported());
+            if (org.getInn() != null)  {
+                dto.setInn(org.getInn());
+            }
+            if (org.getSourceId() != null) {
+                dto.setUrl(bitrixService.getCompanyUrl(org.getSourceId()));
+            }
+            model.addAttribute("org", dto);
         }
         return "org";
     }

@@ -35,6 +35,10 @@ public class OrgService {
         return orgDao.findOrganizationBySourceId(id);
     }
 
+    public Organization findByInn(String inn) {
+        return organizationRepository.findByInn(inn);
+    }
+
     public List<Organization> getUserOrganizations(UserInfo userInfo) {
         return orgDao.getUserOrganizations(userInfo);
     }
