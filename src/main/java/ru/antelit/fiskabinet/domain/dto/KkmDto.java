@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.antelit.fiskabinet.domain.Kkm;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Data
@@ -19,14 +21,16 @@ public class KkmDto {
     private Integer id;
     private String innerName;
 
-    @NotNull
+    @NotNull(message = "Не указана модель")
     private Integer modelId;
 
-    @NotNull
     private Integer vendorId;
 
+    @NotBlank(message = "Не указан заводской номер")
+    @Pattern(regexp = "\\d+", message = "Номер может состоять только из цифр")
     private String serialNumber;
 
+//  @Pattern(regexp = "\\d+", message = "Номер может состоять только из цифр")
     private String fnNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -34,13 +38,21 @@ public class KkmDto {
 
     private Integer tradepointId;
 
+    private Integer ofdId;
+
+    private Date ofdEnd;
+
+    private Integer orgId;
+
     public static KkmDto create(Kkm kkm) {
         KkmDtoBuilder builder = new KkmDtoBuilder();
         builder.id(kkm.getId())
                 .innerName(kkm.getInnerName());
+
         if (kkm.getSerialNumber() != null) {
             builder.serialNumber(kkm.getSerialNumber());
         }
+
         if (kkm.getKkmModel() != null) {
             builder
                     .modelId(kkm.getKkmModel().getId())
@@ -49,10 +61,23 @@ public class KkmDto {
             builder.modelId(0)
                     .vendorId(0);
         }
-        builder.fnNumber(kkm.getFnNumber())
-                .fnEnd(kkm.getFnEnd())
-                .tradepointId(kkm.getTradepoint().getId());
 
+        if (kkm.getOfdProvider() != null) {
+            builder.ofdId = kkm.getOfdProvider().getId();
+        }
+
+        if (kkm.getOfdSubEnd() != null) {
+            builder.ofdEnd(kkm.getOfdSubEnd());
+        }
+
+        if (kkm.getOrganization() != null) {
+            builder.orgId(kkm.getOrganization().getId());
+        }
+        builder.fnNumber(kkm.getFnNumber())
+                .fnEnd(kkm.getFnEnd());
+        if (kkm.getTradepoint() != null) {
+                builder.tradepointId(kkm.getTradepoint().getId());
+        }
         return builder.build();
     }
 }

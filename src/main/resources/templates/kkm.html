@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <th:block th:replace="~{include::head}"/>
-    <script th:src="@{/js/kkm.js}" type="text/javascript"></script>
+<!--    <script th:src="@{/js/kkm.js}" type="text/javascript"></script>-->
     <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
     <title th:value="${title}"></title>
     <script>
@@ -14,11 +14,11 @@
     </script>
 </head>
 <body>
-<div class="container vh-100">
-    <form class="form" th:object="${kkm}" th:action="@{/kkm/save}" method="post">
+<div class="container shadow vh-100">
+    <form class="form" th:object="${kkmDto}" th:action="@{/kkm/save}" method="post">
         <input type="hidden" name="id" th:field="*{id}">
         <input type="hidden" id="modelId" th:field="*{modelId}">
-        <!--        <input type="hidden" id="tpId" th:field="*{tradepointId}">-->
+        <input type="hidden" th:field="*{orgId}">
         <div class="row">
             <div class="col">
                 <label for="inner_name">Внутреннее имя</label>
@@ -31,18 +31,36 @@
         </div>
         <div class="row mb-3">
             <div class="col">
-                <label for="snNum"></label>
+                <label for="snNum">Заводской номер</label>
                 <input type="text" id="snNum" th:field="*{serialNumber}">
+                <span class="text-danger small"
+                      th:if="${#fields.hasErrors('serialNumber')}" th:errors="*{serialNumber}"></span>
             </div>
         </div>
-        <div class="row mb-2">
-            <div class="col">
+        <div class="row mb-3">
+            <div class="col-4">
+            <label for="ofd_name">ОФД</label>
+            <select id="ofd_name" th:field="*{ofdId}">
+                <option label="Выберите ОФД" value="0"></option>
+                <option th:each="ofd: ${ofdList}"
+                        th:text="${ofd.name}"
+                        th:value="${ofd.id}"></option>
+            </select>
+                <span class="text-danger small" th:if="${#fields.hasErrors('ofdId')}" th:errors="*{ofdId}"></span>
+            </div>
+            <div class="col-4">
+                <label for="ofd_end">Срок ОФД</label>
+                <input type="date" id="ofd_end">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-5">
                 <label for="fnNum">ФН</label>
-                <input type="number" size="11" th:field="*{fnNumber}" id="fnNum" name="fnNum" placeholder="Номер ФН">
+                <input type="text" size="16" maxlength="16"
+                       th:field="*{fnNumber}" id="fnNum" name="fnNum"
+                       placeholder="0000000000000000">
             </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col">
+            <div class="col-4">
                 <label for="fnEnd">Срок ФН</label>
                 <input type="date" id="fnEnd" th:field="*{fnEnd}">
             </div>
@@ -53,9 +71,9 @@
                     hx-target="#model_select" hx-swap="innerHTML">
                     <option label="Выберите производителя"></option>
                     <option th:each="vendor : ${vendors.entrySet()}"
-                            th:text="${vendor.getValue()}"
-                            th:selected="${vendor ne null and vendor.getKey() eq kkm.vendorId}"
-                            th:value="${vendor.getKey()}"></option>
+                            th:text="${vendor.value}"
+                            th:selected="${vendor ne null and vendor.key eq kkmDto.vendorId}"
+                            th:value="${vendor.key}"></option>
                 </select>
             </div>
             <div class="col-2">
@@ -64,12 +82,13 @@
                         <th:block th:if="${models ne null}" th:fragment="m_list">
                             <option label="Выберите модель"></option>
                             <option th:each="model : ${models.entrySet()}"
-                                    th:selected="${kkm ne null and model.key eq kkm.modelId}"
+                                    th:selected="${kkmDto ne null and model.key eq kkmDto.modelId}"
                                     th:text="${model.value}"
-                                    th:value="${model.getKey()}"></option>
+                                    th:value="${model.key}"></option>
                         </th:block>
                     </select>
                 </div>
+                <span class="text-danger small" th:if="${#fields.hasErrors('modelId')}" th:errors="*{modelId}"></span>
             </div>
         </div>
         <div class="row">
@@ -77,7 +96,7 @@
                 <select name="tp_select" id="tp_select" th:field="*{tradepointId}">
                     <option class="text-muted" label="Выберите торговую точку" value="0"></option>
                     <option th:each="tradepoint: ${tradepoints.entrySet()}"
-                            th:selected="${kkm ne null and tradepoint.key eq kkm.tradepointId}"
+                            th:selected="${kkmDto ne null and tradepoint.key eq kkmDto.tradepointId}"
                             th:text="${tradepoint.value}"
                             th:value="${tradepoint.key}"></option>
                 </select>

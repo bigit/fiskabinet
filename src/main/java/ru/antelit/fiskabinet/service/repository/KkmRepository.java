@@ -14,6 +14,8 @@ public interface KkmRepository extends JpaRepository<Kkm, Integer> {
 
    List<Kkm> getKkmByTradepoint(Tradepoint tradepoint);
 
+   List<Kkm> findByOrganization(Organization organization);
+
    List<Kkm> findByTradepoint_Organization(Organization organization);
 
    Optional<Kkm> getKkmBySerialNumber(String serialNumber);

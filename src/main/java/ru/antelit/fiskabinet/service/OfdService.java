@@ -13,6 +13,9 @@ public class OfdService {
     @Autowired
     private OfdRepository repository;
 
+    public OfdProvider get(Integer id) {
+        return repository.getReferenceById(id);
+    }
     public List<OfdProvider> list() {
         return repository.findAll();
     }

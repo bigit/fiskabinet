@@ -48,6 +48,10 @@ public class Kkm {
     private Date fnEnd;
 
     @ManyToOne
+    @JoinColumn(name = "org_id")
+    private Organization organization;
+
+    @ManyToOne
     @JoinColumn(name = "tradepoint_id")
     private Tradepoint tradepoint;
 

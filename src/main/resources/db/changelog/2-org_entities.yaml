@@ -29,7 +29,7 @@ databaseChangeLog:
                   type: varchar(128)
               - column:
                   name: inn
-                  type: char(12)
+                  type: varchar(12)
                   constraints:
                     checkConstraint: length(inn) = 10 or length(inn) = 12
                     unique: true

@@ -39,6 +39,10 @@ public class OrgService {
         return organizationRepository.findByInn(inn);
     }
 
+    public List<Organization> findByName(String query) {
+        return organizationRepository.findByNameIgnoreCase("%"+query+"%");
+    }
+
     public List<Organization> getUserOrganizations(UserInfo userInfo) {
         return orgDao.getUserOrganizations(userInfo);
     }
