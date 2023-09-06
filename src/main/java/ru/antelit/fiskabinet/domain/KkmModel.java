@@ -10,10 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Getter
 @Setter
-@Entity(name = "model")
+@Entity(name = "Model")
 @Table(schema = "equip", name = "model")
 public class KkmModel {
     @Id

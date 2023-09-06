@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
-@Entity(name = "vendor")
+@Entity
 @Table(schema = "equip", name = "vendor")
 public class Vendor {
 

@@ -8,7 +8,7 @@
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
-<div class="container shadow p-3">
+<div class="container shadow vh-100 p-3">
     <form th:action="@{/org}" method="post" th:object="${org}">
         <input type="hidden" th:field="*{id}">
         <span class="small text-success" th:if="${saved}">Данные сохранены</span>
@@ -54,7 +54,7 @@
     </div>
     <div class="row mt-3">
         <div class="col">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered rounded-1 table-responsive table-hover">
                 <thead>
                 <th>Имя</th>
                 <th>Модель</th>
@@ -86,7 +86,7 @@
                     </td>
                     <td style="width: 80px">
                         <label th:text="${kkm.fnEnd ne null ? kkm.fnEnd : 'Не указан срок'}"
-                               th:class="${kkm.fnEnd lt #dates.createNow()} ? 'text-danger'"></label>
+                               th:class="${kkm.fnEnd lt #temporals.createToday()} ? 'text-danger'"></label>
                     </td>
                 </tr>
                 </tbody>

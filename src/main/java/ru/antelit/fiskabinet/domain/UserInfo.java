@@ -21,7 +21,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Entity(name = "user")
+@Entity
 @Table(schema = "security", name = "user")
 @Getter
 @Setter

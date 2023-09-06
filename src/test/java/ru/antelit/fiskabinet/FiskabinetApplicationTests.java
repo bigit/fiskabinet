@@ -1,13 +1,11 @@
 package ru.antelit.fiskabinet;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-//@SpringBootTest
-//class FiskabinetApplicationTests {
-//
-//    @Test
-//    void contextLoads() {
-//    }
-//
-//}
+@SpringBootTest(classes = FiskabinetTestConfiguration.class)
+@ActiveProfiles("test")
+public class FiskabinetApplicationTests {
+
+
+}

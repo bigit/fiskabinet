@@ -1,5 +1,6 @@
 package ru.antelit.fiskabinet.service;
 
+import liquibase.exception.DateParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,10 @@ import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.domain.Vendor;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,7 +218,7 @@ public class BitrixService {
                             log.info("  Найдена дата ФН {}", strDate);
                             rec = rec.replace(matcher.group(0), "").trim();
                             try {
-                                Date fnEnd = parseDate(strDate);
+                                LocalDate fnEnd = parseDate(strDate);
                                 kkm.setFnEnd(fnEnd);
                                 log.info("  Распарсена дата ФН {}", fnEnd);
                             } catch (ParseException e1) {
@@ -244,7 +246,7 @@ public class BitrixService {
                                 log.info("  Найдена дата ОФД {}", strDate);
                                 rec = rec.replace(matcher.group(0), "").trim();
                                 try {
-                                    Date ofdDate = parseDate(strDate);
+                                    LocalDate ofdDate = parseDate(strDate);
                                     kkm.setOfdSubEnd(ofdDate);
                                     log.info("  Распарсена дата ОФД {}", ofdDate);
                                 } catch (ParseException e) {
@@ -330,19 +332,19 @@ public class BitrixService {
             }
         }
         org.setInn(requisiteDto.getInn());
-    };
+    }
 
-    private Date parseDate(String strDate) throws ParseException {
-        Date date = null;
+    private LocalDate parseDate(String strDate) throws ParseException {
+        LocalDate date = null;
         for (String pattern : DATE_TIME_PATTERNS) {
             try {
-                SimpleDateFormat format = new SimpleDateFormat(pattern);
-                date = format.parse(strDate);
-            } catch (ParseException ignored) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                date = LocalDate.parse(strDate, formatter);
+            } catch (DateTimeParseException ignored) {
             }
             return date;
         }
-        throw new ParseException("Unable parse date from string " + strDate, 0);
+        throw new DateParseException("Unable parse date from string " + strDate);
     }
 
     private void saveKkm(Kkm kkm) {

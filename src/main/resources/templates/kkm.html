@@ -50,7 +50,7 @@
             </div>
             <div class="col-4">
                 <label for="ofd_end">Срок ОФД</label>
-                <input type="date" id="ofd_end">
+                <input type="date" id="ofd_end" th:field="${kkmDto.ofdEnd}">
             </div>
         </div>
         <div class="row mb-3">
@@ -80,7 +80,7 @@
                 <div id="model_list" >
                     <select id="model_select" th:fragment="model_list">
                         <th:block th:if="${models ne null}" th:fragment="m_list">
-                            <option label="Выберите модель"></option>
+                            <option label="Выберите модель" value="0"></option>
                             <option th:each="model : ${models.entrySet()}"
                                     th:selected="${kkmDto ne null and model.key eq kkmDto.modelId}"
                                     th:text="${model.value}"
@@ -105,7 +105,7 @@
         <div class="row mt-2">
             <div class="col">
                 <input type="submit" class="btn btn-success" value="Сохранить">
-                <a class="btn btn-warning" th:href="${referer}">Назад</a>
+                <a class="btn btn-warning" th:href="@{|/org/${kkmDto.orgId}|}">Назад</a>
             </div>
         </div>
     </form>

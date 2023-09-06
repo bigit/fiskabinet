@@ -20,7 +20,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "organization")
+@Entity
 @Table(schema = "org", name = "organization")
 public class Organization {
 

@@ -13,6 +13,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Inte
 
     Organization findByInn(@NonNull String inn);
 
-    @Query("select o from organization o where upper(o.name) like upper(?1)")
+    @Query("select o from Organization o where upper(o.name) like upper(?1)")
     List<Organization> findByNameIgnoreCase(String name);
 }

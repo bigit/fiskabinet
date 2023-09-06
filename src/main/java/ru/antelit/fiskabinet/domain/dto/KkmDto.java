@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.antelit.fiskabinet.domain.Kkm;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -22,6 +24,7 @@ public class KkmDto {
     private String innerName;
 
     @NotNull(message = "Не указана модель")
+    @Range(min = 1, message = "Не указан модель")
     private Integer modelId;
 
     private Integer vendorId;
@@ -34,14 +37,14 @@ public class KkmDto {
     private String fnNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date fnEnd;
-
-    private Integer tradepointId;
+    private LocalDate fnEnd;
 
     private Integer ofdId;
 
-    private Date ofdEnd;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate ofdEnd;
 
+    private Integer tradepointId;
     private Integer orgId;
 
     public static KkmDto create(Kkm kkm) {

@@ -52,25 +52,30 @@ public class KkmController {
                         @RequestParam(value = "org", required = false) Integer orgId,
                         @RequestHeader(value = "referer", required = false) String referer,
                         Model model) {
-        KkmDto kkmDto = new KkmDto();
+        KkmDto kkmDto;
 
         if (!model.containsAttribute("kkmDto")) {
             if (id != null) {
                 kkmDto = KkmDto.create(kkmService.get(id));
-                var models = modelService.getModelsByVendorId(kkmDto.getVendorId())
-                        .stream()
-                        .collect(Collectors.toMap(KkmModel::getId, KkmModel::getName));
-                model.addAttribute("models", models);
             } else {
                 kkmDto = new KkmDto();
             }
-            if (kkmDto.getOrgId() == null) {
-                kkmDto.setOrgId(orgId);
-            } else {
-                orgId = kkmDto.getOrgId();
-            }
             model.addAttribute("kkmDto", kkmDto);
+        } else {
+            kkmDto = (KkmDto) model.getAttribute("kkmDto");
         }
+        assert kkmDto != null;
+
+        if (kkmDto.getOrgId() == null) {
+            kkmDto.setOrgId(orgId);
+        } else {
+            orgId = kkmDto.getOrgId();
+        }
+        
+        var models = modelService.getModelsByVendorId(kkmDto.getVendorId())
+                .stream()
+                .collect(Collectors.toMap(KkmModel::getId, KkmModel::getName));
+        model.addAttribute("models", models);
 
         Map<Integer, String> vendors = vendorService.list().stream()
                 .collect(Collectors.toMap(Vendor::getId, Vendor::getName));
@@ -83,7 +88,7 @@ public class KkmController {
             tp = kkmDto.getTradepointId();
             tpList = tradepointService.listSiblings(tp);
         } else {
-            var org = orgService.get(orgId);
+            var org = orgService.get(kkmDto.getOrgId());
             tpList = Collections.singletonList(tradepointService.createDefaultTradepoint(org));
         }
         var tradepoints = tpList.stream().collect(Collectors.toMap(Tradepoint::getId, Tradepoint::getName));
@@ -92,7 +97,7 @@ public class KkmController {
         var ofdList = ofdService.list();
         model.addAttribute("ofdList", ofdList);
 
-        model.addAttribute("referer", referer);
+//        model.addAttribute("referer", referer);
         return "kkm";
     }
 
@@ -103,9 +108,10 @@ public class KkmController {
         if (bindingResult.hasErrors()) {
             attrs.addFlashAttribute("org.springframework.validation.BindingResult.kkmDto", bindingResult);
             attrs.addFlashAttribute("kkmDto", kkmDto);
-            return "redirect:/kkm/" + (kkmDto.getId() != null ? kkmDto.getId() : "new" +
-                    "?org=" + kkmDto.getOrgId());
+            return "redirect:/kkm/" + (kkmDto.getId() != null ?
+                        kkmDto.getId() : "new" + "?org=" + kkmDto.getOrgId());
         }
+
         var kkm = kkmService.fromDto(kkmDto);
         if (kkm.getInnerName().isBlank()) {
             kkm.setInnerName(kkm.getKkmModel().getVendor().getName() + " "
@@ -113,7 +119,6 @@ public class KkmController {
                     + StringUtils.right(kkm.getSerialNumber(), 4));
         }
         Kkm saved = kkmService.save(kkm);
-
         return "redirect:/kkm/" + saved.getId();
     }
 
