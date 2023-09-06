@@ -14,11 +14,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
 @Setter
-@Entity(name = "kkm")
+@Entity(name = "Kkm")
 @Table(schema = "equip", name = "kkm")
 public class Kkm {
 
@@ -44,8 +45,11 @@ public class Kkm {
     private String fnNumber;
 
     @Column(name = "fn_end")
-    @Temporal(TemporalType.DATE)
-    private Date fnEnd;
+    private LocalDate fnEnd;
+
+    @ManyToOne
+    @JoinColumn(name = "org_id")
+    private Organization organization;
 
     @ManyToOne
     @JoinColumn(name = "tradepoint_id")
@@ -56,6 +60,5 @@ public class Kkm {
     private OfdProvider ofdProvider;
 
     @Column(name = "ofd_sub_end")
-    private Date ofdSubEnd;
-
+    private LocalDate ofdSubEnd;
 }

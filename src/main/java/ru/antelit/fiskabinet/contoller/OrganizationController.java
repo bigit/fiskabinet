@@ -9,18 +9,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.UserInfo;
+import ru.antelit.fiskabinet.domain.dto.OrgDto;
+import ru.antelit.fiskabinet.service.BitrixService;
+import ru.antelit.fiskabinet.service.KkmService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.UserInfoService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class OrganizationController {
 
     @Autowired
     private OrgService organizationService;
+
+    @Autowired
+    private KkmService kkmService;
+
+    @Autowired
+    private BitrixService bitrixService;
+
     @Autowired
     private UserInfoService userInfoService;
 
@@ -36,7 +49,24 @@ public class OrganizationController {
             } else {
                 org = new Organization();
             }
-            model.addAttribute("org", org);
+
+            OrgDto dto = new OrgDto();
+            dto.setId(org.getId());
+            dto.setName(org.getName());
+            dto.setFullyImported(org.isFullyImported());
+            if (org.getInn() != null)  {
+                dto.setInn(org.getInn());
+            }
+            if (org.getSourceId() != null) {
+                dto.setUrl(bitrixService.getCompanyUrl(org.getSourceId()));
+            }
+            model.addAttribute("org", dto);
+
+            List<Kkm> kkmList = new ArrayList<>();
+            if (org.getId() != null) {
+                kkmList = kkmService.getByOrganization(org);
+            }
+            model.addAttribute("kkmList", kkmList);
         }
         return "org";
     }
@@ -52,7 +82,7 @@ public class OrganizationController {
         organization.setOwner(user);
         Integer id = organizationService.save(organization);
         attrs.addFlashAttribute("saved", true);
-        return "redirect:/org/" + id + "?saved=true";
+        return "redirect:/org/" + id;
     }
 
 

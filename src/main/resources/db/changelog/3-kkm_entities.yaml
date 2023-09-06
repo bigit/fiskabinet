@@ -45,6 +45,9 @@ databaseChangeLog:
               - column:
                   name: tradepoint_id
                   type: integer
+              - column:
+                  name: org_id
+                  type: integer
       rollback:
         - dropTable:
             schemaName: equip
@@ -206,3 +209,21 @@ databaseChangeLog:
             schemaName: equip
             tableName: kkm
             constraintName: unique_fn_num
+
+  - changeSet:
+      id: fk_kkm_org
+      author: r.miller
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_kkm_org
+            baseTableSchemaName: equip
+            baseTableName: kkm
+            baseColumnNames: org_id
+            referencedTableSchemaName: org
+            referencedTableName: organization
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: equip
+            baseTableName: kkm
+            constraintName: fk_kkm_org

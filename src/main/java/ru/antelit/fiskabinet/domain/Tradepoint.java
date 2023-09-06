@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
-@Entity(name = "tradepoint")
+@Entity
 @Table(schema = "org", name = "tradepoint")
 public class Tradepoint {
 
