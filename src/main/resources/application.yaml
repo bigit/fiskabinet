@@ -34,4 +34,9 @@ bitrix24:
   token: b38vyanz2vyjj67m
   country: ru
   responsible-id: 21
-
+minio:
+  bucket: default
+  accesskey: fiskabinet
+  secretkey: 12345678
+  url: http://localhost/
+  port: 9000

@@ -5,14 +5,31 @@
 }
 
 .login-form {
-    border: thin gray solid;
+    border: thin rgb(128, 128, 128) solid;
     border-radius: 7px;
 }
 
 .register-form{
-    border: thin gray solid;
     border-right: 7px;
-    text-align: right !important;
+    text-align: right;
+}
+
+.report-form {
+    width: 80%;
+    /*padding: 2px;*/
+    border-right: 7px;
+}
+
+.report-group {
+    display: block !important;
+    padding: 10px;
+    border: 1px solid lightblue;
+    border-radius: 10px;
+}
+
+.report-row {
+    display: block;
+    margin-bottom: 8px;
 }
 
 body {
