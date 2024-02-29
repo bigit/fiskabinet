@@ -39,4 +39,5 @@ bitrix24:
   token: b38vyanz2vyjj67m
   country: ru
   responsible-id: 21
-
+deploy:
+  host: http://localhost
