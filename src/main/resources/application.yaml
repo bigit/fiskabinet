@@ -40,3 +40,5 @@ minio:
   secretkey: 12345678
   url: http://localhost/
   port: 9000
+deploy:
+  host: http://localhost:8080/
