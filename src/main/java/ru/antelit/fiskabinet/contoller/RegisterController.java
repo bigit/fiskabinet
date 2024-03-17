@@ -33,7 +33,6 @@ public class RegisterController {
             return "register";
         }
         userInfo = userService.createUser(userInfo);
-
         model.addAttribute("register", true);
         return "login";
     }

@@ -17,14 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class ActivationCodeController {
 
-    @Autowired
-    private OfdService ofdService;
+    private final OfdService ofdService;
+    private final ActivationCodeService codeService;
+    private final DtoConverter converter;
 
     @Autowired
-    private ActivationCodeService codeService;
-
-    @Autowired
-    private DtoConverter converter;
+    public ActivationCodeController(OfdService ofdService, ActivationCodeService codeService, DtoConverter converter) {
+        this.ofdService = ofdService;
+        this.codeService = codeService;
+        this.converter = converter;
+    }
 
     @GetMapping("/code")
     public String index(Model model) {

@@ -16,14 +16,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-jersey'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     implementation ("org.springframework.boot:spring-boot-starter-web") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
@@ -31,6 +30,16 @@ dependencies {
 
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
+
+    implementation "org.apache.poi:ooxml-schemas:1.4"
+    implementation 'org.apache.poi:poi:4.0.1'
+    implementation 'org.apache.poi:poi-ooxml:4.0.1'
+
+    implementation 'org.jxls:jxls:2.6.0'
+    implementation 'org.jxls:jxls-poi:1.2.0'
+//    implementation 'org.jxls:jxls-jexcel:1.0.9'
+
+    implementation 'io.minio:minio:8.5.4'
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -40,9 +49,9 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.webjars:bootstrap:5.2.3'
-    implementation 'org.webjars:jquery:3.6.3'
-    implementation 'org.webjars:font-awesome:6.2.1'
-
+    implementation 'org.webjars:jquery:3.6.4'
+    implementation 'org.webjars:font-awesome:6.3.0'
+    implementation 'io.github.wimdeblauwe:htmx-spring-boot-thymeleaf:1.0.0'
     annotationProcessor 'org.projectlombok:lombok'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
@@ -57,7 +66,7 @@ cargo {
     containerId = 'tomcat9x'
 
     remote {
-        hostname = '85.192.132.42'
+        hostname = '85.192.128.50'
         port = 8080
         username = 'deployer'
         password = 's3cr3t'
@@ -66,6 +75,11 @@ cargo {
     deployable {
         context = 'kabinet'
     }
+}
+
+javadoc {
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    options.showFromPrivate()
 }
 
 liquibase {

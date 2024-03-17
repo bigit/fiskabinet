@@ -1,13 +1,11 @@
 package ru.antelit.fiskabinet.contoller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.Organization;
@@ -25,30 +23,23 @@ import java.util.List;
 @Controller
 public class OrganizationController {
 
-    @Autowired
-    private OrgService organizationService;
+    private final OrgService organizationService;
+    private final KkmService kkmService;
+    private final BitrixService bitrixService;
+    private final UserInfoService userInfoService;
 
-    @Autowired
-    private KkmService kkmService;
-
-    @Autowired
-    private BitrixService bitrixService;
-
-    @Autowired
-    private UserInfoService userInfoService;
+    public OrganizationController(OrgService organizationService, KkmService kkmService,
+                                  BitrixService bitrixService, UserInfoService userInfoService) {
+        this.organizationService = organizationService;
+        this.kkmService = kkmService;
+        this.bitrixService = bitrixService;
+        this.userInfoService = userInfoService;
+    }
 
     @GetMapping({"/org/{id}", "/org/new"})
-    public String org(@PathVariable(name = "id", required = false) Integer id,
-                      @RequestParam(name = "saved", required = false, defaultValue = "false") boolean saved,
-                      Model model) {
-
+    public String org(@PathVariable(name = "id", required = false) Integer id, Model model) {
         if (!model.containsAttribute("org")) {
-            Organization org;
-            if (id != null) {
-                org = organizationService.get(id);
-            } else {
-                org = new Organization();
-            }
+            Organization org = id != null ? organizationService.get(id) : new Organization();
 
             OrgDto dto = new OrgDto();
             dto.setId(org.getId());
@@ -81,7 +72,6 @@ public class OrganizationController {
         UserInfo user = userInfoService.getCurrentUser();
         organization.setOwner(user);
         Integer id = organizationService.save(organization);
-        attrs.addFlashAttribute("saved", true);
         return "redirect:/org/" + id;
     }
 
