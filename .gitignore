@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/test/resources/application.yaml
+/src/test/java/ru/antelit/fiskabinet/api/Bitrix24Test.java
+/src/test/java/ru/antelit/fiskabinet/FiskabinetTestConfiguration.java
+/rebel.xml
