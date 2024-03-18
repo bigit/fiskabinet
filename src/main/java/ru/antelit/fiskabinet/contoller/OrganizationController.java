@@ -74,6 +74,4 @@ public class OrganizationController {
         Integer id = organizationService.save(organization);
         return "redirect:/org/" + id;
     }
-
-
 }

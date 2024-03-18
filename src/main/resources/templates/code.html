@@ -7,6 +7,20 @@
     <th:block th:replace="~{include::head}"/>
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
     <script type="text/javascript">
+        htmx.on("update", function (event) {
+            hideResult();
+        });
+        // htmx.on("#code_value", "change", function () {
+        //     hideResult()
+        // });
+
+        function hideResult() {
+            document.getElementById("code_value").value = '';
+            setTimeout(function () {
+                document.getElementById("add_result").classList.replace('rst', 'hide');
+            }, 5000);
+        }
+
         function copyText(num) {
             let copyText = document.getElementById("val_" + num).textContent;
             navigator.clipboard.writeText(copyText);
@@ -15,7 +29,7 @@
 </head>
 <body>
 <th:block th:replace="include::navigation"></th:block>
-<div class="container shadow p-3 vh-100 h-100">
+<div class="container shadow p-3 h-100">
     <div class="row mb-3">
         <div class="col">
             <select name="providerId" id="ofd" class="form-select">
@@ -25,7 +39,7 @@
     </div>
     <div class="row mb-3">
         <div class="col">
-            <input type="text" name="value">
+            <input type="text" name="value" id="code_value" hx-trigger="">
 
             <input type="radio" name="duration" id="m15" value="15">
             <label for="m15">15 мес.</label>
@@ -36,12 +50,12 @@
                    hx-trigger="click" hx:post="@{/code/add}" hx-target="#add_result" hx-swap="outerHTML"
                    hx-include="[name='value'],[name='duration'],[name='providerId']"/>
 
-            <span id="add_result" th:class="${class}" th:fragment="result">[[${result == null ? "" : result}]]</span>
-
+            <span id="add_result" th:class="'rst ' + ${class}"
+                  th:fragment="result">[[${result == null ? "" : result}]]</span>
         </div>
     </div>
     <div class="row">
-        <div class="col" id="codes_list" hx:get="@{code/free}" hx-include="[name='providerId']"
+        <div class="col" id="codes_list" hx:get="@{code/list}" hx-include="[name='providerId']"
              hx-trigger="load, update from:body, change from:#ofd">
             <th:block th:fragment="codes" th:if="${codes != null}">
                 <table class="table table-hover w-100">
@@ -50,16 +64,30 @@
                     <th scope="col">Код</th>
                     <th scope="col">Срок</th>
                     <th scope="col">Статус</th>
+                    <th scope="col">Клиент</th>
                     </thead>
                     <tbody>
                     <tr th:each="code : ${codes}">
                         <td>
-                            <button class="btn btn-outline-success" th:onclick="'copyText(' + ${code.id} + ')'"><i class="fa fa-copy"></i></button>
-                            <button class="btn btn-success"><i class="fa fa-check"></i></button>
+                            <button class="btn btn-outline-success" th:onclick="'copyText(' + ${code.id} + ')'">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                            <button th:if="${code.status.name eq 'NEW' or code.status.name eq 'RESERVED'}"
+                                    class="btn btn-success" data-bs-toggle="modal" data-bs-target="#useCode"
+                                    th:data-bs-id="${code.id}" th:data-bs-value="${code.value}">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-warning" th:if="${code.status.name eq 'NEW'}"
+                                    hx:post="@{/code/reserve}" hx:vals='|{ "codeId" : "${code.id}" }|'
+                                    hx-swap="none">
+                                <i class="fa fa-sign"></i>
+                            </button>
+                            <input type="hidden" name="codeId" th:value="${code.value}">
                         </td>
                         <td th:id="${'val_' + code.id}" th:text="${code.value}"></td>
                         <td th:text="${code.duration}"></td>
                         <td th:text="${code.status.description}"></td>
+                        <td th:text="${code.organization == null} ? '' : ${code.organization.name}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -67,6 +95,41 @@
         </div>
     </div>
 </div>
-
+<div id="useCode" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" hx:get="@{code/orgs}" hx-trigger="load" hx-target="#org_list"
+                 hx-swap="innerHTML">
+                <h4 class="modal-title">Применение кода</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <br>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title" id="use_code_value"></h4>
+                <input type="hidden" id="use_code_id" name="use_code_id">
+                <div id="org_list">
+                    <select name="org_id" class="form-select" th:fragment="useCodeOrgs">
+                        <option th:if="${orgs != null}"
+                                th:each="org: ${orgs}" th:value="${org.id}" th:text="${org.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-toggle="modal"
+                        hx:post="@{code/apply}" hx-swap="none"
+                        hx-include="[name='use_code_id'],[name='org_id']">Применить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let mdl = document.getElementById("useCode");
+    mdl.addEventListener("show.bs.modal", function (event) {
+        let source = event.relatedTarget;
+        document.getElementById("use_code_id").value = source.getAttribute('data-bs-id');
+        document.getElementById("use_code_value").textContent = source.getAttribute('data-bs-value');
+    })
+</script>
 </body>
 </html>

@@ -23,5 +23,8 @@ public interface ActivationCodeRepository extends JpaRepository<ActivationCode, 
     @Query(value = "select ac from ActivationCode as ac where ac.status = 1 and ac.provider = :provider")
     List<ActivationCode> getFreeCode(@Param("provider") OfdProvider providerId);
 
+    @Query("select ac from ActivationCode as ac where ac.provider.id = :provider")
+    List<ActivationCode> getActivationCodeByProvider(@Param("provider") Integer providerId);
+
     Optional<ActivationCode> findActivationCodesByValue(String value);
 }

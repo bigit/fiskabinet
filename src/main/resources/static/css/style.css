@@ -32,10 +32,6 @@
     margin-bottom: 8px;
 }
 
-body {
-
-}
-
 .center-button {
     text-align: center !important;
 }
@@ -90,6 +86,15 @@ body {
 .m-b-30 {
     margin-bottom: 30px !important
 }
+
+span.rst {
+    opacity:1;
+    transition:opacity 1000ms;
+}
+span.hide {
+    opacity:0;
+}
+
 
 @media only screen and (max-width: 520px) {
     .error-body h1 {

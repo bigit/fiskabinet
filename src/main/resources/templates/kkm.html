@@ -9,7 +9,7 @@
     <title th:value="${title}"></title>
     <script>
         htmx.on("#model_select", "change", function (event) {
-            $("form #modelId").val($(this).val());
+            document.getElementById('modelId').value = document.getElementById('model_select').value
         })
     </script>
 </head>
