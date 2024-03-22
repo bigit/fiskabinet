@@ -46,4 +46,6 @@ public class CompanyDto {
 
     @JsonProperty("UF_CRM_1664526798211")
     private List<String> ofd3;
+
+    private Boolean imported;
 }

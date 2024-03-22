@@ -11,7 +11,9 @@ public class InnValidator implements ConstraintValidator<InnConstraint, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-
+        if (value == null) {
+            return true;
+        }
         if (value.length() == 10) {
             int checksum = 0;
             for (int i = 0; i < 9; i++) {

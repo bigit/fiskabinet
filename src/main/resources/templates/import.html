@@ -12,14 +12,36 @@
 <div class="container shadow p-3">
     <div class="row">
         <div class="col">
-            <button hx:post="@{/import}" hx-target="#report" hx-swap="outerHTML">Импорт</button>
+            <input name="query" type="text">
+            <button hx:get="@{/import/lookup}" hx-include="[name='query']"
+                    hx-target="#result" hx-swap="innerHTML">Найти</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" id="result">
+            <table class="table table-hover" th:fragment="results">
+                <thead>
+                <th>ID</th>
+                <th>Название</th>
+                <th></th>
+                </thead>
+                <tbody>
+                <tr th:each="company: ${companies}">
+                    <td th:text="${company.id}"></td>
+                    <td th:text="${company.title}"></td>
+                    <td>
+                        <i th:if="${company.imported}" class="fa fa-check"></i>
+                        <button th:unless="${company.imported}">Импорт</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <div id="report" th:fragment="report">
+            <div id="info" th:fragment="report">
 
-                <textarea class="form-control" th:text="${report}"></textarea>
                </div>
 
        </div>

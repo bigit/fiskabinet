@@ -359,6 +359,14 @@ public class BitrixService {
         return bitrix24.findCompanyByName(query);
     }
 
+    public void setImportStatus(List<CompanyDto> companies) {
+        var importedIds = orgService.findImportedFromBitrixId(companies.stream()
+                .map(CompanyDto::getId)
+                .map(String::valueOf)
+                .collect(toList()));
+        companies.forEach(c -> c.setImported(importedIds.contains(String.valueOf(c.getId()))));
+    }
+
     public String getCompanyUrl(String id) {
         return bitrix24.getCompanyUrl(id);
     }
