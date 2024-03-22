@@ -82,6 +82,11 @@
                                     hx-swap="none">
                                 <i class="fa fa-sign"></i>
                             </button>
+                            <button class="btn btn-outline-warning" th:if="${code.status.name eq 'RESERVED'}"
+                                    hx:post="@{/code/release}" hx:vals='|{ "codeId" : "${code.id}" }|'
+                                    hx-swap="none">
+                                <i class="fa fa-sign"></i>
+                            </button>
                             <input type="hidden" name="codeId" th:value="${code.value}">
                         </td>
                         <td th:id="${'val_' + code.id}" th:text="${code.value}"></td>
@@ -115,10 +120,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" data-toggle="modal"
-                        hx:post="@{code/apply}" hx-swap="none"
-                        hx-include="[name='use_code_id'],[name='org_id']">Применить
-                </button>
+                <button hx:post="@{code/apply}" hx-swap="none" hx-include="[name='use_code_id'],[name='org_id']"
+                        class="btn btn-success" data-toggle="modal">Применить</button>
             </div>
         </div>
     </div>

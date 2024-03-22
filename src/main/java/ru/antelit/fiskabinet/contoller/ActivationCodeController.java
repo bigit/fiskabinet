@@ -1,6 +1,7 @@
 package ru.antelit.fiskabinet.contoller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,7 +88,28 @@ public class ActivationCodeController {
     @PostMapping("code/reserve")
     public ResponseEntity<?> reserveCode(@RequestParam Long codeId, HttpServletResponse response) {
         var code = codeService.getById(codeId);
+        if (code == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Указаный код не найден в системе");
+        }
+        if (code.getStatus() != CodeStatus.NEW) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не может быть зарезервирован");
+        }
         code.setStatus(CodeStatus.RESERVED);
+        codeService.save(code);
+        response.setHeader("HX-Trigger", "update");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("code/release")
+    public ResponseEntity<?> releaseCode(@RequestParam Long codeId, HttpServletResponse response) {
+        var code = codeService.getById(codeId);
+        if (code == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Указанный код не найден");
+        }
+        if (code.getStatus() != CodeStatus.RESERVED) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не зарезервирован");
+        }
+        code.setStatus(CodeStatus.NEW);
         codeService.save(code);
         response.setHeader("HX-Trigger", "update");
         return ResponseEntity.ok().build();

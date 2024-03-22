@@ -19,8 +19,6 @@ logging:
         security: DEBUG
 mybatis:
   config-location: classpath:mybatis-config.xml
-# type-aliases-package: ru.antelit.fiskabinet.domain
-# mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
 server:
   error:
     whitelabel:
@@ -40,5 +38,6 @@ minio:
   secretkey: 12345678
   url: http://localhost/
   port: 9000
-deploy:
+application:
   host: http://localhost:8080/
+  version: 0.5.100
