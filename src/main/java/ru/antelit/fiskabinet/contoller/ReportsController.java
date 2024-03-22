@@ -39,15 +39,13 @@ import java.util.stream.Collectors;
 public class ReportsController {
 
     public static final String FILE_NAME = "Заявление на регистрацию.xlsx";
-    @Value("${deploy.host}")
+    @Value("${application.host}")
     private String host;
 
     @Autowired
     private ReportService reportService;
     @Autowired
     private ModelService modelService;
-    @Autowired
-    private VendorService vendorService;
     @Autowired
     private OfdService ofdService;
     @Autowired

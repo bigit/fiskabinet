@@ -73,7 +73,7 @@ public class SecurityConfig {
                 .hasRole("ADMIN")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register", "/error/**", "/webjars/**")
+                .antMatchers("/register", "/error/**", "/webjars/**", "/static/img/favicon.ico")
                 .permitAll()
                 .and()
                 .authorizeRequests()
