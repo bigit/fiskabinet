@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: test
+#  config:
+#    activate:
+#      on-profile: test
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fis
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  liquibase:
+    change-log: db/changelog/changelog-main.yaml
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+#  mvc:
+#    servlet:
+#      path: /kabinet
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+mybatis:
+  config-location: classpath:mybatis-config.xml
+# type-aliases-package: ru.antelit.fiskabinet.domain
+# mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
+server:
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+  servlet:
+    application-display-name: Личный кабинет ФИС Услуги
+bitrix24:
+  country: ru
+  domain: 427a6e84-c3a2-47e7-b1e7-c811f6b32581.mock.pstmn.io
+  user-id: 21
+  token: b38vyanz2vyjj67m
+  responsible_id: 21
+
