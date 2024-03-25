@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.api;
+package ru.antelit.fiskabinet.api.bitrix;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonRootName;

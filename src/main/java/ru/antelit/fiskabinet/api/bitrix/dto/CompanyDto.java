@@ -15,7 +15,7 @@ import java.util.List;
 public class CompanyDto {
 
     @JsonProperty("ID")
-    private Integer id;
+    private String id;
 
     @JsonProperty("TITLE")
     private String title;

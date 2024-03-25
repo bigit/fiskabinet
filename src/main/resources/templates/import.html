@@ -12,9 +12,12 @@
 <div class="container shadow p-3">
     <div class="row">
         <div class="col">
-            <input name="query" type="text">
+            <input name="query" type="text" class="form-control w-25 d-inline mb-3">
             <button hx:get="@{/import/lookup}" hx-include="[name='query']"
-                    hx-target="#result" hx-swap="innerHTML">Найти</button>
+                    hx-target="#result" hx-swap="innerHTML"
+                    class="btn btn-outline-info">
+                <i class="fa fa-magnifying-glass"></i>
+            </button>
         </div>
     </div>
     <div class="row">
@@ -26,12 +29,18 @@
                 <th></th>
                 </thead>
                 <tbody>
-                <tr th:each="company: ${companies}">
-                    <td th:text="${company.id}"></td>
+
+                <tr th:each="company: ${companies}"
+                    hx:get="@{import/info}" hx-trigger="click" hx-include="find [name='bid']"
+                    hx-target="#info" hx-swap="innerHTML">
+                    <input name="bid" type="hidden" th:value="${company.id}">
+                    <td th:text="${company.id}" ></td>
                     <td th:text="${company.title}"></td>
                     <td>
                         <i th:if="${company.imported}" class="fa fa-check"></i>
-                        <button th:unless="${company.imported}">Импорт</button>
+<!--                        <button th:unless="${company.imported}" class="btn btn-outline-dark"-->
+<!--                                hx:post="@{import/save}"-->
+<!--                                hx-include="closest(input)">Импорт</button>-->
                     </td>
                 </tr>
                 </tbody>
@@ -39,10 +48,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <div id="info" th:fragment="report">
-
-               </div>
+        <div class="col" id="info">
+            <div th:if="${cmp ne null}" th:fragment="info">
+                <label for="name">Название</label>
+                <input type="text" id="name" disabled th:value="${cmp.title}">
+                <label for="inn">ИНН</label>
+                <input type="text" id="inn" disabled th:value="${req.inn}">
+            </div>
 
        </div>
     </div>

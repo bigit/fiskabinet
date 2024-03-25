@@ -125,7 +125,7 @@ public class BitrixService {
 
             Matcher matcher;
 
-            Map<Integer, Map<Integer, Kkm>> kkmNumbersMap = new HashMap<>();
+            Map<String, Map<Integer, Kkm>> kkmNumbersMap = new HashMap<>();
 
             Tradepoint defaultTradepoint;
             defaultTradepoint = tradepointService.getDefaultTradepoint(org);
@@ -259,8 +259,8 @@ public class BitrixService {
                     }
                     saveKkm(kkm);
 
-                    for (String vendor: vendorsNames) {
-                       rec = rec.replaceAll("(?ui)" + vendor, "").trim();
+                    for (String vendor : vendorsNames) {
+                        rec = rec.replaceAll("(?ui)" + vendor, "").trim();
                     }
 
                     StringJoiner joiner = new StringJoiner("|");
@@ -274,9 +274,9 @@ public class BitrixService {
                             .add("~|-|,")
                             .add("ФН")
                             .add("№*\\d?");
-                        rec = rec.replaceAll(
-                                "(?ui)" + joiner, "").trim();
-                    if (rec.length() > 0) {
+                    rec = rec.replaceAll(
+                            "(?ui)" + joiner, "").trim();
+                    if (!rec.isEmpty()) {
                         String msg = String.format("Не обработана строка %s", rec);
                         log.error(msg);
                         if (lastLogged != dto) {
@@ -357,6 +357,13 @@ public class BitrixService {
 
     public List<CompanyDto> findCompaniesByName(String query) {
         return bitrix24.findCompanyByName(query);
+    }
+
+    public RequisiteDto getRequisites(CompanyDto companyDto) {
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("ENTITY_ID", companyDto.getId());
+        var response = bitrix24.getRequisites(filter, null);
+        return !response.isEmpty() ? response.get(0) : new RequisiteDto();
     }
 
     public void setImportStatus(List<CompanyDto> companies) {
