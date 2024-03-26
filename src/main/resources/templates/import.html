@@ -38,15 +38,13 @@
                     <td th:text="${company.title}"></td>
                     <td>
                         <i th:if="${company.imported}" class="fa fa-check"></i>
-<!--                        <button th:unless="${company.imported}" class="btn btn-outline-dark"-->
-<!--                                hx:post="@{import/save}"-->
-<!--                                hx-include="closest(input)">Импорт</button>-->
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
     <div class="row">
         <div class="col" id="info">
             <div th:if="${cmp ne null}" th:fragment="info">
@@ -54,10 +52,12 @@
                 <input type="text" id="name" disabled th:value="${cmp.title}">
                 <label for="inn">ИНН</label>
                 <input type="text" id="inn" disabled th:value="${req.inn}">
+                <button hx:post="@{import/save}" hx:params="|'id' : ${cmp.id}|"
+                        class="btn btn-outline-dark">Импорт</button>
             </div>
-
-       </div>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
