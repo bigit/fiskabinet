@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.antelit.fiskabinet.api.bitrix.dto.CompanyDto;
-import ru.antelit.fiskabinet.api.bitrix.dto.RequisiteDto;
+import ru.antelit.fiskabinet.api.bitrix.model.CompanyDto;
+import ru.antelit.fiskabinet.api.bitrix.model.RequisiteDto;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.service.BitrixService;
 import ru.antelit.fiskabinet.service.OrgService;
@@ -41,12 +41,13 @@ public class ImportController {
     }
 
     @PostMapping("import/save")
-    public ResponseEntity<?> importData(@Param("id") String id, HttpServletResponse response) {
-        var company = companyCache.get(id);
+    public ResponseEntity<?> importData(Organization orgDto,
+                                        HttpServletResponse response) {
         var org = new Organization();
-        org.setName(company.getTitle());
-        org.setInn(selectedRequisite.getInn());
-        org.setSourceId(company.getId());
+        org.setId(orgDto.getId());
+        org.setName(orgDto.getName());
+        org.setInn(orgDto.getInn());
+        org.setSourceId(orgDto.getSourceId());
         var savedId = orgService.save(org);
         response.setHeader("HX-Trigger", "saved");
         return ResponseEntity.ok(savedId);
@@ -57,7 +58,12 @@ public class ImportController {
         if (query == null || query.isBlank()) {
             model.addAttribute("companies", Collections.emptyList());
         } else {
-            List<CompanyDto> companies = bitrixService.findCompaniesByName(query);
+            List<CompanyDto> companies;
+            if (query.matches("\\d{5,}")) {
+                companies = bitrixService.findCompaniesByInn(query);
+            } else {
+                companies = bitrixService.findCompaniesByName(query);
+            }
             companies.forEach(companyDto -> companyCache.putIfAbsent(companyDto.getId(), companyDto));
             bitrixService.setImportStatus(companies);
             model.addAttribute("companies", companies);
@@ -68,9 +74,20 @@ public class ImportController {
     @GetMapping("import/info")
     public String info(@RequestParam("bid") String bid, Model model) {
         var cmp = companyCache.get(bid);
-        model.addAttribute("cmp",cmp);
         selectedRequisite = bitrixService.getRequisites(cmp);
-        model.addAttribute("req", selectedRequisite);
-        return "import::info";
+
+        var org = orgService.findByInn(selectedRequisite.getInn());
+        if (org == null) {
+            org = new Organization();
+            org.setSourceId(cmp.getId());
+            org.setName(cmp.getTitle());
+            org.setInn(selectedRequisite.getInn());
+        } else {
+            model.addAttribute("exists", true);
+            model.addAttribute("source", cmp);
+            model.addAttribute("req", selectedRequisite);
+        }
+        model.addAttribute("target", org);
+        return "import::details";
     }
 }

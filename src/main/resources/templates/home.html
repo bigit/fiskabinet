@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:hx="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Личный кабинет</title>
@@ -70,7 +71,7 @@
                                     <a th:href="@{|/kkm/${kkm.id}?tp=${tp.id}&org=${org.id}|}" class="btn">Редактировать</a>
                                     <input type="hidden" name="id" th:value="${kkm.id}">
                                     <a
-                                       th:hx-post="@{/kkm/task}"
+                                       hx:post="@{/kkm/task}"
                                        hx-include="previous [name = 'id']"
                                        hx-trigger="click"
                                        hx-swap="none"
@@ -83,13 +84,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
     <input hidden type="submit" value="Sign Out"/>
 </form>
-
-
 </body>
 </html>

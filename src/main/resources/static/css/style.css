@@ -95,6 +95,10 @@ span.hide {
     opacity:0;
 }
 
+.vert * {
+    display: block;
+    margin-bottom: 3px;
+}
 
 @media only screen and (max-width: 520px) {
     .error-body h1 {

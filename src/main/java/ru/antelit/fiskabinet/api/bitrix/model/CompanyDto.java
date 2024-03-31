@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.api.bitrix.dto;
+package ru.antelit.fiskabinet.api.bitrix.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,7 +33,7 @@ public class CompanyDto {
     private List<String> serialNumbers;
 
     @JsonProperty("UF_CRM_1565683449215")
-    private List<String> kabinets;
+    private List<String> cabinets;
 
     @JsonProperty("UF_CRM_1597121179")
     private List<String> maintainAddress2;

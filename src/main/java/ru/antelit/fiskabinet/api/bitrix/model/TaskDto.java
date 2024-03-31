@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.api.bitrix;
+package ru.antelit.fiskabinet.api.bitrix.model;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;

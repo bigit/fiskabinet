@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <title>Импорт из Битрикс</title>
     <th:block th:replace="~{include::head}"/>
-    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
 </head>
 <body>
 <th:block th:replace="include::navigation"></th:block>
-<div class="container shadow p-3">
+<div class="container shadow p-3 h-100">
     <div class="row">
         <div class="col">
             <input name="query" type="text" class="form-control w-25 d-inline mb-3">
@@ -21,43 +21,98 @@
         </div>
     </div>
     <div class="row">
-        <div class="col" id="result">
-            <table class="table table-hover" th:fragment="results">
+        <div class="col overflow-scroll" id="result"  style="max-height: 200px">
+            <table th:fragment="results"
+                   class="table table-hover">
                 <thead>
                 <th>ID</th>
                 <th>Название</th>
                 <th></th>
                 </thead>
                 <tbody>
-
                 <tr th:each="company: ${companies}"
                     hx:get="@{import/info}" hx-trigger="click" hx-include="find [name='bid']"
-                    hx-target="#info" hx-swap="innerHTML">
+                    hx-target="#details" hx-swap="outerHTML">
                     <input name="bid" type="hidden" th:value="${company.id}">
-                    <td th:text="${company.id}" ></td>
+                    <td th:text="${company.id}"></td>
                     <td th:text="${company.title}"></td>
-                    <td>
-                        <i th:if="${company.imported}" class="fa fa-check"></i>
-                    </td>
+                    <td><i th:if="${company.imported}" class="fa fa-check"></i></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col" id="info">
-            <div th:if="${cmp ne null}" th:fragment="info">
-                <label for="name">Название</label>
-                <input type="text" id="name" disabled th:value="${cmp.title}">
-                <label for="inn">ИНН</label>
-                <input type="text" id="inn" disabled th:value="${req.inn}">
-                <button hx:post="@{import/save}" hx:params="|'id' : ${cmp.id}|"
-                        class="btn btn-outline-dark">Импорт</button>
-            </div>
+    <div class="row" id="details" th:fragment="details">
+        <div class="col">
+            <form th:if="${target ne null}">
+                <div class="row">
+                    <div class="col">
+                        <span class="small text-danger" th:if="${exists}">Организация уже существует</span>
+                        <table class="table-borderless w-100 mt-3">
+                            <colgroup>
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 40%;">
+                                <col span="1" style="width: 10%;">
+                                <col span="1" style="width: 40%;">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td><label for="name">Название</label></td>
+                                <td>
+                                    <input type="hidden" name="id" th:value="${target.id eq null ? '' : target.id}">
+                                    <input type="text" id="name" name="name" th:value="${target.name}"
+                                           class="form-control">
+                                </td>
+                                <th:block th:if="${source ne null}">
+                                    <td>
+                                        <button type="button" id="btn1" class="btn btn-outline-dark"
+                                                onclick="copy('source_name', 'name')">
+                                            <i class="fa fa-arrow-left"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input name="sourceId" type="hidden" th:value="${source.id}">
+                                        <input id="source_name" th:value="${source.title}" readonly="readonly"
+                                               class="form-control">
+                                    </td>
+                                </th:block>
+                            </tr>
+                            <tr>
+                                <td><label for="inn">ИНН</label></td>
+                                <td>
+                                    <input type="text" id="inn" name="inn" th:value="${target.inn}"
+                                           class="form-control" readonly="readonly">
+                                </td>
+                                <th:block th:if="${source ne null}">
+                                    <td>
+                                        <button type="button" class="btn btn-outline-dark cpy">
+                                            <i class="fa fa-arrow-left"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input id="source_inn" th:value="${req.inn}" disabled class="form-control">
+                                    </td>
+                                </th:block>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center">
+                        <button hx:post="@{import/save}" class="btn btn-outline-dark">Импорт</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    function copy(src, trg) {
+        let source = document.getElementById(src);
+        let target = document.getElementById(trg);
+        target.value = source.value;
+    }
+</script>
 </body>
 </html>

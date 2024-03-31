@@ -90,7 +90,7 @@ public enum Scope {
     //Служебный канал для мгновенных сообщений системы (подписка на информацию об обновлении всех элементов системы доступных пользователю)
     PULL_CHANNEL("pull_channel");
 
-    private String value;
+    private final String value;
 
     Scope(String value) {
         this.value = value;

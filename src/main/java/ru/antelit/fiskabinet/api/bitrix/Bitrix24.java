@@ -1,19 +1,24 @@
 package ru.antelit.fiskabinet.api.bitrix;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
-import ru.antelit.fiskabinet.api.bitrix.dto.CompanyDto;
-import ru.antelit.fiskabinet.api.bitrix.dto.RequisiteDto;
 import ru.antelit.fiskabinet.api.bitrix.enums.Method;
 import ru.antelit.fiskabinet.api.bitrix.enums.Scope;
 import ru.antelit.fiskabinet.api.bitrix.json.ObjectMapperProvider;
+import ru.antelit.fiskabinet.api.bitrix.model.BitrixRequest;
+import ru.antelit.fiskabinet.api.bitrix.model.CompanyDto;
+import ru.antelit.fiskabinet.api.bitrix.model.ListResponse;
+import ru.antelit.fiskabinet.api.bitrix.model.RequisiteDto;
+import ru.antelit.fiskabinet.api.bitrix.model.TaskDto;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -29,19 +34,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
-import static ru.antelit.fiskabinet.api.bitrix.BitrixConsts.ENTITY_TYPE_COMPANY;
-import static ru.antelit.fiskabinet.api.bitrix.BitrixConsts.ENTITY_TYPE_ID;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.COMPANY;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.REQUISITE;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.TASK;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Method.LIST;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Scope.CRM;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.COMPANY_URL;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ENTITY_TYPE_COMPANY;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ENTITY_TYPE_ID;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.HOST;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.HTTPS;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.REST;
 
 /**
  * Клиент для Bitrix24 REST API
@@ -52,45 +61,40 @@ import static ru.antelit.fiskabinet.api.bitrix.enums.Scope.CRM;
 @AllArgsConstructor
 public class Bitrix24 {
 
-    public static final String ID = "ID";
-    public static final String TITLE = "TITLE";
-    public static final String ASSIGNED_BY_ID = "ASSIGNED_BY_ID";
     public static final String LOGIN_PASSWORD = "UF_CRM_1506422595";
     public static final String SERIAL_NUMBERS = "UF_CRM_1524819776";
-    public static final String KABINETS = "UF_CRM_1565683449215";
+    public static final String CABINETS = "UF_CRM_1565683449215";
     public static final String MAINTAIN_ADDRESS = "UF_CRM_1596523038359";
     public static final String MAINTAIN_ADDRESS_2 = "UF_CRM_1597121179";
-    public static final String KABINET_URL = "UF_CRM_1687185821074";
+    public static final String CABINET_URL = "UF_CRM_1687185821074";
 
     public static final String OFD = "UF_CRM_1506421566";
     public static final String OFD2 = "UF_CRM_1658205075471";
     public static final String OFD3 = "UF_CRM_1664526798211";
     public static final String KKT = "UF_CRM_1657547855021";
-    public static final String COMPANY_URL = "/crm/company/details/%s/";
-    public static final String HOST = ".bitrix24.";
-    public static final String REST = "rest";
 
+    @Getter(AccessLevel.PRIVATE)
     private String path;
 
     @NonNull
     @Builder.ObtainVia(method = "forDomain")
     private final String domain;
 
-    @Builder.Default
     @Builder.ObtainVia(method = "inCountry")
-    private String country = "ru";
+    private final String country;
 
     @NonNull
     private final String userId;
 
     @NonNull
-    private String apiKey;
+    @Getter(AccessLevel.PRIVATE)
+    private final String apiKey;
 
     @Builder.Default
+    @Builder.ObtainVia(method = "client")
     private JerseyClient client = buildDefaultClient();
 
-    private static JerseyClient buildDefaultClient()
-    {
+    private static JerseyClient buildDefaultClient() {
         ClientBuilder builder = JerseyClientBuilder.newBuilder();
 
         ClientConfig config = new ClientConfig();
@@ -98,14 +102,15 @@ public class Bitrix24 {
         builder.withConfig(config);
 
         builder.scheduledExecutorService(Executors.newSingleThreadScheduledExecutor());
-
         return (JerseyClient) builder.build();
     }
 
-    public Bitrix24(String path, @NonNull String userId) {
+    public Bitrix24(String path, @NonNull String userId, @NonNull String apiKey, String country) {
+        this.apiKey = apiKey;
         this.domain = "";
         this.path = path;
         this.userId = userId;
+        this.country = country;
     }
 
     public TaskDto createTask(TaskDto task) throws ExecutionException, InterruptedException {
@@ -134,8 +139,14 @@ public class Bitrix24 {
         return getOrganizations(filter, null);
     }
 
+    public List<RequisiteDto> findRequisitesByCompanyName(String query) {
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put("%RQ_COMPANY_FULL_NAME", query);
+        return getRequisites(filter, null);
+    }
+
     @SuppressWarnings("unchecked")
-    public List<CompanyDto> getOrganizations(Map<String, String> filters, List<String> select) {
+    private List<CompanyDto> getOrganizations(Map<String, String> filters, List<String> select) {
         BitrixRequest request = BitrixRequest.builder()
                 .scope(CRM)
                 .entity(COMPANY)
@@ -145,11 +156,12 @@ public class Bitrix24 {
                 .build();
         return getList(request, response ->
                 (ListResponse<CompanyDto>) response.readEntity(GenericType.forInstance(
-                        new GenericEntity<ListResponse<CompanyDto>>(new ListResponse<>()) {})));
+                        new GenericEntity<ListResponse<CompanyDto>>(new ListResponse<>()) {
+                        })));
     }
 
     @SuppressWarnings("unchecked")
-    public List<RequisiteDto> getRequisites(Map<String, Object> filters, List<String> select) {
+    public List<RequisiteDto> getRequisites(Map<String, String> filters, List<String> select) {
         if (filters == null) {
             filters = new HashMap<>();
         }
@@ -163,7 +175,8 @@ public class Bitrix24 {
                 .build();
         return getList(request, response ->
                 (ListResponse<RequisiteDto>) response.readEntity(GenericType.forInstance(
-                        new GenericEntity<ListResponse<RequisiteDto>>(new ListResponse<>()) {})));
+                        new GenericEntity<ListResponse<RequisiteDto>>(new ListResponse<>()) {
+                        })));
     }
 
     private <T> List<T> getList(BitrixRequest request, Function<Response, ListResponse<T>> deserializer) {
@@ -178,7 +191,7 @@ public class Bitrix24 {
                 list.addAll(listResponse.getResult());
                 request.setStart(listResponse.getNext());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unable retrieve data. {}", e.getMessage());
                 return list;
             }
         } while (listResponse.getNext() != null);
@@ -188,7 +201,7 @@ public class Bitrix24 {
     private URI buildUri(BitrixRequest request) {
         UriBuilder builder = new JerseyUriBuilder();
         if (path == null) {
-            builder.scheme("https")
+            builder.scheme(HTTPS)
                     .host(domain + HOST + country)
                     .path(REST)
                     .path(userId)
@@ -204,5 +217,6 @@ public class Bitrix24 {
     public String getCompanyUrl(String id) {
         return "https://" + domain + HOST + country + String.format(COMPANY_URL, id);
     }
+
 }
 

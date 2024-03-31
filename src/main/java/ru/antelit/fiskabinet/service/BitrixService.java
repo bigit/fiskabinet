@@ -50,7 +50,7 @@ public class BitrixService {
     }
 
     public RequisiteDto getRequisites(CompanyDto companyDto) {
-        Map<String, Object> filter = new HashMap<>();
+        Map<String, String> filter = new HashMap<>();
         filter.put("ENTITY_ID", companyDto.getId());
         var response = bitrix24.getRequisites(filter, null);
         return !response.isEmpty() ? response.get(0) : new RequisiteDto();
@@ -68,4 +68,10 @@ public class BitrixService {
         return bitrix24.getCompanyUrl(id);
     }
 
+    public List<CompanyDto> findCompaniesByInn(String query) {
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("%REQ_INN", query);
+        bitrix24.findCompanyByName(query);
+        return null;
+    }
 }

@@ -17,8 +17,8 @@ logging:
     org:
       springframework:
         security: DEBUG
-mybatis:
-  config-location: classpath:mybatis-config.xml
+  file:
+   name: /var/log/fis/kabinet.log
 server:
   error:
     whitelabel:
@@ -26,12 +26,17 @@ server:
     path: /error
   servlet:
     application-display-name: Личный кабинет ФИС Услуги
+  tomcat:
+    accesslog:
+      directory: /var/log/fis
+mybatis:
+  config-location: classpath:mybatis-config.xml
 bitrix24:
-  domain: antelplus
-  user-id: 21
-  token: b38vyanz2vyjj67m
-  country: ru
-  responsible-id: 21
+  domain: ${bitrix.domain}
+  user-id: ${bitrix.user-id}
+  token: ${bitrix.apikey}
+  country: ${bitrix.country}
+  responsible-id: ${bitrix.responsible}
 minio:
   bucket: default
   accesskey: fiskabinet

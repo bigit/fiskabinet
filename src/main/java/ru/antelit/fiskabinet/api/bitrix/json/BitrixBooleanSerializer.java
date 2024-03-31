@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class BitrixBooleanSerialazer extends JsonSerializer<Boolean> {
+@SuppressWarnings("unused")
+public class BitrixBooleanSerializer extends JsonSerializer<Boolean> {
 
     @Override
     public void serialize(Boolean value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
