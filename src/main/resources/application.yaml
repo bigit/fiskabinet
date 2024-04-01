@@ -32,11 +32,11 @@ server:
 mybatis:
   config-location: classpath:mybatis-config.xml
 bitrix24:
-  domain: ${bitrix.domain}
-  user-id: ${bitrix.user-id}
-  token: ${bitrix.apikey}
-  country: ${bitrix.country}
-  responsible-id: ${bitrix.responsible}
+  domain: antelplus
+  user-id: 21
+  token: b38vyanz2vyjj67m
+  country: ru
+  responsible-id: 21
 minio:
   bucket: default
   accesskey: fiskabinet
