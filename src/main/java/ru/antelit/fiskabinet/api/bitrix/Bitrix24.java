@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
@@ -34,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Function;
@@ -140,7 +137,7 @@ public class Bitrix24 {
     }
 
     public List<RequisiteDto> findRequisitesByCompanyName(String query) {
-        HashMap<String, String> filter = new HashMap<>();
+        HashMap<String, Object> filter = new HashMap<>();
         filter.put("%RQ_COMPANY_FULL_NAME", query);
         return getRequisites(filter, null);
     }
@@ -160,8 +157,12 @@ public class Bitrix24 {
                         })));
     }
 
+    public List<RequisiteDto> getRequisites(Map<String, Object> filters) {
+        return getRequisites(filters, null);
+    }
+
     @SuppressWarnings("unchecked")
-    public List<RequisiteDto> getRequisites(Map<String, String> filters, List<String> select) {
+    public List<RequisiteDto> getRequisites(Map<String, Object> filters, List<String> select) {
         if (filters == null) {
             filters = new HashMap<>();
         }
