@@ -47,6 +47,10 @@ public class OrgService {
         return orgDao.getUserOrganizations(userInfo);
     }
 
+    public List<String> findImportedFromBitrixId(List<String> externalIds) {
+        return organizationRepository.findImportedIds(externalIds);
+    }
+
     public boolean checkInnExists(String inn) {
         return orgDao.checkInnExists(inn);
     }

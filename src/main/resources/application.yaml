@@ -13,14 +13,12 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
 logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-mybatis:
-  config-location: classpath:mybatis-config.xml
-# type-aliases-package: ru.antelit.fiskabinet.domain
-# mapper-locations: classpath:ru/antelit/fiskabinet/service/dao/*
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG
+  file:
+   name: /var/log/fis/kabinet.log
 server:
   error:
     whitelabel:
@@ -28,6 +26,11 @@ server:
     path: /error
   servlet:
     application-display-name: Личный кабинет ФИС Услуги
+  tomcat:
+    accesslog:
+      directory: /var/log/fis
+mybatis:
+  config-location: classpath:mybatis-config.xml
 bitrix24:
   domain: antelplus
   user-id: 21
@@ -42,3 +45,4 @@ minio:
   port: 9000
 deploy:
   host: http://localhost:8080/
+  version: 0.5.100

@@ -1,0 +1,113 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema_cds
+      author: r.miller
+      changes:
+        - sql:
+            sql: create schema cds;
+      rollback:
+        - sql:
+            sql: drop schema cds;
+
+  - changeSet:
+      id: table_code
+      author: r.miller
+      changes:
+        - createTable:
+            schemaName: cds
+            tableName: code
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_code
+              - column:
+                  name: value
+                  type: varchar(16)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: provider_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_code_ofd
+                    referencedTableSchemaName: org
+                    referencedTableName: ofd
+                    referencedColumnNames: id
+              - column:
+                  name: org_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_code_org
+                    referencedTableSchemaName: org
+                    referencedTableName: organization
+                    referencedColumnNames: id
+              - column:
+                  name: duration
+                  type: smallint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: integer
+      rollback:
+        - dropTable:
+            schemaName: cds
+            tableName: code
+
+  - changeSet:
+     ignore: true
+     id: table_status
+     author: r.miller
+     changes:
+       - createTable:
+           schemaName: cds
+           tableName: status
+           columns:
+             - column:
+                 name: id
+                 type: serial
+             - column:
+                 name: name
+                 type: varchar
+                 constraints:
+                   nullable: false
+             - column:
+                 name: description
+                 type: varchar
+     rollback:
+       - dropTable:
+           schemaName: cds
+           tableName: status
+
+  - changeSet:
+      ignore: true
+      id: load_statuses
+      author: r.miller
+      changes:
+        - loadUpdateData:
+            schemaName: cds
+            tableName: status
+            file: data/status.csv
+            relativeToChangelogFile: true
+            primaryKey: id
+
+  - changeSet:
+      ignore: true
+      id: fk_code_status
+      author: r.miller
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_code_status
+            baseTableSchemaName: cds
+            baseTableName: code
+            baseColumnNames: status_id
+            referencedTableSchemaName: cds
+            referencedTableName: status
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            constraintName: fk_code_status

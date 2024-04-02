@@ -22,8 +22,6 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
         mapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
         mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-//        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-//        mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     }
 
     @Override

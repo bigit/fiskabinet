@@ -14,3 +14,6 @@ databaseChangeLog:
   - include:
       file: 5-ofd_entity.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 7-codes.yaml
+      relativeToChangelogFile: true

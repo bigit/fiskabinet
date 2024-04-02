@@ -1,53 +1,109 @@
 package ru.antelit.fiskabinet.contoller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.antelit.fiskabinet.api.bitrix.dto.CompanyDto;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.antelit.fiskabinet.api.bitrix.model.CompanyInfo;
+import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.service.BitrixService;
+import ru.antelit.fiskabinet.service.OrgService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
+import java.util.stream.Collectors;
 
 @Controller
 public class ImportController {
 
-    @Autowired
-    private BitrixService bitrixService;
+    private final BitrixService bitrixService;
+    private final OrgService orgService;
 
-    private volatile Map<Integer, CompanyDto> companyCache = new HashMap<>();
+    private final Map<String, CompanyInfo> companyCache = new HashMap<>();
+    private Map<String, CompanyInfo> companyInnCache = new HashMap<>();
+
+    @Autowired
+    public ImportController(BitrixService bitrixService, OrgService orgService) {
+        this.bitrixService = bitrixService;
+        this.orgService = orgService;
+    }
 
     @GetMapping("import")
     public String show() {
         return "import";
     }
 
-    @PostMapping("import")
-    public String importData(Model model) {
-        String report = bitrixService.importOrganizationsData();
-        model.addAttribute("report", report);
-        return "import::report";
+    @PostMapping("import/save")
+    public ResponseEntity<?> importData(Organization orgDto, HttpServletResponse response) {
+        var org = new Organization();
+        org.setId(orgDto.getId());
+        org.setName(orgDto.getName());
+        org.setInn(orgDto.getInn());
+        org.setSourceId(orgDto.getSourceId());
+        var savedId = orgService.save(org);
+        response.setHeader("HX-Trigger", "saved");
+        return ResponseEntity.ok(savedId);
     }
 
     @GetMapping("import/lookup")
     public String lookup(String query, Model model) {
-        List<CompanyDto> companies = bitrixService.findCompaniesByName(query);
-        companies.forEach(companyDto -> companyCache.putIfAbsent(companyDto.getId(), companyDto));
+        if (query == null || query.isBlank()) {
+            model.addAttribute("companies", Collections.emptyList());
+        } else {
+            List<CompanyInfo> companies;
+            if (query.matches("\\d{5,}")) {
+                companies = bitrixService.findCompaniesByRequisiteInn(query);
+                companies.forEach(company -> companyCache.putIfAbsent(company.getSourceId(), company));
+            } else {
+                companies = bitrixService.findCompaniesByName(query);
+                companies.forEach(company -> companyCache.putIfAbsent(company.getSourceId(), company));
 
-        Map<Integer, String> results = companies.stream()
-                .collect(toMap(CompanyDto::getId, CompanyDto::getTitle));
-        model.addAttribute("results", results);
-        return "import::search-results";
+                var reqCompanies = bitrixService.findCompaniesByRequisiteName(query);
+                for (var req: reqCompanies) {
+                    var key = req.getSourceId();
+                    if (companyCache.containsKey(key)) {
+                        var cmp = companyCache.get(key);
+                        if (!cmp.getMessages().isEmpty()) {
+                            companies.remove(cmp);
+                            companyCache.remove(key);
+                        }
+                    }
+                    companies.add(req);
+                    companyCache.put(key, req);
+                }
+            }
+            companyInnCache = companies.stream().collect(Collectors.toMap(CompanyInfo::getInn, cmp -> cmp));
+            model.addAttribute("companies", companies);
+        }
+        return "import::results";
     }
 
     @GetMapping("import/info")
-    public String info(Integer query, Model model) {
-        model.addAttribute("org", companyCache.get(query));
-        return "import::info";
+    public String info(@RequestParam("inn") String inn, Model model) {
+        var cmp = companyInnCache.get(inn);
+
+        CompanyInfo target = new CompanyInfo();
+        var org = orgService.findByInn(cmp.getInn());
+        if (org == null) {
+            target.setSourceId(cmp.getSourceId());
+            target.setName(cmp.getName());
+            target.setInn(cmp.getInn());
+            target.setMessages(cmp.getMessages());
+        } else {
+            target.setId(org.getId());
+            target.setSourceId(org.getSourceId());
+            target.setName(org.getName());
+            target.setInn(org.getInn());
+            target.addMessage("Организация с таким ИНН уже существует", false);
+            model.addAttribute("source", cmp);
+        }
+        model.addAttribute("target", target);
+        return "import::details";
     }
 }

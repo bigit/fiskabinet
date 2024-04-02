@@ -1,5 +1,6 @@
 package ru.antelit.fiskabinet.api.bitrix.enums;
 
+@SuppressWarnings("ALL")
 public enum Entity {
 
     CATEGORY("category"),
@@ -21,7 +22,7 @@ public enum Entity {
         this.value = value;
     }
 
-    private String value;
+    private final String value;
 
     public String value() {
         return value;

@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.api.bitrix;
+package ru.antelit.fiskabinet.api.bitrix.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,15 +20,19 @@ public class BitrixRequest {
 
     @JsonIgnore
     private Scope scope;
+
     @JsonIgnore
     private Entity entity;
+
     @JsonIgnore
     private Method method;
 
     @JsonProperty("filter")
     private Map<String, ?> filter;
+
     @JsonProperty("select")
     private List<String> select;
+
     @JsonProperty("start")
     private Integer start;
 

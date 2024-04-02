@@ -1,5 +1,6 @@
 package ru.antelit.fiskabinet.api.bitrix.enums;
 
+@SuppressWarnings("unused")
 public enum Elements {
 
     ITEMS("items"),
@@ -9,7 +10,7 @@ public enum Elements {
         this.value = value;
     }
 
-    private String value;
+    private final String value;
 
     public String value() {
         return value;
