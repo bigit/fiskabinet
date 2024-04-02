@@ -89,31 +89,28 @@ public class BitrixService {
             Map<String, Object> filter = new HashMap<>();
             filter.put("%RQ_COMPANY_NAME", name);
             List<RequisiteDto> requisites = bitrix24.getRequisites(filter).stream()
+                    .filter(req -> (!req.getCompanyName().isBlank() || !req.getCompanyFullName().isBlank()))
                     .filter(req -> Objects.nonNull(req.getInn()))
                     .collect(toList());
-            List<CompanyInfo> companies = new ArrayList<>();
-            for (RequisiteDto req : requisites) {
-                CompanyInfo info = new CompanyInfo();
-                info.setInn(req.getInn());
-                info.setName(req.getCompanyName());
-                info.setSourceId(req.getEntityId());
-                companies.add(info);
-            }
-            return companies;
+            return convert(requisites);
     }
 
-
-        public List<CompanyInfo> findCompaniesByRequisiteInn (String query){
+        public List<CompanyInfo> findCompaniesByRequisiteInn (String query) {
             Map<String, Object> filter = new HashMap<>();
             filter.put("%RQ_INN", query);
-            List<RequisiteDto> requisites = bitrix24.getRequisites(filter)
-                    .stream().filter(req -> Objects.nonNull(req.getCompanyName()))
+            List<RequisiteDto> requisites = bitrix24.getRequisites(filter).stream()
+                    .filter(req -> Objects.nonNull(req.getCompanyName()))
+                    .filter(req -> (!req.getCompanyName().isBlank() || !req.getCompanyFullName().isBlank()))
                     .collect(toList());
+            return convert(requisites);
+        }
+
+        private List<CompanyInfo> convert(List<RequisiteDto> requisites) {
             List<CompanyInfo> companies = new ArrayList<>();
             for (RequisiteDto req : requisites) {
                 CompanyInfo info = new CompanyInfo();
                 info.setInn(req.getInn());
-                info.setName(req.getCompanyName());
+                info.setName(!req.getCompanyName().isBlank() ? req.getCompanyName() : req.getCompanyFullName());
                 info.setSourceId(req.getEntityId());
                 companies.add(info);
             }

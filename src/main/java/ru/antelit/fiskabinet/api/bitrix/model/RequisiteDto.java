@@ -22,7 +22,4 @@ public class RequisiteDto {
 
     @JsonProperty("RQ_COMPANY_FULL_NAME")
     private String companyFullName;
-
-    @JsonProperty("RQ_COMPANY_SHORT_NAME")
-    private String companyShortName;
 }

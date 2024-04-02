@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class ImportController {
@@ -25,6 +26,7 @@ public class ImportController {
     private final OrgService orgService;
 
     private final Map<String, CompanyInfo> companyCache = new HashMap<>();
+    private Map<String, CompanyInfo> companyInnCache = new HashMap<>();
 
     @Autowired
     public ImportController(BitrixService bitrixService, OrgService orgService) {
@@ -76,14 +78,15 @@ public class ImportController {
                     companyCache.put(key, req);
                 }
             }
+            companyInnCache = companies.stream().collect(Collectors.toMap(CompanyInfo::getInn, cmp -> cmp));
             model.addAttribute("companies", companies);
         }
         return "import::results";
     }
 
     @GetMapping("import/info")
-    public String info(@RequestParam("bid") String bid, Model model) {
-        var cmp = companyCache.get(bid);
+    public String info(@RequestParam("inn") String inn, Model model) {
+        var cmp = companyInnCache.get(inn);
 
         CompanyInfo target = new CompanyInfo();
         var org = orgService.findByInn(cmp.getInn());
