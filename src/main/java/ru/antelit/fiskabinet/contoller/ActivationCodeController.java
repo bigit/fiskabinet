@@ -81,7 +81,15 @@ public class ActivationCodeController {
     @PostMapping("code/apply")
     public ResponseEntity<?> applyCode(@RequestParam("use_code_id") Long id, @RequestParam("org_id") Integer orgId,
                                        HttpServletResponse response) {
-        ActivationCode code = codeService.getById(id);
+        var code = codeService.getById(id);
+        if (code == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Указанный код не найден в системе");
+        }
+        if (code.getStatus() == CodeStatus.ERROR || code.getStatus() == CodeStatus.USED) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не может быть использован");
+        }
+        UserInfo user = securityUtils.getCurrentUser();
+        code.setUserInfo(user);
         code.setStatus(CodeStatus.USED);
         code.setOrganization(orgService.get(orgId));
         codeService.save(code);
@@ -93,7 +101,7 @@ public class ActivationCodeController {
     public ResponseEntity<?> reserveCode(@RequestParam Long codeId, HttpServletResponse response) {
         var code = codeService.getById(codeId);
         if (code == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Указаный код не найден в системе");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Указанный код не найден в системе");
         }
         if (code.getStatus() != CodeStatus.NEW) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не может быть зарезервирован");
@@ -116,6 +124,7 @@ public class ActivationCodeController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не зарезервирован");
         }
         code.setStatus(CodeStatus.NEW);
+        code.setUserInfo(null);
         codeService.save(code);
         response.setHeader("HX-Trigger", "update");
         return ResponseEntity.ok().build();

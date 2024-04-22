@@ -130,14 +130,14 @@
             </div>
         </div>
     </div>
+    <script>
+        let mdl = document.getElementById("useCode");
+        mdl.addEventListener("show.bs.modal", function (event) {
+            let source = event.relatedTarget;
+            document.getElementById("use_code_id").value = source.getAttribute('data-bs-id');
+            document.getElementById("use_code_value").textContent = source.getAttribute('data-bs-value');
+        })
+    </script>
 </div>
-<script>
-    let mdl = document.getElementById("useCode");
-    mdl.addEventListener("show.bs.modal", function (event) {
-        let source = event.relatedTarget;
-        document.getElementById("use_code_id").value = source.getAttribute('data-bs-id');
-        document.getElementById("use_code_value").textContent = source.getAttribute('data-bs-value');
-    })
-</script>
 </body>
 </html>
