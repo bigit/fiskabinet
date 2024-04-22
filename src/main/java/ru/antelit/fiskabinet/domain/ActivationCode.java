@@ -42,4 +42,8 @@ public class ActivationCode {
 
     @Column
     private Integer duration;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserInfo userInfo;
 }

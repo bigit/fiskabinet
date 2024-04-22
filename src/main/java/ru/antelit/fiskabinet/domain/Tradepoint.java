@@ -21,10 +21,13 @@ public class Tradepoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column
     private String name;
+
     @Column
     private String address;
+
     @OneToOne
     @JoinColumn(name = "org_id")
     private Organization organization;

@@ -60,11 +60,14 @@
             <th:block th:fragment="codes" th:if="${codes != null}">
                 <table class="table table-hover w-100">
                     <thead class="table-light">
-                    <th scope="col"></th>
-                    <th scope="col">Код</th>
-                    <th scope="col">Срок</th>
-                    <th scope="col">Статус</th>
-                    <th scope="col">Клиент</th>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Код</th>
+                        <th scope="col">Срок</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Клиент</th>
+                        <th scope="col">Пользователь</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <tr th:each="code : ${codes}">
@@ -93,6 +96,7 @@
                         <td th:text="${code.duration}"></td>
                         <td th:text="${code.status.description}"></td>
                         <td th:text="${code.organization == null} ? '' : ${code.organization.name}"></td>
+                        <td th:text="${code.userInfo == null} ? '' : ${code.userInfo.getShortName()}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -121,7 +125,8 @@
             </div>
             <div class="modal-footer">
                 <button hx:post="@{code/apply}" hx-swap="none" hx-include="[name='use_code_id'],[name='org_id']"
-                        class="btn btn-success" data-toggle="modal">Применить</button>
+                        class="btn btn-success" data-toggle="modal">Применить
+                </button>
             </div>
         </div>
     </div>

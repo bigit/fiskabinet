@@ -11,10 +11,10 @@ import ru.antelit.fiskabinet.service.UserInfoService;
 public class SecurityUtils {
 
     @Autowired
-    private static UserInfoService userInfoService;
+    private UserInfoService userInfoService;
 
-    public static UserInfo getCurrentUser() {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userInfoService.getUserByName(user.getUsername());
+    public UserInfo getCurrentUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userInfoService.getUserByName(userDetails.getUsername());
     }
 }

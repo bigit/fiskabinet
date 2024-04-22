@@ -111,3 +111,28 @@ databaseChangeLog:
       rollback:
         - dropForeignKeyConstraint:
             constraintName: fk_code_status
+
+  - changeSet:
+      id: add_user_column
+      author: r.miller
+      changes:
+        - addColumn:
+            schemaName: cds
+            tableName: code
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+        - addForeignKeyConstraint:
+            constraintName: fk_codes_user
+            baseTableSchemaName: cds
+            baseTableName: code
+            baseColumnNames: user_id
+            referencedTableSchemaName: security
+            referencedTableName: user
+            referencedColumnNames: id
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableSchemaName: cds
+            baseTableName: code
+            constraintName: fk_codes_user

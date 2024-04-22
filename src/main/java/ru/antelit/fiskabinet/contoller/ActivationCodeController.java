@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.antelit.fiskabinet.domain.ActivationCode;
 import ru.antelit.fiskabinet.domain.CodeStatus;
+import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.domain.dto.ActivationCodeDto;
 import ru.antelit.fiskabinet.domain.dto.DtoConverter;
 import ru.antelit.fiskabinet.service.ActivationCodeService;
 import ru.antelit.fiskabinet.service.OfdService;
 import ru.antelit.fiskabinet.service.OrgService;
+import ru.antelit.fiskabinet.utils.SecurityUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Comparator;
@@ -27,14 +29,16 @@ public class ActivationCodeController {
     private final ActivationCodeService codeService;
     private final OrgService orgService;
     private final DtoConverter converter;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public ActivationCodeController(OfdService ofdService, ActivationCodeService codeService, OrgService orgService,
-                                    DtoConverter converter) {
+                                    DtoConverter converter, SecurityUtils securityUtils) {
         this.ofdService = ofdService;
         this.codeService = codeService;
         this.orgService = orgService;
         this.converter = converter;
+        this.securityUtils = securityUtils;
     }
 
     @GetMapping("/code")
@@ -94,6 +98,8 @@ public class ActivationCodeController {
         if (code.getStatus() != CodeStatus.NEW) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Указанный код не может быть зарезервирован");
         }
+        UserInfo user = securityUtils.getCurrentUser();
+        code.setUserInfo(user);
         code.setStatus(CodeStatus.RESERVED);
         codeService.save(code);
         response.setHeader("HX-Trigger", "update");
