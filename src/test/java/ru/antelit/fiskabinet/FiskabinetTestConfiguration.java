@@ -23,7 +23,7 @@ public class FiskabinetTestConfiguration {
 
     @Bean(name = "bitrix.post")
     public Bitrix24 bitrix24() {
-        return new Bitrix24("https://65df5531-c8e0-4ffd-981e-6a0246750b63.mock.pstmn.io", "21");
+        return new Bitrix24("https://65df5531-c8e0-4ffd-981e-6a0246750b63.mock.pstmn.io", "21", null, null);
     }
 
     @Bean(name = "bitrix.test")

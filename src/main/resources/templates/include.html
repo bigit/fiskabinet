@@ -1,26 +1,70 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:hx="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="head">
+    <link rel="shortcut icon"
+          th:href="@{/img/favicon.ico}"/>
+    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/6eaf652bd5.js" crossorigin="anonymous"></script>
 
-  <link rel="shortcut icon"
-        th:href="@{/img/favicon.ico}" />
-  <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet"/>
-  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}" type="text/javascript"></script>
-  <script th:src="@{/webjars/jquery/3.6.3/jquery.min.js}" type="text/javascript"></script>
-  <script src="https://kit.fontawesome.com/6eaf652bd5.js" crossorigin="anonymous"></script>
-<!--  <link href="/webjars/font-awesome/6.2.1/css/fontawesome.min.css" rel="stylesheet"/>-->
-  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
 </th:block>
-</html>
 
 <nav th:fragment="navigation" class="navbar navbar-expand navbar-light">
-  <ul class="navbar-nav">
-    <li class="nav-item"><a th:href="@{/manager}" class="nav-link">Организации</a></li>
-    <li class="nav-item"><a th:href="@{/import}" class="nav-link">Импорт</a></li>
-    <li class="nav-item"><a th:href="@{/application}" class="nav-link">Заявление</a></li>
-    <li class="nav-item"><a th:href="@{/code}" class="nav-link">Коды активации</a></li>
-  </ul>
+    <ul class="navbar-nav">
+        <li class="nav-item"><a th:href="@{/manager}" class="nav-link">Организации</a></li>
+        <li class="nav-item"><a th:href="@{/import}" class="nav-link">Импорт</a></li>
+        <li class="nav-item"><a th:href="@{/application}" class="nav-link">Заявление</a></li>
+        <li class="nav-item"><a th:href="@{/code}" class="nav-link">Коды активации</a></li>
+    </ul>
 </nav>
+
+<div id="useCode" class="modal fade" role="dialog" th:fragment="use_code_modal"
+     hx-on::load='var md = new bootstrap.Modal(document.getElementById("useCode")); md.show()'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" th:text="${code.value}"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <br>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title" id="use_code_value"></h4>
+                <input type="hidden" typeof="int" id="use_code_id" name="code_id" th:value="${code.id}">
+                <div id="org_list">
+                    <select name="org_id" class="form-select" th:if="${code.status.name eq 'NEW'}">
+                        <option th:if="${orgs != null}"
+                                th:each="org: ${orgs}" th:value="${org.id}" th:text="${org.name}"></option>
+                    </select>
+                    <input th:unless="${code.status.name eq 'NEW'}" type="text" th:value="${code.organization.name}"
+                           readonly class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button th:if="${code.status.name eq 'NEW' or code.status.name eq 'RESERVED'}"
+                        hx:post="@{code/apply}" hx-swap="none" hx-include="[name='code_id'],[name='org_id']"
+                        class="btn btn-success" data-bs-dismiss="modal">Применить
+                </button>
+                <button th:if="${code.status.name eq 'NEW'}"
+                        hx:post="@{code/reserve}" hx-swap="none" hx-include="[name='code_id'],[name='org_id']"
+                        class="btn btn-warning" data-bs-dismiss="modal">Зарезервировать
+                </button>
+                <button th:if="${code.status.name eq 'RESERVED'}"
+                        hx:post="@{code/release}" hx-swap="none" hx-include="[name='code_id']"
+                        class="btn btn-outline-primary" data-bs-dismiss="modal">Снять резерв
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</html>
