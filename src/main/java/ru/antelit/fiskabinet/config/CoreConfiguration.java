@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class CoreConfiguration {
 
-    @Value(" ${minio.accesskey}")
+    @Value("${minio.accesskey}")
     private String accessKey;
 
     @Value("${minio.secretkey}")
