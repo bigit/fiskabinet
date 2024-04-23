@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${org.name}"></title>
+    <title th:text="${#strings.isEmpty(org.name) ? 'Новая организация' : org.name}"></title>
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
