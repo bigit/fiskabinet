@@ -32,9 +32,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="company: ${companies}"
-                    hx:get="@{import/info}" hx-trigger="click" hx-include="find [name='inn']"
+                    hx:get="@{import/info}" hx-trigger="click" hx-include="find [name='source_id']"
                     hx-target="#details" hx-swap="outerHTML">
-                    <input name="bid" type="hidden" th:value="${company.sourceId}">
+                    <input name="source_id" type="hidden" th:value="${company.sourceId}">
                     <input name="inn" type="hidden" th:value="${company.inn}">
                     <td th:text="${company.sourceId}"></td>
                     <td th:text="${company.name}"></td>

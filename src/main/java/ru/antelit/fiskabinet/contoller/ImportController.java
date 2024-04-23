@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class ImportController {
@@ -26,7 +25,6 @@ public class ImportController {
     private final OrgService orgService;
 
     private final Map<String, CompanyInfo> companyCache = new HashMap<>();
-    private Map<String, CompanyInfo> companyInnCache = new HashMap<>();
 
     @Autowired
     public ImportController(BitrixService bitrixService, OrgService orgService) {
@@ -78,18 +76,26 @@ public class ImportController {
                     companyCache.put(key, req);
                 }
             }
-            companyInnCache = companies.stream().collect(Collectors.toMap(CompanyInfo::getInn, cmp -> cmp));
             model.addAttribute("companies", companies);
         }
         return "import::results";
     }
 
     @GetMapping("import/info")
-    public String info(@RequestParam("inn") String inn, Model model) {
-        var cmp = companyInnCache.get(inn);
-
+    public String info(@RequestParam("source_id") String sourceId, Model model) {
+        var cmp = companyCache.get(sourceId);
         CompanyInfo target = new CompanyInfo();
-        var org = orgService.findByInn(cmp.getInn());
+        Organization org = null;
+        if (cmp.getInn() != null) {
+            org = orgService.findByInn(cmp.getInn());
+            target.addMessage("Организация с таким ИНН уже существует", false);
+        } if (org == null) {
+            var list = orgService.findByName(cmp.getName());
+            target.addMessage("Организация с таким именем уже существует", false);
+            if (!list.isEmpty()) {
+                org = list.get(0);
+            }
+        }
         if (org == null) {
             target.setSourceId(cmp.getSourceId());
             target.setName(cmp.getName());
@@ -100,7 +106,6 @@ public class ImportController {
             target.setSourceId(org.getSourceId());
             target.setName(org.getName());
             target.setInn(org.getInn());
-            target.addMessage("Организация с таким ИНН уже существует", false);
             model.addAttribute("source", cmp);
         }
         model.addAttribute("target", target);
