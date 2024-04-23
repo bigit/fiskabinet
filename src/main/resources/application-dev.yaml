@@ -1,9 +1,4 @@
 spring:
-#  profiles:
-#    active: dev
-  config:
-    activate:
-      on-profile: dev
   datasource:
     url: jdbc:postgresql://localhost:5432/fis
     driver-class-name: org.postgresql.Driver
@@ -39,5 +34,11 @@ bitrix24:
   token: b38vyanz2vyjj67m
   country: ru
   responsible-id: 21
+minio:
+  bucket: default
+  accesskey: fiskabinet
+  secretkey: 12345678
+  url: http://localhost/
+  port: 9000
 deploy:
-  host: http://localhost
+  host: http://localhost:8080/

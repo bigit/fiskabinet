@@ -10,8 +10,12 @@ import ru.antelit.fiskabinet.service.UserInfoService;
 @Component
 public class SecurityUtils {
 
+    private final UserInfoService userInfoService;
+
     @Autowired
-    private UserInfoService userInfoService;
+    public SecurityUtils(UserInfoService userInfoService) {
+        this.userInfoService = userInfoService;
+    }
 
     public UserInfo getCurrentUser() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

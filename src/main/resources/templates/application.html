@@ -17,254 +17,276 @@
                     <form>
                         <div class="report-group">
                             <div class="report-row">
-                                <label for="name">Наименование организации</label><br>
+                                <label for="name">Наименование организации</label>
                             </div>
                             <div class="report-row">
-                                <input type="text" id="name" name="name" placeholder="ООО Василёк" class="w-100"><br>
+                                <input type="text" id="name" name="name" placeholder="ООО Василёк" class="form-control">
                             </div>
                             <div class="report-row">
                                 <label for="inn">ИНН</label>
-                                <input type="text" id="inn" name="inn" size="11" placeholder="123456789012">
+                                <input type="text" id="inn" name="inn" size="11" placeholder="123456789012"
+                                class="form-control" style="width: 140px">
                             </div>
                         </div>
                         <div class="report-group">
                             <div class="report-row">
                                 <label for="reg">Регистрация</label>
-                                <input name="isRegistration" id="reg" type="radio" value="true">
+                                <input name="isRegistration" id="reg" type="radio" value="true" class="form-check-input">
                                 <span class="mx-3"></span>
                                 <label for="rereg">Перерегистрация</label>
-                                <input name="isRegistration" id="rereg" type="radio" value="false">
+                                <input name="isRegistration" id="rereg" type="radio" value="false" class="form-check-input">
                             </div>
                             <div class="report-row">
-                                <input id="addr" type="checkbox" name="changeAddressPlace">
-                                <label for="addr">Смена адреса</label>
+                                <input id="addr" type="checkbox" name="changeAddressPlace" class="form-check-input">
+                                <label for="addr" class="form-check-label">Смена адреса</label>
                             </div>
                             <div class="report-row">
-                                <input id="change_ofd" type="checkbox" name="changeOfd">
-                                <label for="change_ofd">Смена ОФД</label>
-                            </div>
-
-<!--    Убраны т.к. не используются (добавить в настройки?) -->
-<!--                        <div class="form-outline mb-3 text-start">-->
-<!--                            <input id="automatic" type="checkbox" name="changeAutomatic" value="2">-->
-<!--                            <label for="automatic">Изменений сведений о применении в составе автоматического-->
-<!--                             устройства</label>-->
-<!--                        </div>-->
-
-                            <div class="report-row">
-                                <input id="fn" type="checkbox" name="changeFn">
-                                <label for="fn">Замена фискального накопителя</label>
+                                <input id="change_ofd" type="checkbox" name="changeOfd" class="form-check-input">
+                                <label for="change_ofd" class="form-check-label">Смена ОФД</label>
                             </div>
 
-<!-- Убраны т.к. не используются (добавить в настройки?)  -->
-<!--                        <div class="form-outline mb-3 text-start">-->
-<!--                            <input id="from_autonomus" type="checkbox" name="changeOffAutonomous">-->
-<!--                            <label for="from_autonomus">Переход из автономного режима</label>-->
-<!--                        </div>-->
-<!--                        <div class="form-outline mb-3 text-start">-->
-<!--                            <input id="to_autonomous" type="checkbox" name="changeOnAutonomous">-->
-<!--                            <label for="to_autonomous">Переход в автономный режим</label>-->
-<!--                        </div>-->
+                            <!--    Убраны т.к. не используются (добавить в настройки?) -->
+                            <!--                        <div class="form-outline mb-3 text-start">-->
+                            <!--                            <input id="automatic" type="checkbox" name="changeAutomatic" value="2">-->
+                            <!--                            <label for="automatic">Изменений сведений о применении в составе автоматического-->
+                            <!--                             устройства</label>-->
+                            <!--                        </div>-->
 
                             <div class="report-row">
-                                <input id="title" type="checkbox" name="changeUserName">
-                                <label for="title">Изменение наименование пользователя</label>
+                                <input id="fn" type="checkbox" name="changeFn" class="form-check-input">
+                                <label for="fn" class="form-check-label">Замена фискального накопителя</label>
+                            </div>
+
+                            <!-- Убраны т.к. не используются (добавить в настройки?)  -->
+                            <!--                        <div class="form-outline mb-3 text-start">-->
+                            <!--                            <input id="from_autonomus" type="checkbox" name="changeOffAutonomous">-->
+                            <!--                            <label for="from_autonomus">Переход из автономного режима</label>-->
+                            <!--                        </div>-->
+                            <!--                        <div class="form-outline mb-3 text-start">-->
+                            <!--                            <input id="to_autonomous" type="checkbox" name="changeOnAutonomous">-->
+                            <!--                            <label for="to_autonomous">Переход в автономный режим</label>-->
+                            <!--                        </div>-->
+
+                            <div class="report-row">
+                                <input id="title" type="checkbox" name="changeUserName" class="form-check-input">
+                                <label for="title" class="form-check-label">Изменение наименование пользователя</label>
                             </div>
                             <div class="report-row">
-                                <input id="other" type="checkbox" name="changeOther">
+                                <input id="other" type="checkbox" name="changeOther" class="form-check-input">
                                 <label for="other">Иные причины</label>
                             </div>
                         </div>
                         <div class="report-group">
                             <div class="report-row">
                                 <label for="declarer">Заявитель</label>
-                                <input type="text" id="declarer" name="declarer" size="30">
+                                <input type="text" id="declarer" name="declarer" size="30"
+                                       class="form-control w-50">
                             </div>
                             <div class="report-row">
-                                <input type="checkbox" id="is_user" name="isUser">
+                                <input type="checkbox" id="is_user" name="isUser" class="form-check-input">
                                 <label for="is_user">Является пользователем</label>
                             </div>
                         </div>
                         <div class="report-group">
                             <div class="report-row">
                                 <label for="model">Модель</label>
-                                <select id="model" name="model">
+                                <select id="model" name="model" class="form-select w-25 d-inline">
                                     <option th:each="m: ${models}" th:value="${m}" th:text="${m}"></option>
                                 </select>
                             </div>
                             <div class="report-row">
                                 <label for="serialNumber">Заводской номер</label>
-                                <input type="text" id="serialNumber" name="serialNumber" maxlength="20">
+                                <input type="text" id="serialNumber" name="serialNumber" maxlength="20"
+                                class="form-control w-25 d-inline">
                             </div>
                         </div>
                         <div class="report-group">
                             <div class="report-row">
                                 <label for="fnModel">Модель ФН</label>
-                                <select id="fnModel" name="fnModel">
-                                    <option>
-                                        Фискальный накопитель ФН 1.2 исп. Ав15-3
-                                    </option>
-                                    <option>
-                                        Фискальный накопитель ФН 1.2 исп. Ав36-3
-                                    </option>
-                                    <option>
-                                        Фискальный накопитель ФН 1.2 исп. Ин15-3
-                                    </option>
-                                    <option>
-                                        Фискальный накопитель ФН 1.2 исп. Ин36-3
-                                    </option>
+                                <select id="fnModel" name="fnModel" class="form-select w-50 d-inline">
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ин15-4</option>
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ин36-4</option>
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ин15-3</option>
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ин36-3</option>
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ав15-3</option>
+                                    <option>Фискальный накопитель ФН 1.2 исп. Ав36-3</option>
                                 </select>
                             </div>
                             <div class="report-row">
                                 <label for="fnNumber">Заводской номер ФН</label>
-                                <input type="text" id="fnNumber" name="fnNumber" maxlength="16" size="15">
+                                <input type="text" id="fnNumber" name="fnNumber" maxlength="16" size="15"
+                                class="form-control w-25 d-inline">
                             </div>
                         </div>
                         <section id="address">
                             <div class="report-group">
                                 <div class="report-row">
                                     <label for="postIndex">Индекс</label>
-                                    <input type="text" maxlength="6" size="5" id="postIndex" name="postIndex"
-                                           placeholder="462400">
+                                    <input type="text"  id="postIndex" name="postIndex"
+                                           maxlength="6" size="5" placeholder="462400"
+                                            class="form-control d-inline" style="width: 6em">
                                 </div>
                                 <div class="report-row">
                                     <label for="county">Район</label>
-                                    <input type="text" id="county" name="county" size="32" maxlength="30">
+                                    <input type="text" id="county" name="county" size="32" maxlength="30"
+                                            class="form-control d-inline" style="width: 30em">
                                 </div>
                                 <div class="report-row">
                                     <label for="city">Город</label>
-                                    <input type="text" id="city" name="city" placeholder="Орск">
+                                    <input type="text" id="city" name="city" placeholder="Орск"
+                                            class="form-control d-inline" style="width: 30em">
                                 </div>
                                 <div class="report-row">
                                     <label for="settlement">Населенный пункт</label>
-                                    <input type="text" id="settlement" name="settlement" size="32" maxlength="30">
+                                    <input type="text" id="settlement" name="settlement" size="32" maxlength="30"
+                                           class="form-control d-inline" style="width: 30em">
                                 </div>
                                 <div class="report-row">
                                     <label for="street">Улица</label>
-                                    <input type="text" name="street" id="street" placeholder="ул. Новосибирская">
+                                    <input type="text" name="street" id="street" placeholder="ул. Новосибирская"
+                                           class="form-control d-inline" style="width: 30em">
                                 </div>
                                 <div class="report-row">
                                     <label for="number">Дом</label>
-                                    <input type="text" id="number" name="number" placeholder="12">
+                                    <input type="text" id="number" name="number" placeholder="12"
+                                           class="form-control d-inline" style="width: 4em">
                                 </div>
                                 <div class="report-row">
                                     <label for="building">Литер</label>
-                                    <input type="text" id="building" name="building" placeholder="А">
+                                    <input type="text" id="building" name="building" placeholder="А"
+                                           class="form-control d-inline" style="width: 4em">
                                 </div>
                                 <div class="report-row">
                                     <label for="room">Квартира/Офис</label>
-                                    <input type="text" id="room" name="room" placeholder="17">
+                                    <input type="text" id="room" name="room" placeholder="17"
+                                           class="form-control d-inline" style="width: 4em">
                                 </div>
                                 <div class="report-row">
                                     <label for="place">Место установки</label>
-                                    <input type="text" id="place" name="place">
+                                    <input type="text" id="place" name="place"
+                                           class="form-control d-inline" style="width: 30em">
                                 </div>
                             </div>
                         </section>
                         <div class="report-group">
                             <div class="report-row">
-                                <input id="autonomous" name="autonomous" type="checkbox">
+                                <input id="autonomous" name="autonomous" type="checkbox" class="form-check-input">
                                 <label for="autonomous">Автономный режим</label>
                             </div>
                             <div class="report-row">
-                                <input id="lottery" name="lottery" type="checkbox">
+                                <input id="lottery" name="lottery" type="checkbox" class="form-check-input">
                                 <label for="lottery">Используется для проведения лотерей</label>
                             </div>
                             <div class="report-row">
-                                <input id="betting" name="betting" type="checkbox">
+                                <input id="betting" name="betting" type="checkbox" class="form-check-input">
                                 <label for="betting">Прием ставок, выплата выигрышей</label>
                             </div>
                             <div class="report-row">
-                                <input id="gambling" name="gambling" type="checkbox">
+                                <input id="gambling" name="gambling" type="checkbox" class="form-check-input">
                                 <label for="gambling">Используется в игорном заведении</label>
                             </div>
                             <div class="report-row">
-                                <input id="bank-agent" name="bankAgent" type="checkbox">
+                                <input id="bank-agent" name="bankAgent" type="checkbox" class="form-check-input">
                                 <label for="bank-agent">Банковский агент</label>
                             </div>
                             <div class="report-row">
-                                <input id="pay-agent" name="payAgent" type="checkbox">
+                                <input id="pay-agent" name="payAgent" type="checkbox" class="form-check-input">
                                 <label for="pay-agent">Платежный агент</label>
                             </div>
                             <div class="report-row">
-                                <input id="vending" name="vending" type="checkbox">
+                                <input id="vending" name="vending" type="checkbox" class="form-check-input">
                                 <label for="vending">В составе автоматического устройства</label>
                             </div>
                             <div class="report-row">
-                                <input id="marking" name="marking" type="checkbox">
+                                <input id="marking" name="marking" type="checkbox" class="form-check-input">
                                 <label for="marking">Используется при продаже маркированных товаров</label>
                             </div>
                             <div class="report-row">
-                                <input id="internet" name="internet" type="checkbox">
+                                <input id="internet" name="internet" type="checkbox" class="form-check-input">
                                 <label for="internet">Для интернет торговли</label>
                             </div>
                             <div class="report-row">
-                                <input id="on-site" name="onSite" type="checkbox">
+                                <input id="on-site" name="onSite" type="checkbox" class="form-check-input">
                                 <label for="on-site">Для разносной/развозной торговли(оказании услуг)</label>
                             </div>
                             <div class="report-row">
-                                <input id="bso" name="bso" type="checkbox">
+                                <input id="bso" name="bso" type="checkbox" class="form-check-input">
                                 <label for="bso">Для БСО</label>
                             </div>
-                            <div class="report-row">
-                                <input id="excise" name="excise" type="checkbox">
+                            <div class="report-row form-check">
+                                <input id="excise" name="excise" type="checkbox" class="form-check-input">
                                 <label for="excise">Продажа подакцизных товаров</label>
                             </div>
                         </div>
                         <div class="report-group">
                             <div class="report-row">
                                 <label for="ofd">ОФД</label>
-                                <select id="ofd" name="ofd">
-                                    <option th:each="ofd: ${ofdList}" th:value="${ofd.id}" th:text="${ofd.name}"></option>
+                                <select id="ofd" name="ofd" class="form-select w-25 d-inline">
+                                    <option th:each="ofd: ${ofdList}" th:value="${ofd.id}"
+                                            th:text="${ofd.name}"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="report-group">
-                            <div class="report-row">
-                                <label for="closure_report_unavailable">Невозможно предоставить отчет о закрытии ФН</label>
-                                <input type="checkbox" id="closure_report_unavailable" name="reportUnavailable">
-                            <div class="report-row">
-                                <label for="close_time">Время закрытия</label>
-                                <input id="close_time" name="closeTime" type="time">
+                            <div class="report-row form-check">
+                                <label for="closure_report_unavailable" class="form-check-label">Невозможно предоставить отчет о закрытии
+                                    ФН</label>
+                                <input type="checkbox" id="closure_report_unavailable" name="reportUnavailable"
+                                       class="form-check-input">
+                                <div class="report-row">
+                                    <label for="close_date">Дата закрытия</label>
+                                    <input id="close_date" name="closeDate" type="date"
+                                           class="form-control d-inline" style="width: 11em">
+                                </div>
+                                <div class="report-row">
+                                    <label for="close_time">Время закрытия</label>
+                                    <input id="close_time" name="closeTime" type="time"
+                                           class="form-control d-inline" style="width: 7em">
+                                </div>
+                                <div class="report-row">
+                                    <label for="close_receipt_number">Номер отчета о закрытии ФН</label>
+                                    <input id="close_receipt_number" name="closeNum" type="text"
+                                    class="form-control d-inline" style="width: 100px;">
+                                </div>
+                                <div class="report-row">
+                                    <label for="close_receipt_digest">ФП отчета о закрытии</label>
+                                    <input id="close_receipt_digest" name="closeDigest" type="text"
+                                           class="form-control d-inline" style="width: 120px;">
+                                </div>
                             </div>
-                            <div class="report-row">
-                                <label for="close_date">Дата закрытия</label>
-                                <input id="close_date" name="closeDate" type="date">
+                            <div class="report-group">
+                                <div class="report-row">
+                                    <label for="register_date">Дата регистрации</label>
+                                    <input id="register_date" name="regDate" type="date"
+                                           class="form-control d-inline" style="width: 11em">
+                                </div>
+                                <div class="report-row">
+                                    <label for="register_time">Время регистрации</label>
+                                    <input id="register_time" name="regTime" type="time"
+                                           class="form-control d-inline" style="width: 7em">
+                                </div>
+                                <div class="report-row">
+                                    <label for="register_receipt_number">Номер отчета о регистрации</label>
+                                    <input id="register_receipt_number" name="regNum" type="text"
+                                           class="form-control d-inline" style="width: 100px;">
+                                </div>
+                                <div class="report-row">
+                                    <label for="register_receipt_digest">ФП отчета о регистрации</label>
+                                    <input id="register_receipt_digest" name="regDigest" type="text"
+                                           maxlength="10"
+                                           class="form-control d-inline" style="width: 120px;">
+                                </div>
                             </div>
-                            <div class="report-row">
-                                <label for="close_receipt_number">Номер отчета о закрытии ФН</label>
-                                <input id="close_receipt_number" name="closeNum" type="text">
-                            </div>
-                            <div class="report-row">
-                                <label for="close_receipt_digest">ФП отчета о закрытии</label>
-                                <input id="close_receipt_digest" name="closeDigest" type="text">
-                            </div>
-                        </div>        
-                        <div class="report-group">
-                            <div class="report-row">
-                                <label for="register_time">Время регистрации</label>
-                                <input id="register_time" name="regTime" type="time">
-                            </div>
-                            <div class="report-row">
-                                <label for="register_date">Дата регистрации</label>
-                                <input id="register_date" name="regDate" type="date">
-                            </div>
-                            <div class="report-row">
-                                <label for="register_receipt_number">Номер отчета о регистрации</label>
-                                <input id="register_receipt_number" name="regNum" type="text">
-                            </div>
-                            <div class="report-row">
-                                <label for="register_receipt_digest">ФП отчета о регистрации</label>
-                                <input id="register_receipt_digest" name="regDigest" type="text">
-                            </div>
-                        </div>
-                        <div class="report-row mt-5">
-                            <button type="button" hx-include="[name='name'],[name='inn']" hx-trigger="click"
-                                    hx:post="@{/application}" hx-target="#report" hx-swap="outerHTML">Сформировать
-                            </button>
-                            <div id="report" th:fragment="report">
-                                <a th:if="${download_url ne null}" th:href="${download_url}">Скачать</a>
-                                <span th:if="${error eq true}" class="text-danger">Ошибка формирования отчета</span>
+                            <div class="report-row mt-5">
+                                <button type="button"
+                                        hx:post="@{/application}" hx-include="[name='name'],[name='inn']"
+                                        hx-target="#report" hx-swap="outerHTML" hx-trigger="click"
+                                        class="btn btn-primary">Сформировать
+                                </button>
+                                <div id="report" th:fragment="report">
+                                    <a th:if="${download_url ne null}" th:href="${download_url}">Скачать</a>
+                                    <span th:if="${error eq true}" class="text-danger">Ошибка формирования отчета</span>
+                                </div>
                             </div>
                         </div>
                     </form>

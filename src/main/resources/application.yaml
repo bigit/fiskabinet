@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: prod
   datasource:
     url: jdbc:postgresql://localhost:5432/fis
     driver-class-name: org.postgresql.Driver
@@ -44,5 +46,5 @@ minio:
   url: http://localhost/
   port: 9000
 deploy:
-  host: http://localhost:8080/
+  host: https://demo.antelit.ru/kabinet/
   version: 0.5.100
