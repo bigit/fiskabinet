@@ -33,7 +33,6 @@ public class Organization {
     private String name;
 
     @Column(columnDefinition = "varchar", unique = true)
-    @Length(min = 10, max = 12, message = "ИНН должен быть 10 или 12 цифр")
     @InnConstraint
     @NotBlank(message = "Не указан ИНН")
     private String inn;

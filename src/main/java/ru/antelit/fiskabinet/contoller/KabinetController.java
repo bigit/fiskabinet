@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ru.antelit.fiskabinet.api.bitrix.model.TaskDto;
 import ru.antelit.fiskabinet.domain.Kkm;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.Tradepoint;
@@ -67,7 +68,6 @@ public class KabinetController {
         kkmMap = new HashMap<>();
 
         for (Tradepoint tradepoint : tradepointList) {
-//            List<Kkm> kkms = kkmService.listKkmByTradepoint(tradepoint);
             List<Kkm> kkms = kkmService.getKkmByTradepoint(tradepoint);
             kkmMap.put(tradepoint, kkms);
         }
@@ -85,7 +85,10 @@ public class KabinetController {
     @ResponseBody
     public ResponseEntity<?> serviceRequest(@RequestParam("id") Integer kkmId) throws ExecutionException, InterruptedException, TimeoutException {
         Kkm kkm = kkmService.get(kkmId);
-        bitrixService.createTask(getCurrentUserInfo(), kkm);
+        TaskDto dto = bitrixService.createTask(getCurrentUserInfo(), kkm);
+        if (dto == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(kkmId);
     }
 
