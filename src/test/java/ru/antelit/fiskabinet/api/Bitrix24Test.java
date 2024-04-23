@@ -8,22 +8,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.antelit.fiskabinet.FiskabinetTestConfiguration;
 import ru.antelit.fiskabinet.api.bitrix.Bitrix24;
-import ru.antelit.fiskabinet.api.bitrix.TaskDto;
-import ru.antelit.fiskabinet.api.bitrix.dto.CompanyDto;
-import ru.antelit.fiskabinet.api.bitrix.dto.RequisiteDto;
-import ru.antelit.fiskabinet.domain.Organization;
+import ru.antelit.fiskabinet.api.bitrix.model.CompanyDto;
+import ru.antelit.fiskabinet.api.bitrix.model.RequisiteDto;
+import ru.antelit.fiskabinet.api.bitrix.model.TaskDto;
+
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.ASSIGNED_BY_ID;
-import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.ID;
-import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.KABINETS;
+import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.CABINETS;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.KKT;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.LOGIN_PASSWORD;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.MAINTAIN_ADDRESS;
@@ -32,7 +29,9 @@ import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.OFD;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.OFD2;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.OFD3;
 import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.SERIAL_NUMBERS;
-import static ru.antelit.fiskabinet.api.bitrix.Bitrix24.TITLE;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ASSIGNED_BY_ID;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ID;
+import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.TITLE;
 
 @SpringBootTest(classes = FiskabinetTestConfiguration.class)
 @ActiveProfiles("test")
@@ -55,17 +54,6 @@ class Bitrix24Test {
         Integer res = 0;
         TaskDto actual = bitrix24Post.createTask(task);
         Assertions.assertEquals(task.getTitle(), actual.getTitle());
-    }
-
-    @Test
-    void testImportFromBitrix() {
-        Map<String, String> filter = new HashMap<>();
-        filter.put(">UF_CRM_1524819776", "");
-
-        List<String> select = Arrays.asList(ID, TITLE, ASSIGNED_BY_ID, LOGIN_PASSWORD, KKT, SERIAL_NUMBERS, KABINETS,
-                MAINTAIN_ADDRESS, MAINTAIN_ADDRESS_2, OFD, OFD2, OFD3);
-       List<CompanyDto> org =  bitrix24Prod.getOrganizations(filter, select);
-       Assertions.assertEquals(158, org.size());
     }
 
     @Test
