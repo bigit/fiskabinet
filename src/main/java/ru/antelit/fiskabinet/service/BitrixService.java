@@ -28,12 +28,11 @@ public class BitrixService {
 
     private final Bitrix24 bitrix24;
 
-
     @Value("${bitrix24.responsible-id}")
     private Integer responsibleId;
 
     @Autowired
-    public BitrixService(Bitrix24 bitrix24, OrgService orgService) {
+    public BitrixService(Bitrix24 bitrix24) {
         this.bitrix24 = bitrix24;
     }
 
@@ -112,7 +111,9 @@ public class BitrixService {
         for (RequisiteDto req : requisites) {
             CompanyInfo info = new CompanyInfo();
             info.setInn(req.getInn());
-            info.setName(!req.getCompanyName().isBlank() ? req.getCompanyName() : req.getCompanyFullName());
+            info.setName(!req.getCompanyName().isBlank() ? req.getCompanyName()
+                    : !req.getCompanyFullName().isBlank() ? req.getCompanyFullName()
+                    : req.getName());
             info.setSourceId(req.getEntityId());
             companies.add(info);
         }
