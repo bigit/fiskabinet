@@ -8,95 +8,111 @@
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
+<th:block th:replace="include::navigation"></th:block>
 <div class="container shadow vh-100 p-3">
-    <form th:action="@{/org}" method="post" th:object="${org}">
-        <input type="hidden" th:field="*{id}">
-        <span class="small text-success" th:if="${saved}">Данные сохранены</span>
-        <div class="row p-2">
-            <div class="col-6">
-                <div class="form-outline mb-3">
-                    <label for="name">Название</label>
-                    <input type="text" id="name" th:field="*{name}" size="50">
+    <section id="info">
+        <form th:action="@{/org}" method="post" th:object="${org}">
+            <input type="hidden" th:field="*{id}">
+            <span class="small text-success" th:if="${saved}">Данные сохранены</span>
+            <div class="row mb-5">
+                <div class="col">
+                    <a sec:authorize="hasRole(ROLE_ADMIN)" th:href="@{/manager}" class="btn btn-warning">Назад</a>
                 </div>
             </div>
-            <div class="col-6 text-end">
-                <label for="imported">Импортирован</label>
-                <input id="imported" type="checkbox" th:field="*{fullyImported}">
-            </div>
-            <span class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-            <div class="row">
-                <div class="col">
-                    <div class="form-outline mb-3">
+            <div class="p-3 shadow">
+                <div class="row form-outline mb-3">
+                    <div class="col-1">
                         <label for="inn">ИНН</label>
-                        <input type="text" id="inn" th:field="*{inn}" size="12">
+                    </div>
+                    <div class="col-9">
+                        <input type="text" id="inn" th:field="*{inn}" size="12" placeholder="123456789012"
+                               class="form-control d-inline" style="width: 140px">
+                        <span th:if="${#fields.hasErrors('inn')}" th:errors="*{inn}" class="text-danger small"></span>
                     </div>
                 </div>
-                <span class="text-danger small"
-                      th:if='${errors ne null and #lists.contains(errors,"inn")}'
-                      th:text="${errors.inn}"/>
-                <span class="text-danger small" th:if="${#fields.hasErrors('inn')}" th:errors="*{inn}"></span>
+                <div class="row form-outline mb-3">
+                    <div class="col-1">
+                        <label for="name">Название</label>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control w-50" type="text" id="name" th:field="*{name}" size="50">
+                    </div>
+                    <div class="col-3">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <a th:href="${org.url}" target="_blank" th:unless="${#strings.isEmpty(org.url)}">
+                                <img style="width: 30px; height: 30px" th:src="@{/img/bitrix24.png}" alt="Страница в Битрикс24">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center mt-5">
+                        <input type="submit" class="btn btn-success" th:value="Сохранить">
+                    </div>
+                </div>
             </div>
-
+        </form>
+    </section>
+    <section id="kkm" th:if="${org.id ne null}">
+        <div class="mt-3 shadow p-3 h-100">
             <div class="row">
                 <div class="col">
-                    <input type="submit" class="btn btn-success" th:value="Сохранить">
-                    <a sec:authorize="hasRole(ROLE_ADMIN)" th:href="@{/manager}" class="btn btn-warning">Назад</a>
-                    <!--                    <a sec:authorize="hasRole(ROLE_USER)" th:href="@{/home}" class="btn btn-warning">Назад</a>-->
+                    <a th:href="@{/kkm/new/(org=${org.id})}" class="btn btn-primary">Добавить кассу</a>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <table class="table table-bordered rounded-1 table-responsive table-hover">
+                        <thead>
+                        <tr class="text-center">
+                            <th scope="col">Имя</th>
+                            <th scope="col">Модель</th>
+                            <th scope="col">Заводской номер</th>
+                            <th scope="col">Номер ФН</th>
+                            <th scope="col">Срок ФН</th>
+                            <th scope="col">Срок ОФД</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(kkmList)}">
+                            <td colspan="6" class="text-muted text-center">Нет касс</td>
+                        </tr>
+                        <tr th:each="kkm : ${kkmList}" th:if="${not #lists.isEmpty(kkmList)}">
+                            <td style="width: 200px; text-align: left">
+                                <a th:href="@{|/kkm/${kkm.id}|}">
+                                    <label th:text="${kkm.getInnerName()}"></label>
+                                </a>
+                            </td>
+                            <td style="width: 200px; text-align: center">
+                                <label th:text="${kkm.kkmModel ne null ? kkm.kkmModel.name : 'Не указана модель'}"
+                                       th:class="${kkm.kkmModel eq null ? 'text-danger' : ''}"/>
+                            </td>
+                            <td style="width: 200px; text-align: center">
+                                <label th:text="${kkm.serialNumber ne null ? kkm.serialNumber : 'Нет заводского номера'}"
+                                       th:class="${kkm.serialNumber eq null ? 'text-danger' : '' }"></label>
+                            </td>
+                            <td style="width: 200px; text-align: center">
+                                <label th:text="${kkm.fnNumber ne null ? kkm.fnNumber : 'Нет номера ФН'}"
+                                       th:class="${kkm.fnNumber eq null ? 'text-danger' : ''}"></label>
+                            </td>
+                            <td style="width: 200px; text-align: center">
+                                <label th:text="${kkm.fnEnd ne null ? kkm.fnEnd : 'Не указан срок'}"
+                                       th:class="${kkm.fnEnd lt #temporals.createToday()} ? 'text-danger'"></label>
+                            </td>
+                            <td style="width: 200px; text-align: center;">
+                                <label th:text="${kkm.ofdSubEnd ne null ? kkm.ofdSubEnd : 'Не указан срок'}"
+                                       th:class="${kkm.ofdSubEnd lt #temporals.createToday()} ? 'text-danger'"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </form>
-    <section id="kkm" th:if="${org.id ne null}">
-    <div class="row mt-3">
-        <div class="col">
-            <a th:href="@{/kkm/new/(org=${org.id})}" class="btn btn-light">Добавить</a>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col">
-            <table class="table table-bordered rounded-1 table-responsive table-hover">
-                <thead>
-                <th>Имя</th>
-                <th>Модель</th>
-                <th>Заводской номер</th>
-                <th>Номер ФН</th>
-                <th>Срок ФН</th>
-                </thead>
-                <tbody>
-                <tr th:if="${#lists.isEmpty(kkmList)}">
-                    <td colspan="5" class="text-muted text-center">Нет касс</td>
-                </tr>
-                <tr th:each="kkm : ${kkmList}" th:if="${not #lists.isEmpty(kkmList)}">
-                    <td style="width: 100px">
-                        <a th:href="@{|/kkm/${kkm.id}|}">
-                            <label th:text="${kkm.getInnerName()}"></label>
-                        </a>
-                    </td>
-                    <td style="width: 100px;">
-                        <label th:text="${kkm.kkmModel ne null ? kkm.kkmModel.name : 'Не указана модель'}"
-                               th:class="${kkm.kkmModel eq null ? 'text-danger' : ''}"/>
-                    </td>
-                    <td style="width: 150px">
-                        <label th:text="${kkm.serialNumber ne null ? kkm.serialNumber : 'Нет заводского номера'}"
-                               th:class="${kkm.serialNumber eq null ? 'text-danger' : '' }"></label>
-                    </td>
-                    <td style="width: 150px">
-                        <label th:text="${kkm.fnNumber ne null ? kkm.fnNumber : 'Нет номера ФН'}"
-                               th:class="${kkm.fnNumber eq null ? 'text-danger' : ''}"></label>
-                    </td>
-                    <td style="width: 80px">
-                        <label th:text="${kkm.fnEnd ne null ? kkm.fnEnd : 'Не указан срок'}"
-                               th:class="${kkm.fnEnd lt #temporals.createToday()} ? 'text-danger'"></label>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
     </section>
-</div>
-</div>
-
 </div>
 </body>
 </html>
