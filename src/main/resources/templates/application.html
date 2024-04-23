@@ -2,7 +2,7 @@
 <html lang="en" xmlns:hx="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Заявление на регистрацию ККТ</title>
     <th:block th:replace="~{include::head}"/>
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 
@@ -43,23 +43,29 @@
                                 <input id="change_ofd" type="checkbox" name="changeOfd">
                                 <label for="change_ofd">Смена ОФД</label>
                             </div>
-<!--                                                            <div class="form-outline mb-3 text-start">-->
-<!--                                                                <input id="automatic" type="checkbox" name="changeAutomatic" value="2">-->
-<!--                                                                <label for="automatic">Изменений сведений о применении в составе автоматического-->
-<!--                                                                    устройства</label>-->
-<!--                                                            </div>-->
+
+<!--    Убраны т.к. не используются (добавить в настройки?) -->
+<!--                        <div class="form-outline mb-3 text-start">-->
+<!--                            <input id="automatic" type="checkbox" name="changeAutomatic" value="2">-->
+<!--                            <label for="automatic">Изменений сведений о применении в составе автоматического-->
+<!--                             устройства</label>-->
+<!--                        </div>-->
+
                             <div class="report-row">
                                 <input id="fn" type="checkbox" name="changeFn">
                                 <label for="fn">Замена фискального накопителя</label>
                             </div>
-<!--                                                            <div class="form-outline mb-3 text-start">-->
-<!--                                                                <input id="from_autonomus" type="checkbox" name="changeOffAutonomous">-->
-<!--                                                                <label for="from_autonomus">Переход из автономного режима</label>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="form-outline mb-3 text-start">-->
-<!--                                                                <input id="to_autonomous" type="checkbox" name="changeOnAutonomous">-->
-<!--                                                                <label for="to_autonomous">Переход в автономный режим</label>-->
-<!--                                                            </div>-->
+
+<!-- Убраны т.к. не используются (добавить в настройки?)  -->
+<!--                        <div class="form-outline mb-3 text-start">-->
+<!--                            <input id="from_autonomus" type="checkbox" name="changeOffAutonomous">-->
+<!--                            <label for="from_autonomus">Переход из автономного режима</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-outline mb-3 text-start">-->
+<!--                            <input id="to_autonomous" type="checkbox" name="changeOnAutonomous">-->
+<!--                            <label for="to_autonomous">Переход в автономный режим</label>-->
+<!--                        </div>-->
+
                             <div class="report-row">
                                 <input id="title" type="checkbox" name="changeUserName">
                                 <label for="title">Изменение наименование пользователя</label>

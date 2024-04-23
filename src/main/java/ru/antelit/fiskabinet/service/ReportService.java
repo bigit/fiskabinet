@@ -9,9 +9,9 @@ import org.jxls.common.CellRef;
 import org.jxls.common.Context;
 import org.jxls.common.cellshift.InnerCellShiftStrategy;
 import org.jxls.transform.Transformer;
-import org.jxls.transform.poi.PoiTransformer;
 import org.jxls.util.JxlsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import ru.antelit.fiskabinet.domain.OfdProvider;
@@ -49,9 +49,7 @@ public class ReportService {
     @Autowired
     private DateTimeFormatter dateReportFormatter;
 
-    //    public File createRegistrationApplication(String inn, boolean isRegistration, int reregistrationType, String organizationName,
-//                                              String declarant, String city, String street, int house, String modelName,
-//                                              String serialNumber, String fnNumber) {
+    @Async
     public File createRegistrationApplication(RegFormDto regFormDto) throws IllegalArgumentException {
 
         File templateFile;
@@ -127,10 +125,11 @@ public class ReportService {
             fis = new FileInputStream(templateFile);
 
             JxlsHelper jxlsHelper = JxlsHelper.getInstance();
-
             Transformer transformer = jxlsHelper.createTransformer(fis, fos);
-            ((PoiTransformer) transformer).setIgnoreColumnProps(false);
-            ((PoiTransformer) transformer).setIgnoreRowProps(false);
+
+            //TODO Проверить работоспособноть параметров
+//            ((PoiTransformer) transformer).setIgnoreColumnProps(false);
+//            ((PoiTransformer) transformer).setIgnoreRowProps(false);
 
             XlsArea areaPage1 = new XlsArea(new AreaRef(PAGE_1 + EXCL + "A1:DO40"), transformer);
 
