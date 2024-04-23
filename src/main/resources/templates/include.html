@@ -44,7 +44,8 @@
                         <option th:if="${orgs != null}"
                                 th:each="org: ${orgs}" th:value="${org.id}" th:text="${org.name}"></option>
                     </select>
-                    <input th:unless="${code.status.name eq 'NEW'}" type="text" th:value="${code.organization.name}"
+                    <input th:unless="${code.status.name eq 'NEW'}" type="text"
+                           th:value="${code.organization == null ? '' : code.organization.name}"
                            readonly class="form-control">
                 </div>
             </div>

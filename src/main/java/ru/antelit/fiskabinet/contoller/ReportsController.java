@@ -6,7 +6,7 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,6 @@ import ru.antelit.fiskabinet.service.MinioService;
 import ru.antelit.fiskabinet.service.ModelService;
 import ru.antelit.fiskabinet.service.OfdService;
 import ru.antelit.fiskabinet.service.ReportService;
-import ru.antelit.fiskabinet.service.VendorService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
 public class ReportsController {
 
     public static final String FILE_NAME = "Заявление на регистрацию.xlsx";
-    @Value("${application.host}")
+    @Value("${deploy.host}")
     private String host;
 
     @Autowired
@@ -54,8 +53,6 @@ public class ReportsController {
     @GetMapping("/application")
     public String index(Model model)
     {
-//        Map<Integer, String> vendors = vendorService.getVendorsNames();
-//        model.addAttribute("vendors", vendors);
         var ofdList = ofdService.list();
         model.addAttribute("ofdList", ofdList);
         var models = modelService.list().stream()
