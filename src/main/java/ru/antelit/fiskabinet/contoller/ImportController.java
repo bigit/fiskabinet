@@ -88,12 +88,14 @@ public class ImportController {
         Organization org = null;
         if (cmp.getInn() != null) {
             org = orgService.findByInn(cmp.getInn());
-            target.addMessage("Организация с таким ИНН уже существует", false);
-        } if (org == null) {
+            if (org != null) {
+                target.addMessage("Организация с таким ИНН уже существует", false);
+            }
+        } if (org == null && !cmp.getName().isBlank()) {
             var list = orgService.findByName(cmp.getName());
-            target.addMessage("Организация с таким именем уже существует", false);
             if (!list.isEmpty()) {
                 org = list.get(0);
+                target.addMessage("Организация с таким именем уже существует", false);
             }
         }
         if (org == null) {

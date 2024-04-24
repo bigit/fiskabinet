@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -88,21 +87,14 @@ public class BitrixService {
     public List<CompanyInfo> findCompaniesByRequisiteName(String name) {
         Map<String, Object> filter = new HashMap<>();
         filter.put("%RQ_COMPANY_NAME", name);
-        List<RequisiteDto> requisites = bitrix24.getRequisites(filter).stream()
-                .filter(req -> (!req.getCompanyName().isBlank() || !req.getCompanyFullName().isBlank()))
-                .filter(req -> Objects.nonNull(req.getInn()))
-                .collect(toList());
+        List<RequisiteDto> requisites = bitrix24.getRequisites(filter);
         return convert(requisites);
     }
 
     public List<CompanyInfo> findCompaniesByRequisiteInn(String query) {
         Map<String, Object> filter = new HashMap<>();
         filter.put("%RQ_INN", query);
-        List<RequisiteDto> requisites = bitrix24.getRequisites(filter).stream()
-                .filter(req -> (!req.getName().isBlank()
-                        || !req.getCompanyFullName().isBlank()
-                        || req.getCompanyName().isBlank()))
-                .collect(toList());
+        List<RequisiteDto> requisites = bitrix24.getRequisites(filter);
         return convert(requisites);
     }
 
@@ -113,7 +105,7 @@ public class BitrixService {
             info.setInn(req.getInn());
             info.setName(!req.getCompanyName().isBlank() ? req.getCompanyName()
                     : !req.getCompanyFullName().isBlank() ? req.getCompanyFullName()
-                    : req.getName());
+                    : !req.getReqName().isBlank() ? req.getReqName() : req.getName()); ;
             info.setSourceId(req.getEntityId());
             companies.add(info);
         }

@@ -15,6 +15,9 @@ public class RequisiteDto {
     private String inn;
 
     @JsonProperty("RQ_NAME")
+    private String reqName;
+
+    @JsonProperty("NAME")
     private String name;
 
     @JsonProperty("RQ_COMPANY_NAME")
