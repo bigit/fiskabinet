@@ -11,12 +11,13 @@ public class InnValidator implements ConstraintValidator<InnConstraint, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        int checksum, checksum1, checksum2;
         int[] values = new int[value.length()];
         for (int i=0; i<values.length; i++) {
             values[i] = Character.getNumericValue(value.charAt(i));
         }
         if (values.length == 10) {
-            int checksum = 0;
+            checksum = 0;
             for (int i = 0; i < 9; i++) {
                 checksum += values[i] * orgCoefs[i];
             }
@@ -25,8 +26,8 @@ public class InnValidator implements ConstraintValidator<InnConstraint, String> 
         }
 
         if (value.length() == 12) {
-            int checksum1 = 0;
-            int checksum2 = 0;
+            checksum1 = 0;
+            checksum2 = 0;
 
             for (int i = 0; i < 10; i++) {
                 checksum1 += values[i] * ipCoefs1[i];
