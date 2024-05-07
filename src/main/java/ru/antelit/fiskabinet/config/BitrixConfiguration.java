@@ -9,7 +9,6 @@ import ru.antelit.fiskabinet.api.bitrix.Bitrix24;
 
 @Configuration
 @PropertySource("classpath:application-dev.yaml")
-//@Profile("dev")
 public class BitrixConfiguration {
 
     @Value("${bitrix24.domain}")

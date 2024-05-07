@@ -69,7 +69,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
                         .requestMatchers("/register", "/css/**","/error/**", "/webjars/**", "/img/**")
                         .permitAll()
-                        .requestMatchers("/home", "/org/**", "/code/**", "/application/**", "/files/**")
+                        .requestMatchers(
+                                "/home",
+                                "/org/**",
+                                "/code/**",
+                                "/kkm/**",
+                                "/application/**",
+                                "/files/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/manager/**", "/import/**")
                         .hasRole("ADMIN")

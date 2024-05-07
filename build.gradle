@@ -42,7 +42,7 @@ dependencies {
 
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
-//    developmentOnly 'org.springframework.boot:spring-boot-devtools:3.1.8'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:3.2.5'
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.webjars:bootstrap:5.2.3'

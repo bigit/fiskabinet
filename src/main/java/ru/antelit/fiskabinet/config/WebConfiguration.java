@@ -18,10 +18,4 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-
-//    @Bean
-//    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
-//    webServerFactoryCustomizer() {
-//        return factory -> factory.setContextPath("/kabinet");
-//    }
 }
