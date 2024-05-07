@@ -12,7 +12,7 @@ import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.service.BitrixService;
 import ru.antelit.fiskabinet.service.OrgService;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

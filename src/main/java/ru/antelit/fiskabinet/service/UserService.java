@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.service.repository.UserRepository;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 @Service
 @Transactional

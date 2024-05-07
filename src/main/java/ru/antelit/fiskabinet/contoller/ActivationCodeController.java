@@ -19,7 +19,7 @@ import ru.antelit.fiskabinet.service.OfdService;
 import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.utils.SecurityUtils;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 

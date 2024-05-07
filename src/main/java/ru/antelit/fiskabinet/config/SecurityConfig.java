@@ -6,12 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.session.RequestedUrlRedirectInvalidSessionStrategy;
 import ru.antelit.fiskabinet.service.UserInfoService;
 
 import javax.sql.DataSource;
@@ -30,8 +31,8 @@ public class SecurityConfig {
         manager.setDataSource(dataSource);
         manager.setAuthoritiesByUsernameQuery("select username, authority from security.authorities where username=?");
         manager.setCreateUserSql("insert into security.user " +
-                                    "(username, password, first_name, father_name, last_name, phonenumber, email, enabled)" +
-                                "values (?, ?, ?, ?, ?, ?, ?, true)");
+                "(username, password, first_name, father_name, last_name, phonenumber, email, enabled)" +
+                "values (?, ?, ?, ?, ?, ?, ?, true)");
         return manager;
     }
 
@@ -54,42 +55,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/auth")
-                .successHandler(successHandler())
-                .failureUrl("/login?error=true")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true")
-                .permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/manager/**", "/import/**")
-                .hasRole("ADMIN")
-                .and()
-                .authorizeRequests()
-                .antMatchers("/register", "/error/**", "/webjars/**", "/static/img/favicon.ico")
-                .permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/home", "/org/**")
-                .hasAnyRole("USER","ADMIN");
+        http.csrf(AbstractHttpConfigurer::disable)
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                        .loginPage("/login")
+                        .loginProcessingUrl("/auth")
+                        .successHandler(successHandler())
+                        .permitAll())
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll())
+                .sessionManagement(mgmt -> mgmt.invalidSessionStrategy(new RequestedUrlRedirectInvalidSessionStrategy()))
+                .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
+                        .requestMatchers("/register", "/css/**","/error/**", "/webjars/**", "/img/**")
+                        .permitAll()
+                        .requestMatchers("/home", "/org/**", "/code/**", "/application/**", "/files/**")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/manager/**", "/import/**")
+                        .hasRole("ADMIN")
+                );
         return http.build();
     }
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
-            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+//            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 request.getRequestDispatcher("/manager").forward(request, response);
-            } else {
-                request.getRequestDispatcher("/home").forward(request, response);
-            }
+//            } else {
+//                request.getRequestDispatcher("/home").forward(request, response);
+//            }
         };
     }
 
