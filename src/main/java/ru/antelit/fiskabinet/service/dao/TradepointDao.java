@@ -1,9 +1,8 @@
 package ru.antelit.fiskabinet.service.dao;
 
-import liquibase.pro.packaged.P;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.Tradepoint;
 
 import java.util.List;
