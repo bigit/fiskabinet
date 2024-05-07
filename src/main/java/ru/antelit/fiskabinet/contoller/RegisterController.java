@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.antelit.fiskabinet.domain.UserInfo;
 import ru.antelit.fiskabinet.service.UserService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Controller
 public class RegisterController {

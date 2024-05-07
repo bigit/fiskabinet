@@ -24,7 +24,7 @@ import ru.antelit.fiskabinet.service.ModelService;
 import ru.antelit.fiskabinet.service.OfdService;
 import ru.antelit.fiskabinet.service.ReportService;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

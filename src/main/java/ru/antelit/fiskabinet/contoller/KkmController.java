@@ -22,7 +22,7 @@ import ru.antelit.fiskabinet.service.OrgService;
 import ru.antelit.fiskabinet.service.TradepointService;
 import ru.antelit.fiskabinet.service.VendorService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
