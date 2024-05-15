@@ -58,6 +58,14 @@ public class UserInfoService implements UserDetailsService {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return repository.findUserInfosByLogin(user.getUsername());
     }
+
+    public void updateAccount(UserInfo userInfo, String firstName, String fatherName, String lastName, String phone) {
+        userInfo.setFirstName(firstName);
+        userInfo.setFatherName(fatherName);
+        userInfo.setLastName(lastName);
+        userInfo.setPhone(phone);
+        repository.save(userInfo);
+    }
     /**
      * Обновляет информацию о пользователе (ФИО, телефон, email)
      * @param userInfo -

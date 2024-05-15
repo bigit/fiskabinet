@@ -75,7 +75,8 @@ public class SecurityConfig {
                                 "/code/**",
                                 "/kkm/**",
                                 "/application/**",
-                                "/files/**")
+                                "/files/**",
+                                "/profile/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/manager/**", "/import/**")
                         .hasRole("ADMIN")
