@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.domain;
+package ru.antelit.fiskabinet.ofd;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import ru.antelit.fiskabinet.domain.Organization;
+import ru.antelit.fiskabinet.domain.UserInfo;
+import ru.antelit.fiskabinet.domain.Vendor;
 
 @Getter
 @Setter
@@ -34,7 +37,7 @@ public class ActivationCode {
     private CodeStatus status;
 
     @ManyToOne
-    private OfdProvider provider;
+    private Vendor.OfdProvider provider;
 
     @ManyToOne
     @JoinColumn(name = "org_id")

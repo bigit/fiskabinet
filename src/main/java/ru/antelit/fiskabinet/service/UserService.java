@@ -12,15 +12,28 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public UserInfo createUser(UserInfo userInfo) {
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         userInfo.setEnabled(true);
 
         return userRepository.save(userInfo);
+    }
+
+    public boolean updatePassword(UserInfo userInfo, String password) {
+        if (passwordEncoder.matches(password, userInfo.getPassword())) {
+            return false;
+        }
+        userInfo.setPassword(passwordEncoder.encode(password));
+        userRepository.save(userInfo);
+        return true;
     }
 }

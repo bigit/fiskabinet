@@ -121,7 +121,7 @@ public class KkmController {
         return "redirect:/kkm/" + saved.getId();
     }
 
-    @GetMapping("/models")
+    @GetMapping("/kkm/models")
     @Secured("hasAnyRole()")
     public String getModels(@RequestParam("vid") Integer vendorId, Model model) {
         Map<Integer, String> models = modelService.getModelsByVendorId(vendorId).stream()

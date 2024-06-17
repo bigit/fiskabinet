@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.domain;
+package ru.antelit.fiskabinet.ofd;
 
 import lombok.Getter;
 

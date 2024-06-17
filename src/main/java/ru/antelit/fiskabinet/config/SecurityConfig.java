@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .permitAll())
                 .sessionManagement(mgmt -> mgmt.invalidSessionStrategy(new RequestedUrlRedirectInvalidSessionStrategy()))
                 .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-                        .requestMatchers("/register", "/css/**","/error/**", "/webjars/**", "/img/**")
+                        .requestMatchers("/register", "/css/**","/error/**", "/webjars/**", "/img/**", "/js/**")
                         .permitAll()
                         .requestMatchers(
                                 "/home",
@@ -75,7 +75,8 @@ public class SecurityConfig {
                                 "/code/**",
                                 "/kkm/**",
                                 "/application/**",
-                                "/files/**")
+                                "/files/**",
+                                "/profile/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/manager/**", "/import/**")
                         .hasRole("ADMIN")
