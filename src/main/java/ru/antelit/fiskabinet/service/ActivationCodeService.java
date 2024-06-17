@@ -2,8 +2,8 @@ package ru.antelit.fiskabinet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.antelit.fiskabinet.domain.ActivationCode;
-import ru.antelit.fiskabinet.domain.OfdProvider;
+import ru.antelit.fiskabinet.domain.Vendor;
+import ru.antelit.fiskabinet.ofd.ActivationCode;
 import ru.antelit.fiskabinet.service.repository.ActivationCodeRepository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class ActivationCodeService {
     }
 
     @SuppressWarnings("unused")
-    public List<ActivationCode> getFreeCodesByProvider(OfdProvider provider) {
+    public List<ActivationCode> getFreeCodesByProvider(Vendor.OfdProvider provider) {
         return repository.getFreeCodesByProvider(provider);
     }
 
@@ -37,7 +37,7 @@ public class ActivationCodeService {
     }
 
     @SuppressWarnings("unused")
-    public ActivationCode getFreeCode(OfdProvider provider) {
+    public ActivationCode getFreeCode(Vendor.OfdProvider provider) {
         return repository.getFreeCodesByProvider(provider).get(0);
     }
 

@@ -15,32 +15,39 @@
 <div class="container shadow p-3">
     <div class="row report-form parent d-flex justify-content-center">
         <div class="col">
-            <form>
+            <form id="pass_form" th:fragment="password">
                 <div class="report-row">
                 <label>Имя пользователя</label>
-                    <input id="username" type="text" readonly th:value="*{user.username}" class="form-control">
+                    <input id="username" type="text" readonly th:value="${user.username}" class="form-control w-25">
                 </div>
-                <label for="password">Новый пароль</label>
-                <input id="password" name="password" type="password" class="form-control"/>
-                <label for="confirm_password">Повторите пароль</label>
-                <input id="confirm_password" name="confirm_password" type="password" class="form-control">
-                <button type="button" class="btn btn-success mt-2"
+                <label for="password" class="d-block">Новый пароль</label>
+                <input id="password" name="password" type="password" class="form-control w-25 d-inline"/>
+<!--                <span th:if="${#fields.hasErrors('password')}" th:errors="*{errors.password}"-->
+<!--                      class="small text-danger d-inline"></span>-->
+
+                <label for="confirm_password" class="d-block">Повторите пароль</label>
+                <input id="confirm_password" name="confirm_password" type="password" class="form-control w-25 d-inline"
+                th:value="${confirmPassword}">
+                <span th:if="${#fields.hasErrors('confirmPassword')}"
+                      class="small text-danger">Ошибка</span>
+                <button type="button" class="btn btn-success mt-2 d-block"
                         hx:post="@{/profile/password}"
-                        hx-include="[name='password']" hx-trigger="click" hx-swap="none">Изменить пароль</button>
+                        hx-include="[name='password'][name='confirm_password']" hx-trigger="click"
+                        hx-target="#pass_form" hx-swap="outerHTML">Изменить пароль</button>
             </form>
 
             <form th:object="${user}" class="mt-3">
                 <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" th:value="*{firstName}" class="form-control">
+                <input type="text" id="first_name" name="first_name" th:value="*{firstName}" class="form-control w-50">
                 <label for="father_name">Отчество</label>
-                <input id="father_name" name="father_name" type="text" th:value="*{fatherName}" class="form-control">
+                <input id="father_name" name="father_name" type="text" th:value="*{fatherName}" class="form-control w-50">
                 <label for="last_name">Фамилия</label>
-                <input id="last_name" name="last_name" type="text" th:value="*{lastName}" class="form-control">
+                <input id="last_name" name="last_name" type="text" th:value="*{lastName}" class="form-control w-50">
                 <label for="phone">Телефон</label>
-                <input id="phone" name="phone" type="tel" th:value="*{phone}" class="form-control">
+                <input id="phone" name="phone" type="tel" th:value="*{phone}" class="form-control" style="width: 180px">
                 <label for="email">Email</label>
-                <input id="email" name="email" type="email" th:value="*{email}" class="form-control">
-                <button class="btn btn-success" hx-post="/profile/update" hx-swap="none">Сохранить</button>
+                <input id="email" name="email" type="email" th:value="*{email}" class="form-control w-50">
+                <button class="btn btn-success mt-3" hx-post="/profile/update" hx-swap="none">Сохранить</button>
             </form>
         </div>
     </div>

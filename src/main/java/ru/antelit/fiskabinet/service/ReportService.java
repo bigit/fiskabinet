@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.antelit.fiskabinet.domain.OfdProvider;
+import ru.antelit.fiskabinet.domain.Vendor;
 import ru.antelit.fiskabinet.report.RegFormDto;
 import ru.antelit.fiskabinet.report.StepCellRefGenerator;
 
@@ -99,7 +99,7 @@ public class ReportService {
         context.putVar("bso",           regFormDto.isBso() ? 1 : 2);
         context.putVar("excise",        regFormDto.isExcise() ? 1 : 2);
 
-        OfdProvider ofd = ofdService.get(regFormDto.getOfd());
+        Vendor.OfdProvider ofd = ofdService.get(regFormDto.getOfd());
         context.putVar("ofdName", prepareString(ofd.getName(), 20, 80));
         context.putVar("ofdInn", prepareString(ofd.getInn(), 12));
 

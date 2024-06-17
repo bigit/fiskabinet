@@ -34,7 +34,7 @@ public class Kkm {
     @Column(name = "serial_number")
     private String serialNumber;
 
-//TODO Добавить регитрационный номер
+//TODO Добавить регистрационный номер
 //    @Column(name = "reg_num")
 //    private String regNumber;
 
@@ -54,7 +54,7 @@ public class Kkm {
 
     @ManyToOne
     @JoinColumn(name = "ofd_id")
-    private OfdProvider ofdProvider;
+    private Vendor.OfdProvider ofdProvider;
 
     @Column(name = "ofd_sub_end")
     private LocalDate ofdSubEnd;
