@@ -54,7 +54,7 @@ public class Kkm {
 
     @ManyToOne
     @JoinColumn(name = "ofd_id")
-    private Vendor.OfdProvider ofdProvider;
+    private OfdProvider ofdProvider;
 
     @Column(name = "ofd_sub_end")
     private LocalDate ofdSubEnd;

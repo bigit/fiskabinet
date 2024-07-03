@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.antelit.fiskabinet.domain.Vendor;
+import ru.antelit.fiskabinet.domain.OfdProvider;
 import ru.antelit.fiskabinet.report.RegFormDto;
 import ru.antelit.fiskabinet.report.StepCellRefGenerator;
 
@@ -99,20 +99,29 @@ public class ReportService {
         context.putVar("bso",           regFormDto.isBso() ? 1 : 2);
         context.putVar("excise",        regFormDto.isExcise() ? 1 : 2);
 
-        Vendor.OfdProvider ofd = ofdService.get(regFormDto.getOfd());
+        OfdProvider ofd = ofdService.get(regFormDto.getOfd());
         context.putVar("ofdName", prepareString(ofd.getName(), 20, 80));
         context.putVar("ofdInn", prepareString(ofd.getInn(), 12));
 
         context.putVar("reportUnavailable", regFormDto.isReportUnavailable() ? 1 : 2);
+
         context.putVar("regNum", prepareString(regFormDto.getRegNum(), 8));
         context.putVar("regDigest", prepareString(regFormDto.getRegDigest(), 10));
-        context.putVar("dr", regFormDto.getRegDate().format(dateReportFormatter).toCharArray());
-        context.putVar("tr", regFormDto.getRegTime().format(timeReportFormatter).toCharArray());
+        if (regFormDto.getRegDate() != null) {
+            context.putVar("dr", regFormDto.getRegDate().format(dateReportFormatter).toCharArray());
+        }
+        if (regFormDto.getRegTime() != null) {
+            context.putVar("tr", regFormDto.getRegTime().format(timeReportFormatter).toCharArray());
+        }
 
         context.putVar("closeNum", prepareString(regFormDto.getCloseNum(), 8));
         context.putVar("closeDigest", prepareString(regFormDto.getCloseDigest(), 10));
-        context.putVar("dc", regFormDto.getCloseDate().format(dateReportFormatter).toCharArray());
-        context.putVar("tc", regFormDto.getCloseTime().format(timeReportFormatter).toCharArray());
+        if (regFormDto.getCloseDate() != null) {
+            context.putVar("dc", regFormDto.getCloseDate().format(dateReportFormatter).toCharArray());
+        }
+        if (regFormDto.getCloseTime() != null) {
+            context.putVar("tc", regFormDto.getCloseTime().format(timeReportFormatter).toCharArray());
+        }
 
         try {
             templateFile = ResourceUtils.getFile("classpath:report/reg_form.xlsx");

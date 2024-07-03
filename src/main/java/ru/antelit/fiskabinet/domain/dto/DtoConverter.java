@@ -2,7 +2,7 @@ package ru.antelit.fiskabinet.domain.dto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.antelit.fiskabinet.domain.Vendor;
+import ru.antelit.fiskabinet.domain.OfdProvider;
 import ru.antelit.fiskabinet.ofd.ActivationCode;
 import ru.antelit.fiskabinet.ofd.CodeStatus;
 import ru.antelit.fiskabinet.service.OfdService;
@@ -23,7 +23,7 @@ public class DtoConverter {
         }
         code.setDuration(dto.getDuration());
 
-        Vendor.OfdProvider provider = ofdService.get(dto.getProviderId());
+        OfdProvider provider = ofdService.get(dto.getProviderId());
         code.setProvider(provider);
 
         if (dto.getStatus() != null) {

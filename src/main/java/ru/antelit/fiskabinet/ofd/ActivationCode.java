@@ -1,9 +1,5 @@
 package ru.antelit.fiskabinet.ofd;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,9 +10,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import ru.antelit.fiskabinet.domain.OfdProvider;
 import ru.antelit.fiskabinet.domain.Organization;
 import ru.antelit.fiskabinet.domain.UserInfo;
-import ru.antelit.fiskabinet.domain.Vendor;
 
 @Getter
 @Setter
@@ -37,7 +36,7 @@ public class ActivationCode {
     private CodeStatus status;
 
     @ManyToOne
-    private Vendor.OfdProvider provider;
+    private OfdProvider provider;
 
     @ManyToOne
     @JoinColumn(name = "org_id")
