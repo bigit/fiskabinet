@@ -1,10 +1,11 @@
 package ru.antelit.fiskabinet.validator;
 
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.validation.ConstraintValidatorContext;
+
 
 class InnValidatorTest {
 

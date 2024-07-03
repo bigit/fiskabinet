@@ -49,18 +49,15 @@ public class UserProfileController {
 
     @PostMapping("/profile/password")
     public String changePassword(@RequestAttribute("password") String newPassword,
-                                 BindingResult passBindingResult,
                                  @RequestAttribute("confirm_password") String confirmPassword,
-                                 BindingResult bindingResult, Model model) {
+                                 Model model) {
         UserInfo userInfo = securityUtils.getCurrentUser();
         if (newPassword.length() < 8) {
-            bindingResult.addError(new ObjectError("newPassword", "Пароль должен быть 8 или более символов"));
             model.addAttribute("newPassword", newPassword);
             model.addAttribute("confirmPassword", confirmPassword);
             return "profile :: password";
         }
         if (!newPassword.equals(confirmPassword)) {
-            bindingResult.addError(new ObjectError("confirmPassword", "Пароли не совпадают"));
             model.addAttribute("newPassword", newPassword);
             model.addAttribute("confirmPassword", confirmPassword);
             return "profile :: password";

@@ -1,4 +1,4 @@
-package ru.antelit.fiskabinet.api.bitrix.model;
+package ru.antelit.fiskabinet.api.bitrix;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

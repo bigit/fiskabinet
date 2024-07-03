@@ -50,7 +50,7 @@ public class ImportController {
     }
 
     @GetMapping("import/lookup")
-    public String lookup(String query, Model model) {
+    public String lookup(@RequestParam("query") String query, Model model) {
         if (query == null || query.isBlank()) {
             model.addAttribute("companies", Collections.emptyList());
         } else {

@@ -8,7 +8,7 @@
     <th:block th:replace="~{include::head}"/>
 </head>
 <body>
-<th:block th:replace="include::navigation"></th:block>
+<th:block th:replace="~{include::navigation}"></th:block>
 <div class="container shadow vh-100 p-3">
     <section id="info">
         <form th:action="@{/org}" method="post" th:object="${org}">
@@ -25,7 +25,7 @@
                         <label for="inn">ИНН</label>
                     </div>
                     <div class="col-9">
-                        <input type="text" id="inn" th:field="*{inn}" size="12" placeholder="123456789012"
+                        <input type="text" id="inn" th:field="*{inn}" maxlength="12" size="12" placeholder="123456789012"
                                class="form-control d-inline" style="width: 140px">
                         <span th:if="${#fields.hasErrors('inn')}" th:errors="*{inn}" class="text-danger small"></span>
                     </div>

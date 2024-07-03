@@ -31,20 +31,25 @@ import java.util.concurrent.TimeoutException;
 @Controller
 public class KabinetController {
 
-    @Autowired
-    private UserInfoService userInfoService;
-    @Autowired
-    private OrgService orgService;
-    @Autowired
-    private TradepointService tradepointSerivce;
-    @Autowired
-    private KkmService kkmService;
-    @Autowired
-    private BitrixService bitrixService;
+    private final UserInfoService userInfoService;
+    private final OrgService orgService;
+    private final TradepointService tradepointSerivce;
+    private final KkmService kkmService;
+    private final BitrixService bitrixService;
 
     private List<Tradepoint> tradepointList;
     private Map<Organization, List<Tradepoint>> tradepointMap;
     private Map<Tradepoint, List<Kkm>> kkmMap;
+
+    @Autowired
+    public KabinetController(UserInfoService userInfoService, OrgService orgService, TradepointService tradepointSerivce,
+                             KkmService kkmService, BitrixService bitrixService) {
+        this.userInfoService = userInfoService;
+        this.orgService = orgService;
+        this.tradepointSerivce = tradepointSerivce;
+        this.kkmService = kkmService;
+        this.bitrixService = bitrixService;
+    }
 
     @GetMapping("/home")
     public String home(Model model) {

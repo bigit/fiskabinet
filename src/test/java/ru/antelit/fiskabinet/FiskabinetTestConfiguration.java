@@ -1,5 +1,6 @@
 package ru.antelit.fiskabinet;
 
+import jakarta.ws.rs.client.ClientBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -11,12 +12,10 @@ import org.springframework.test.context.TestPropertySource;
 import ru.antelit.fiskabinet.api.bitrix.Bitrix24;
 import ru.antelit.fiskabinet.api.bitrix.json.ObjectMapperProvider;
 
-import javax.ws.rs.client.ClientBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 @TestConfiguration
-//@Import({BitrixConfiguration.class})
 @Profile({"test"})
 @TestPropertySource("classpath:application.yaml")
 public class FiskabinetTestConfiguration {

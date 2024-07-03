@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Список организаций</title>
-    <th:block th:replace="include::head"/>
+    <th:block th:replace="~{include::head}"/>
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 <body>
-<th:block th:replace="include::navigation"/>
+<th:block th:replace="~{include::navigation}"/>
 <div class="container shadow p-3">
     <h1>Организации</h1>
     <div class="row mb-3">

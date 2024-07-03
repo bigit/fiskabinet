@@ -8,7 +8,7 @@
 
 </head>
 <body>
-<th:block th:replace="include::navigation"></th:block>
+<th:block th:replace="~{include::navigation}"></th:block>
 <div class="container h-100 shadow p-3">
     <div class="row">
         <div class="col">
@@ -24,8 +24,8 @@
                             </div>
                             <div class="report-row">
                                 <label for="inn">ИНН</label>
-                                <input type="text" id="inn" name="inn" size="11" placeholder="123456789012"
-                                class="form-control" style="width: 140px">
+                                <input type="text" id="inn" name="inn" maxlength="12" size="11"
+                                       placeholder="123456789012" class="form-control" style="width: 140px">
                             </div>
                         </div>
                         <div class="report-group">

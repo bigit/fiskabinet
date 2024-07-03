@@ -38,48 +38,55 @@ import java.util.stream.Collectors;
 public class ReportsController {
 
     public static final String FILE_NAME = "Заявление на регистрацию.xlsx";
+
     @Value("${deploy.host}")
     private String host;
 
-    @Autowired
-    private ReportService reportService;
-    @Autowired
-    private ModelService modelService;
-    @Autowired
-    private OfdService ofdService;
-    @Autowired
-    private MinioService minioService;
+    private final ReportService reportService;
+    private final ModelService modelService;
+    private final OfdService ofdService;
+    private final MinioService minioService;
+
+    public ReportsController(ReportService reportService, ModelService modelService, OfdService ofdService,
+                             MinioService minioService) {
+        this.reportService = reportService;
+        this.modelService = modelService;
+        this.ofdService = ofdService;
+        this.minioService = minioService;
+    }
 
     @GetMapping("/application")
     public String index(Model model)
     {
         var ofdList = ofdService.list();
-        model.addAttribute("ofdList", ofdList);
         var models = modelService.list().stream()
                 .map(KkmModel::getFullName)
                 .sorted()
                 .collect(Collectors.toList());
+        model.addAttribute("ofdList", ofdList);
         model.addAttribute("models", models);
         return "application";
     }
 
     @PostMapping("/application")
-    public String create(RegFormDto regFormDto, Model model) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        File report =
-                reportService.createRegistrationApplication(regFormDto);
+    public String create(RegFormDto regFormDto, Model model) throws ServerException, InsufficientDataException,
+            ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException,
+            XmlParserException, InternalException {
+        File report = reportService.createRegistrationApplication(regFormDto);
         String filename = minioService.upload(report);
         model.addAttribute("download_url", host + "files/" + filename);
         return "application::report";
     }
 
     @GetMapping(value = "files/**", produces = "application/octet-stream")
-    public ResponseEntity<?> get(HttpServletRequest request) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public ResponseEntity<?> get(HttpServletRequest request) throws Exception {
         String filename = new AntPathMatcher().extractPathWithinPattern("files/**", request.getServletPath());
         InputStream stream = minioService.getFileStream(filename);
+        String name;
         if (stream == null) {
             return ResponseEntity.notFound().build();
         }
-        String name = URLEncoder.encode(FILE_NAME, StandardCharsets.UTF_8)
+        name = URLEncoder.encode(FILE_NAME, StandardCharsets.UTF_8)
                 .replace("+", " ");
         byte[] fileBytes = IOUtils.toByteArray(minioService.getFileStream(filename));
         stream.close();

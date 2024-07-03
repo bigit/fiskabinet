@@ -13,7 +13,6 @@ import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 import ru.antelit.fiskabinet.api.bitrix.enums.Method;
 import ru.antelit.fiskabinet.api.bitrix.enums.Scope;
 import ru.antelit.fiskabinet.api.bitrix.json.ObjectMapperProvider;
-import ru.antelit.fiskabinet.api.bitrix.model.BitrixRequest;
 import ru.antelit.fiskabinet.api.bitrix.model.CompanyDto;
 import ru.antelit.fiskabinet.api.bitrix.model.ListResponse;
 import ru.antelit.fiskabinet.api.bitrix.model.RequisiteDto;
@@ -42,12 +41,12 @@ import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.REQUISITE;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Entity.TASK;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Method.LIST;
 import static ru.antelit.fiskabinet.api.bitrix.enums.Scope.CRM;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.COMPANY_URL;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ENTITY_TYPE_COMPANY;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.ENTITY_TYPE_ID;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.HOST;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.HTTPS;
-import static ru.antelit.fiskabinet.api.bitrix.model.BitrixConstants.REST;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.COMPANY_URL;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.ENTITY_TYPE_COMPANY;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.ENTITY_TYPE_ID;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.HOST;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.HTTPS;
+import static ru.antelit.fiskabinet.api.bitrix.BitrixConstants.REST;
 
 /**
  * Клиент для Bitrix24 REST API

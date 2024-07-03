@@ -19,11 +19,16 @@ import javax.sql.DataSource;
 
 @EnableWebSecurity
 @Configuration
-//@Profile("dev")
 public class SecurityConfig {
 
+    private final DataSource dataSource;
+    private final UserInfoService userInfoService;
+
     @Autowired
-    DataSource dataSource;
+    public SecurityConfig(DataSource dataSource, UserInfoService userInfoService) {
+        this.dataSource = dataSource;
+        this.userInfoService = userInfoService;
+    }
 
     @Bean
     public JdbcUserDetailsManager userDetailsManager() {
@@ -35,10 +40,6 @@ public class SecurityConfig {
                 "values (?, ?, ?, ?, ?, ?, ?, true)");
         return manager;
     }
-
-    @Autowired
-    public UserInfoService userInfoService;
-
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -87,19 +88,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
-//            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 request.getRequestDispatcher("/manager").forward(request, response);
-//            } else {
-//                request.getRequestDispatcher("/home").forward(request, response);
-//            }
         };
     }
-
-//    @Autowired
-//    public void configureJdbcAuth(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.jdbcAuthentication()
-//                .dataSource(dataSource)
-//                .usersByUsernameQuery("select")
-//    }
 
 }

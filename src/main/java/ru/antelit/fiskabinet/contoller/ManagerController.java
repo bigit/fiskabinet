@@ -48,8 +48,7 @@ public class ManagerController {
         var urlMap = orgs.stream()
                 .collect(Collectors.toMap(
                         Organization::getId,
-                        org -> bitrixService.getCompanyUrl(String.valueOf(org.getId())))
-                );
+                        org -> bitrixService.getCompanyUrl(String.valueOf(org.getId()))));
         model.addAttribute("organizations", orgs);
         model.addAttribute("urlMap", urlMap);
         return "manager :: organizations";
