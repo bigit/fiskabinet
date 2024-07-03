@@ -6,8 +6,8 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,7 +24,6 @@ import ru.antelit.fiskabinet.service.ModelService;
 import ru.antelit.fiskabinet.service.OfdService;
 import ru.antelit.fiskabinet.service.ReportService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,8 +55,7 @@ public class ReportsController {
     }
 
     @GetMapping("/application")
-    public String index(Model model)
-    {
+    public String index(Model model) {
         var ofdList = ofdService.list();
         var models = modelService.list().stream()
                 .map(KkmModel::getFullName)
