@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.jxls.command.CellRefGenerator;
 import org.jxls.common.CellRef;
 import org.jxls.common.Context;
+import org.jxls.logging.JxlsLogger;
 
 @AllArgsConstructor
 @Log4j2
@@ -25,7 +26,7 @@ public class StepCellRefGenerator implements CellRefGenerator {
     }
 
     @Override
-    public CellRef generateCellRef(int index, Context context) {
+    public CellRef generateCellRef(int index, Context context, JxlsLogger logger) {
         int row = startRow + (index / length) * 2;
         int col = startCol + index % length;
         CellRef cellRef = new CellRef( sheetName, row, offset + col * 3);
