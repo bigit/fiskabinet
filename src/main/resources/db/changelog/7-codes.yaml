@@ -12,6 +12,7 @@ databaseChangeLog:
   - changeSet:
       id: table_code
       author: r.miller
+      runOnChange: true
       changes:
         - createTable:
             schemaName: cds
@@ -136,3 +137,10 @@ databaseChangeLog:
             baseTableSchemaName: cds
             baseTableName: code
             constraintName: fk_codes_user
+  - changeSet:
+      id: fix_code_length
+      author: r.miller
+      comment: Исправлена для кода с учетом дефисов.
+      changes:
+        - sql:
+            sql: alter table cds.code alter column value type varchar(32)

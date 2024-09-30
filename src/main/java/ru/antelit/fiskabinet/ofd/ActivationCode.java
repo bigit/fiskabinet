@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -28,7 +29,8 @@ public class ActivationCode {
     private Long id;
 
     @Column
-    @Length(max = 16)
+    @Length(max = 32)
+    @Pattern(regexp = "[a-zA-Z0-9-]+", message = "Недопустимые символы")
     private String value;
 
     @Column
