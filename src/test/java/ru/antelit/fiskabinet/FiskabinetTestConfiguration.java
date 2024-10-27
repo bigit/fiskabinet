@@ -4,6 +4,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -20,6 +21,18 @@ import java.util.concurrent.ScheduledExecutorService;
 @TestPropertySource("classpath:application.yaml")
 public class FiskabinetTestConfiguration {
 
+    @Value("${bitrix.domain}")
+    private String domain;
+
+    @Value("${bitrix.country}")
+    private String country;
+
+    @Value("${bitrix.user-id}")
+    private String userId;
+
+    @Value("${bitrix.apiKey}")
+    private String apiKey;
+
     @Bean(name = "bitrix.post")
     public Bitrix24 bitrix24() {
         return new Bitrix24("https://65df5531-c8e0-4ffd-981e-6a0246750b63.mock.pstmn.io", "21", null, null);
@@ -29,10 +42,10 @@ public class FiskabinetTestConfiguration {
     @Primary
     public Bitrix24 bitrix24Prod() {
         return  Bitrix24.builder()
-                .country("ru")
-                .domain("antelplus")
-                .apiKey("b38vyanz2vyjj67m")
-                .userId("21")
+                .domain(domain)
+                .country(country)
+                .userId(userId)
+                .apiKey(apiKey)
                 .build();
     }
 
