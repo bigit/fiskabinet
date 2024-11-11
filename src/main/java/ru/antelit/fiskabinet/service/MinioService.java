@@ -4,11 +4,7 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import io.minio.errors.ErrorResponseException;
-import io.minio.errors.InsufficientDataException;
-import io.minio.errors.InternalException;
-import io.minio.errors.InvalidResponseException;
-import io.minio.errors.ServerException;
-import io.minio.errors.XmlParserException;
+import io.minio.errors.MinioException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,8 +26,7 @@ public class MinioService {
     @Value("${minio.bucket}")
     private String bucketName;
 
-    public String upload(File file) throws ServerException, InsufficientDataException, ErrorResponseException,
-            IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public String upload(File file) throws MinioException, IOException, InvalidKeyException, NoSuchAlgorithmException {
         var response = minioClient.uploadObject(
                 UploadObjectArgs.builder()
                         .bucket(bucketName)
@@ -42,18 +37,18 @@ public class MinioService {
         return file.getName();
     }
 
-    public InputStream getFileStream(String filename) throws ServerException, InsufficientDataException,
-            IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public InputStream getFileStream(String filename)
+            throws MinioException, IOException, InvalidKeyException, NoSuchAlgorithmException {
         InputStream is;
         try {
             is = minioClient.getObject(GetObjectArgs.builder()
-                   .bucket("default")
-                   .object(filename)
-                   .build());
-       } catch (ErrorResponseException e) {
-           log.error("File {} not found", filename);
-           return null;
-       }
+                    .bucket(bucketName)
+                    .object(filename)
+                    .build());
+        } catch (ErrorResponseException e) {
+            log.error("File {} not found", filename);
+            return null;
+        }
         return is;
     }
 

@@ -1,11 +1,6 @@
 package ru.antelit.fiskabinet.contoller;
 
-import io.minio.errors.ErrorResponseException;
-import io.minio.errors.InsufficientDataException;
-import io.minio.errors.InternalException;
-import io.minio.errors.InvalidResponseException;
-import io.minio.errors.ServerException;
-import io.minio.errors.XmlParserException;
+import io.minio.errors.MinioException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,9 +62,8 @@ public class ReportsController {
     }
 
     @PostMapping("/application")
-    public String create(RegFormDto regFormDto, Model model) throws ServerException, InsufficientDataException,
-            ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException,
-            XmlParserException, InternalException {
+    public String create(RegFormDto regFormDto, Model model) throws MinioException, IOException,
+            NoSuchAlgorithmException, InvalidKeyException {
         File report = reportService.createRegistrationApplication(regFormDto);
         String filename = minioService.upload(report);
         model.addAttribute("download_url", host + "files/" + filename);

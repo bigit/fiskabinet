@@ -11,12 +11,10 @@ import org.jxls.builder.JxlsTemplateFiller;
 import org.jxls.command.EachCommand;
 import org.jxls.common.AreaRef;
 import org.jxls.common.PoiExceptionLogger;
-import org.jxls.logging.JxlsLogger;
 import org.jxls.transform.Transformer;
 import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder;
 import org.jxls.transform.poi.PoiTransformerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import ru.antelit.fiskabinet.domain.OfdProvider;
@@ -57,7 +55,6 @@ public class ReportService {
     @Autowired
     private DateTimeFormatter dateReportFormatter;
 
-    @Async
     public File createRegistrationApplication(RegFormDto regFormDto) throws IllegalArgumentException {
 
         File templateFile;
@@ -151,200 +148,209 @@ public class ReportService {
 //            ((PoiTransformer) transformer).setIgnoreRowProps(false);
             JxlsPoiTemplateFillerBuilder builder = JxlsPoiTemplateFillerBuilder.newInstance();
             JxlsTemplateFiller filler =
-            builder.withAreaBuilder((trfmr, ctc) -> {
-                List<Area> areas = new ArrayList<>();
+                    builder.withAreaBuilder((trfmr, ctc) -> {
+                                List<Area> areas = new ArrayList<>();
 
-                //// стр.1
-                XlsArea areaPage1 = new XlsArea(new AreaRef(PAGE_1 + EXCL + "A1:DO40"), transformer);
-                AreaRef arType = new AreaRef(PAGE_1 + EXCL + "AA12:BW15");
+                                //// стр.1
+                                XlsArea areaPage1 = new XlsArea(new AreaRef(PAGE_1 + EXCL + "A1:DO40"), transformer);
+                                AreaRef arType = new AreaRef(PAGE_1 + EXCL + "AA12:BW15");
+                                XlsArea areaType = new XlsArea(arType, transformer);
+                                areas.add(areaType);
 
-                //ИНН
-                AreaRef arInn = new AreaRef(PAGE_1 + EXCL + "AN4:BU4");
-                XlsArea areaInn = new XlsArea(arInn, transformer);
-                EachCommand innCommand = new EachCommand("i", "inn", areaInn,
-                        new StepCellRefGenerator(PAGE_1, 3, 13, 12));
-                areaPage1.addCommand(arInn, innCommand);
-                //Наименование организации
-                AreaRef arOrgName = new AreaRef(PAGE_1 + EXCL + "A17:DN17");
-                XlsArea areaOrgName = new XlsArea(arOrgName, transformer);
-                EachCommand orgNameCommand = new EachCommand("letter", "orgName", areaOrgName,
-                        new StepCellRefGenerator(PAGE_1, 16, 0, 40));
-                areaPage1.addCommand(arOrgName, orgNameCommand);
-                areas.add(areaPage1);
+                                //ИНН
+                                AreaRef arInn = new AreaRef(PAGE_1 + EXCL + "AN4:BU4");
+                                XlsArea areaInn = new XlsArea(arInn, transformer);
+                                EachCommand innCommand = new EachCommand("i", "inn", areaInn,
+                                        new StepCellRefGenerator(PAGE_1, 3, 13, 12));
+                                areaPage1.addCommand(arInn, innCommand);
+                                //Наименование организации
+                                AreaRef arOrgName = new AreaRef(PAGE_1 + EXCL + "A17:DN17");
+                                XlsArea areaOrgName = new XlsArea(arOrgName, transformer);
+                                EachCommand orgNameCommand = new EachCommand("letter", "orgName", areaOrgName,
+                                        new StepCellRefGenerator(PAGE_1, 16, 0, 40));
+                                areaPage1.addCommand(arOrgName, orgNameCommand);
+                                areas.add(areaPage1);
 
-                //ФИО заявителя
-                AreaRef arRootDeclarer = new AreaRef(PAGE_1 + EXCL + "A35:BI40");
-                XlsArea areaRootDeclarer = new XlsArea(arRootDeclarer, transformer);
-                AreaRef afDeclarer = new AreaRef(PAGE_1 + EXCL + "A36:BF40");
-                XlsArea areaDeclarer = new XlsArea(afDeclarer, transformer);
+                                //ФИО заявителя
+                                AreaRef arRootDeclarer = new AreaRef(PAGE_1 + EXCL + "A35:BI40");
+                                XlsArea areaRootDeclarer = new XlsArea(arRootDeclarer, transformer);
+                                AreaRef afDeclarer = new AreaRef(PAGE_1 + EXCL + "A36:BF40");
+                                XlsArea areaDeclarer = new XlsArea(afDeclarer, transformer);
 //TODO                areaDeclarer.setCellShiftStrategy(new InnerCellShiftStrategy());
-                EachCommand declarantCommand = new EachCommand("letter", "declarerName", areaDeclarer,
-                        new StepCellRefGenerator(PAGE_1, 35, 0, 20));
-                areaRootDeclarer.addCommand(afDeclarer, declarantCommand);
-                areas.add(areaRootDeclarer);
+                                EachCommand declarantCommand = new EachCommand("letter", "declarerName", areaDeclarer,
+                                        new StepCellRefGenerator(PAGE_1, 35, 0, 20));
+                                areaRootDeclarer.addCommand(afDeclarer, declarantCommand);
+                                areas.add(areaRootDeclarer);
 
-                //// Стр. 3 Раздел 1
-                //
-                XlsArea areaPage3_1 = new XlsArea(PAGE_3 + EXCL + "BC13:DJ33", transformer);
-                //TODO areaPage3_1.setCellShiftStrategy(new InnerCellShiftStrategy());
+                                //// Стр. 3 Раздел 1
+                                //
+                                XlsArea areaPage3_1 = new XlsArea(PAGE_3 + EXCL + "BC13:DJ33", transformer);
+                                //TODO areaPage3_1.setCellShiftStrategy(new InnerCellShiftStrategy());
 
-                //Модель ККТ
-                AreaRef arModel = new AreaRef(PAGE_3 + EXCL + "BC13:DH15");
-                XlsArea areaModel = new XlsArea(arModel, transformer);
-                EachCommand cmdModel = new EachCommand("l", "modelName", areaModel,
-                        new StepCellRefGenerator(PAGE_3, 12, 18, 20));
-                //TODO    areaModel.setCellShiftStrategy(new InnerCellShiftStrategy());
-                areaPage3_1.addCommand(arModel, cmdModel);
-                //Заводской номер
-                AreaRef arSerialNum = new AreaRef(PAGE_3 + EXCL + "BC17:DH17");
-                XlsArea areaSerialNum = new XlsArea(arSerialNum, transformer);
-                EachCommand cmdSerialNum = new EachCommand("d", "serialNumber", areaSerialNum,
-                        new StepCellRefGenerator(PAGE_3, 16, 18, 20));
-                areaPage3_1.addCommand(arSerialNum, cmdSerialNum);
-                //Модель ФН
-                AreaRef arFnModel = new AreaRef(PAGE_3 + EXCL + "BC21:DH31");
-                XlsArea areaFnModel = new XlsArea(arFnModel, transformer);
-                EachCommand cmdFnModel = new EachCommand("l", "fnModel", areaFnModel,
-                        new StepCellRefGenerator(PAGE_3, 20, 18, 20));
-                areaPage3_1.addCommand(arFnModel, cmdFnModel);
-                //Номер ФН
-                AreaRef arFnNumber = new AreaRef(PAGE_3 + EXCL + "BC33:DH33");
-                XlsArea areaFnNumber = new XlsArea(arFnNumber, transformer);
-                EachCommand cmdFnNumber = new EachCommand("d", "fnNumber", areaFnNumber,
-                        new StepCellRefGenerator(PAGE_3, 32, 18, 20));
-                areaPage3_1.addCommand(arFnNumber, cmdFnNumber);
-                areas.add(areaPage3_1);
+                                //Модель ККТ
+                                AreaRef arModel = new AreaRef(PAGE_3 + EXCL + "BC13:DH15");
+                                XlsArea areaModel = new XlsArea(arModel, transformer);
+                                EachCommand cmdModel = new EachCommand("l", "modelName", areaModel,
+                                        new StepCellRefGenerator(PAGE_3, 12, 18, 20));
+                                //TODO    areaModel.setCellShiftStrategy(new InnerCellShiftStrategy());
+                                areaPage3_1.addCommand(arModel, cmdModel);
+                                //Заводской номер
+                                AreaRef arSerialNum = new AreaRef(PAGE_3 + EXCL + "BC17:DH17");
+                                XlsArea areaSerialNum = new XlsArea(arSerialNum, transformer);
+                                EachCommand cmdSerialNum = new EachCommand("d", "serialNumber", areaSerialNum,
+                                        new StepCellRefGenerator(PAGE_3, 16, 18, 20));
+                                areaPage3_1.addCommand(arSerialNum, cmdSerialNum);
+                                //Модель ФН
+                                AreaRef arFnModel = new AreaRef(PAGE_3 + EXCL + "BC21:DH31");
+                                XlsArea areaFnModel = new XlsArea(arFnModel, transformer);
+                                EachCommand cmdFnModel = new EachCommand("l", "fnModel", areaFnModel,
+                                        new StepCellRefGenerator(PAGE_3, 20, 18, 20));
+                                areaPage3_1.addCommand(arFnModel, cmdFnModel);
+                                //Номер ФН
+                                AreaRef arFnNumber = new AreaRef(PAGE_3 + EXCL + "BC33:DH33");
+                                XlsArea areaFnNumber = new XlsArea(arFnNumber, transformer);
+                                EachCommand cmdFnNumber = new EachCommand("d", "fnNumber", areaFnNumber,
+                                        new StepCellRefGenerator(PAGE_3, 32, 18, 20));
+                                areaPage3_1.addCommand(arFnNumber, cmdFnNumber);
+                                areas.add(areaPage3_1);
 
-                //Индекс
-                AreaRef arRootPostIndex = new AreaRef(PAGE_3 + EXCL + "AD37:AW39");
-                XlsArea areaRootPostIndex = new XlsArea(arRootPostIndex, transformer);
-                AreaRef arPostIndex = new AreaRef(PAGE_3 + EXCL + "AE38:AT38");
-                XlsArea areaPostIndex = new XlsArea(arPostIndex, transformer);
-                EachCommand cmdPostIndex = new EachCommand("d", "postIndex", areaPostIndex,
-                        new StepCellRefGenerator(PAGE_3, 37, 10, 6));
-                areaRootPostIndex.addCommand(arPostIndex, cmdPostIndex);
-                areas.add(areaRootPostIndex);
+                                //Индекс
+                                AreaRef arRootPostIndex = new AreaRef(PAGE_3 + EXCL + "AD37:AW39");
+                                XlsArea areaRootPostIndex = new XlsArea(arRootPostIndex, transformer);
+                                AreaRef arPostIndex = new AreaRef(PAGE_3 + EXCL + "AE38:AT38");
+                                XlsArea areaPostIndex = new XlsArea(arPostIndex, transformer);
+                                EachCommand cmdPostIndex = new EachCommand("d", "postIndex", areaPostIndex,
+                                        new StepCellRefGenerator(PAGE_3, 37, 10, 6));
+                                areaRootPostIndex.addCommand(arPostIndex, cmdPostIndex);
+                                areas.add(areaRootPostIndex);
 
-                //Район, Город, Населенный пункт
-                AreaRef arRootCity = new AreaRef(PAGE_3 + EXCL + "AC39:DQ45");
-                XlsArea areaRootCity = new XlsArea(arRootCity, transformer);
-                //TODO areaRootCity.setCellShiftStrategy(new InnerCellShiftStrategy());
+                                //Район, Город, Населенный пункт
+                                AreaRef arRootCity = new AreaRef(PAGE_3 + EXCL + "AC39:DQ45");
+                                XlsArea areaRootCity = new XlsArea(arRootCity, transformer);
+                                //TODO areaRootCity.setCellShiftStrategy(new InnerCellShiftStrategy());
 
-                AreaRef arCounty = new AreaRef(PAGE_3 + EXCL + "AE40:DN40");
-                XlsArea areaCounty = new XlsArea(arCounty, transformer);
-                EachCommand cmdCounty = new EachCommand("l", "county", areaCounty,
-                        new StepCellRefGenerator(PAGE_3, 39, 10, 30));
-                areaRootCity.addCommand(arCounty, cmdCounty);
+                                AreaRef arCounty = new AreaRef(PAGE_3 + EXCL + "AE40:DN40");
+                                XlsArea areaCounty = new XlsArea(arCounty, transformer);
+                                EachCommand cmdCounty = new EachCommand("l", "county", areaCounty,
+                                        new StepCellRefGenerator(PAGE_3, 39, 10, 30));
+                                areaRootCity.addCommand(arCounty, cmdCounty);
 
-                AreaRef arCity = new AreaRef(PAGE_3 + EXCL + "AE42:DN42");
-                XlsArea areaCity = new XlsArea(arCity, transformer);
-                EachCommand cmdCity = new EachCommand("l", "city", areaCity,
-                        new StepCellRefGenerator(PAGE_3, 41, 10, 30));
-                areaRootCity.addCommand(arCity, cmdCity);
+                                AreaRef arCity = new AreaRef(PAGE_3 + EXCL + "AE42:DN42");
+                                XlsArea areaCity = new XlsArea(arCity, transformer);
+                                EachCommand cmdCity = new EachCommand("l", "city", areaCity,
+                                        new StepCellRefGenerator(PAGE_3, 41, 10, 30));
+                                areaRootCity.addCommand(arCity, cmdCity);
 
-                AreaRef arSettlement = new AreaRef(PAGE_3 + EXCL + "AE44:DN44");
-                XlsArea areaSettlement = new XlsArea(arSettlement, transformer);
-                //TODO areaSettlement.setCellShiftStrategy(new InnerCellShiftStrategy());
-                EachCommand cmdSettlement = new EachCommand("l", "settlement", areaSettlement,
-                        new StepCellRefGenerator(PAGE_3, 43, 10, 30));
-                areaRootCity.addCommand(arSettlement, cmdSettlement);
+                                AreaRef arSettlement = new AreaRef(PAGE_3 + EXCL + "AE44:DN44");
+                                XlsArea areaSettlement = new XlsArea(arSettlement, transformer);
+                                //TODO areaSettlement.setCellShiftStrategy(new InnerCellShiftStrategy());
+                                EachCommand cmdSettlement = new EachCommand("l", "settlement", areaSettlement,
+                                        new StepCellRefGenerator(PAGE_3, 43, 10, 30));
+                                areaRootCity.addCommand(arSettlement, cmdSettlement);
 
-                areas.add(areaRootCity);
+                                areas.add(areaRootCity);
 
-                //// Стр. 4 Раздел 1
-                //
-                AreaRef arAddressStreet = new AreaRef(PAGE_4 + EXCL + "AD8:DQ16");
-                XlsArea areaAddressStreet = new XlsArea(arAddressStreet, transformer);
-                //TODO areaAddressStreet.setCellShiftStrategy(new InnerCellShiftStrategy());
+                                //// Стр. 4 Раздел 1
+                                //
+                                AreaRef arAddressStreet = new AreaRef(PAGE_4 + EXCL + "AD8:DQ16");
+                                XlsArea areaAddressStreet = new XlsArea(arAddressStreet, transformer);
+                                //TODO areaAddressStreet.setCellShiftStrategy(new InnerCellShiftStrategy());
 
-                AreaRef arStreet = new AreaRef(PAGE_4 + EXCL + "AE9:DN9");
-                XlsArea areaStreet = new XlsArea(arStreet, transformer);
-                EachCommand cmdStreet = new EachCommand("l", "street", areaStreet,
-                        new StepCellRefGenerator(PAGE_4, 8, 10, 30));
-                areaAddressStreet.addCommand(arStreet, cmdStreet);
+                                AreaRef arStreet = new AreaRef(PAGE_4 + EXCL + "AE9:DN9");
+                                XlsArea areaStreet = new XlsArea(arStreet, transformer);
+                                EachCommand cmdStreet = new EachCommand("l", "street", areaStreet,
+                                        new StepCellRefGenerator(PAGE_4, 8, 10, 30));
+                                areaAddressStreet.addCommand(arStreet, cmdStreet);
 
-                AreaRef arNumber = new AreaRef(PAGE_4 + EXCL + "AE11:AZ11");
-                XlsArea areaNumber = new XlsArea(arNumber, transformer);
-                EachCommand cmdNumber = new EachCommand("d", "number", areaNumber,
-                        new StepCellRefGenerator(PAGE_4, 10, 10, 8));
-                areaAddressStreet.addCommand(arNumber, cmdNumber);
+                                AreaRef arNumber = new AreaRef(PAGE_4 + EXCL + "AE11:AZ11");
+                                XlsArea areaNumber = new XlsArea(arNumber, transformer);
+                                EachCommand cmdNumber = new EachCommand("d", "number", areaNumber,
+                                        new StepCellRefGenerator(PAGE_4, 10, 10, 8));
+                                areaAddressStreet.addCommand(arNumber, cmdNumber);
 
-                AreaRef arBuilding = new AreaRef(PAGE_4 + EXCL + "AE13:AZ13");
-                XlsArea areaBuilding = new XlsArea(arBuilding, transformer);
-                EachCommand cmdBuilding = new EachCommand("d", "building", areaBuilding,
-                        new StepCellRefGenerator(PAGE_4, 12, 10, 8));
-                areaAddressStreet.addCommand(arBuilding, cmdBuilding);
+                                AreaRef arBuilding = new AreaRef(PAGE_4 + EXCL + "AE13:AZ13");
+                                XlsArea areaBuilding = new XlsArea(arBuilding, transformer);
+                                EachCommand cmdBuilding = new EachCommand("d", "building", areaBuilding,
+                                        new StepCellRefGenerator(PAGE_4, 12, 10, 8));
+                                areaAddressStreet.addCommand(arBuilding, cmdBuilding);
 
-                AreaRef arRoom = new AreaRef(PAGE_4 + EXCL + "AE15:AZ15");
-                XlsArea areaRoom = new XlsArea(arRoom, transformer);
-                EachCommand cmdRoom = new EachCommand("d", "room", areaRoom,
-                        new StepCellRefGenerator(PAGE_4, 14, 10, 8));
-                areaAddressStreet.addCommand(arRoom, cmdRoom);
-                areas.add(areaAddressStreet);
-                AreaRef arRootPlace = new AreaRef(PAGE_4 + EXCL + "AZ18:DE27");
-                XlsArea areaRootPlace = new XlsArea(arRootPlace, transformer);
-                AreaRef arPlace = new AreaRef(PAGE_4 + EXCL + "AZ18:DE24");
-                XlsArea areaPlace = new XlsArea(arPlace, transformer);
-                EachCommand cmdPlace = new EachCommand("l", "place", areaPlace,
-                        new StepCellRefGenerator(PAGE_4, 17, 17, 20));
-                areaRootPlace.addCommand(arPlace, cmdPlace);
-                areas.add(areaRootPlace);
+                                AreaRef arRoom = new AreaRef(PAGE_4 + EXCL + "AE15:AZ15");
+                                XlsArea areaRoom = new XlsArea(arRoom, transformer);
+                                EachCommand cmdRoom = new EachCommand("d", "room", areaRoom,
+                                        new StepCellRefGenerator(PAGE_4, 14, 10, 8));
+                                areaAddressStreet.addCommand(arRoom, cmdRoom);
+                                areas.add(areaAddressStreet);
+                                AreaRef arRootPlace = new AreaRef(PAGE_4 + EXCL + "AZ18:DE27");
+                                XlsArea areaRootPlace = new XlsArea(arRootPlace, transformer);
+                                AreaRef arPlace = new AreaRef(PAGE_4 + EXCL + "AZ18:DE24");
+                                XlsArea areaPlace = new XlsArea(arPlace, transformer);
+                                EachCommand cmdPlace = new EachCommand("l", "place", areaPlace,
+                                        new StepCellRefGenerator(PAGE_4, 17, 17, 20));
+                                areaRootPlace.addCommand(arPlace, cmdPlace);
+                                areas.add(areaRootPlace);
 
-                AreaRef arAttr1 = new AreaRef(PAGE_5 + EXCL + "BF11:BF42");
-                XlsArea areaAttr1 = new XlsArea(arAttr1, transformer);
-                areas.add(areaAttr1);
+                                AreaRef arAttr1 = new AreaRef(PAGE_5 + EXCL + "BF11:BF42");
+                                XlsArea areaAttr1 = new XlsArea(arAttr1, transformer);
+                                areas.add(areaAttr1);
 
-                AreaRef arAttr2 = new AreaRef(PAGE_6 + EXCL + "BF10:BF24");
-                XlsArea areaAttr2 = new XlsArea(arAttr2, transformer);
-                areas.add(areaAttr2);
+                                AreaRef arAttr2 = new AreaRef(PAGE_6 + EXCL + "BF10:BF24");
+                                XlsArea areaAttr2 = new XlsArea(arAttr2, transformer);
+                                areas.add(areaAttr2);
 
-                AreaRef arOfd = new AreaRef(PAGE_9 + EXCL + "BC12:DJ21");
-                XlsArea areaOfd = new XlsArea(arOfd, transformer);
+                                AreaRef arOfd = new AreaRef(PAGE_9 + EXCL + "BC12:DJ21");
+                                XlsArea areaOfd = new XlsArea(arOfd, transformer);
 
-                AreaRef arOfdName = new AreaRef(PAGE_9 + EXCL + "BC12:DH18");
-                XlsArea areaOfdName = new XlsArea(arOfdName, transformer);
-                EachCommand ofdNameCommand = new EachCommand("l", "ofdName", areaOfdName,
-                        new StepCellRefGenerator(PAGE_9, 11, 17, 20));
-                areaOfd.addCommand(arOfdName, ofdNameCommand);
+                                AreaRef arOfdName = new AreaRef(PAGE_9 + EXCL + "BC12:DH18");
+                                XlsArea areaOfdName = new XlsArea(arOfdName, transformer);
+                                EachCommand ofdNameCommand = new EachCommand("l", "ofdName", areaOfdName,
+                                        new StepCellRefGenerator(PAGE_9, 11, 17, 20));
+                                areaOfd.addCommand(arOfdName, ofdNameCommand);
 
-                AreaRef arOfdInn = new AreaRef(PAGE_9 + EXCL + "BC21:CJ21");
-                XlsArea areaOfdInn = new XlsArea(arOfdInn, transformer);
-                EachCommand ofdInnCommand = new EachCommand("d", "ofdInn", areaOfdInn,
-                        new StepCellRefGenerator(PAGE_9, 20, 17, 12));
-                areaOfd.addCommand(arOfdInn, ofdInnCommand);
-                areas.add(areaOfd);
+                                AreaRef arOfdInn = new AreaRef(PAGE_9 + EXCL + "BC21:CJ21");
+                                XlsArea areaOfdInn = new XlsArea(arOfdInn, transformer);
+                                EachCommand ofdInnCommand = new EachCommand("d", "ofdInn", areaOfdInn,
+                                        new StepCellRefGenerator(PAGE_9, 20, 17, 12));
+                                areaOfd.addCommand(arOfdInn, ofdInnCommand);
+                                areas.add(areaOfd);
 
-                //Стр.10_Разд.4
-                AreaRef arReport = new AreaRef(PAGE_10 + EXCL + "BD11:CJ45");
-                XlsArea areaReport = new XlsArea(arReport, transformer);
-                AreaRef arRegNum = new AreaRef(PAGE_10 + EXCL + "BD18:BY18");
-                XlsArea areaRegNum = new XlsArea(arRegNum, transformer);
-                EachCommand regNumCommand = new EachCommand("d", "regNum", areaRegNum,
-                        new StepCellRefGenerator(PAGE_10, 17, 18, 8, 1));
-                areaReport.addCommand(arRegNum, regNumCommand);
+                                //Стр.10_Разд.4
+                                AreaRef arReport = new AreaRef(PAGE_10 + EXCL + "BD11:CJ45");
+                                XlsArea areaReport = new XlsArea(arReport, transformer);
 
-                AreaRef arRegDigest = new AreaRef(PAGE_10 + EXCL + "BD29:CE29");
-                XlsArea areaRegDigest = new XlsArea(arRegDigest, transformer);
-                EachCommand regDigestCommand = new EachCommand("d", "regDigest", areaRegDigest,
-                        new StepCellRefGenerator(PAGE_10, 28, 18, 10, 1));
-                areaReport.addCommand(arRegDigest, regDigestCommand);
+                                AreaRef arRegNum = new AreaRef(PAGE_10 + EXCL + "BD18:BY18");
+                                XlsArea areaRegNum = new XlsArea(arRegNum, transformer);
+                                EachCommand regNumCommand = new EachCommand("d", "regNum", areaRegNum,
+                                        new StepCellRefGenerator(PAGE_10, 17, 18, 8, 1));
+                                areaReport.addCommand(arRegNum, regNumCommand);
 
-                AreaRef arCloseNum = new AreaRef(PAGE_10 + EXCL + "BD34:BY34");
-                XlsArea areaCloseNum = new XlsArea(arCloseNum, transformer);
-                EachCommand closeNumCommand = new EachCommand("d", "closeNum", areaCloseNum,
-                        new StepCellRefGenerator(PAGE_10, 33, 18, 8, 1));
-                areaReport.addCommand(arCloseNum, closeNumCommand);
+                                //Время и дата отчета о регистрации
+                                AreaRef arRegDateTime = new AreaRef(PAGE_10 + EXCL + "BD22:CE26");
+                                XlsArea areaRegDateTime = new XlsArea(arRegDateTime, transformer);
+                                areas.add(areaRegDateTime);
 
-                AreaRef arCloseDigest = new AreaRef(PAGE_10 + EXCL + "BD45:CE45");
-                XlsArea areaCloseDigest = new XlsArea(arCloseDigest, transformer);
-                EachCommand closeDigestCommand = new EachCommand("d", "closeDigest", areaCloseDigest,
-                        new StepCellRefGenerator(PAGE_10, 44, 18, 10, 1));
-                areaReport.addCommand(arCloseDigest, closeDigestCommand);
-               areas.add(areaReport);
+                                //Фискальный признак отчета о регистрации
+                                AreaRef arRegDigest = new AreaRef(PAGE_10 + EXCL + "BD29:CE29");
+                                XlsArea areaRegDigest = new XlsArea(arRegDigest, transformer);
+                                EachCommand regDigestCommand = new EachCommand("d", "regDigest", areaRegDigest,
+                                        new StepCellRefGenerator(PAGE_10, 28, 18, 10, 1));
+                                areaReport.addCommand(arRegDigest, regDigestCommand);
 
-                return areas;
-            })
-                    .withTemplate(templateFile).build();
+                                AreaRef arCloseNum = new AreaRef(PAGE_10 + EXCL + "BD34:BY34");
+                                XlsArea areaCloseNum = new XlsArea(arCloseNum, transformer);
+                                EachCommand closeNumCommand = new EachCommand("d", "closeNum", areaCloseNum,
+                                        new StepCellRefGenerator(PAGE_10, 33, 18, 8, 1));
+                                areaReport.addCommand(arCloseNum, closeNumCommand);
+
+                                AreaRef arCloseDigest = new AreaRef(PAGE_10 + EXCL + "BD45:CE45");
+                                XlsArea areaCloseDigest = new XlsArea(arCloseDigest, transformer);
+                                EachCommand closeDigestCommand = new EachCommand("d", "closeDigest", areaCloseDigest,
+                                        new StepCellRefGenerator(PAGE_10, 44, 18, 10, 1));
+                                areaReport.addCommand(arCloseDigest, closeDigestCommand);
+                                areas.add(areaReport);
+
+                                return areas;
+                            })
+                            .withTemplate(templateFile).build();
             JxlsOutput output = new JxlsOutputFile(outputFile);
             filler.fill(data, output);
 
